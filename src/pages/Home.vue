@@ -93,7 +93,10 @@
 
       <v-row class="my-3">
         <v-col cols="1" class="mr-6">
-          <v-btn depressed color="primary" @click="(mode = 'table'), test()"
+          <v-btn
+            depressed
+            color="primary"
+            @click="(mode = 'table'), informacoesCalculo()"
             >Calcular</v-btn
           >
         </v-col>
@@ -109,7 +112,7 @@
     <v-data-table
       v-if="mode === 'table'"
       :headers="headers"
-      :items="infos"
+      :items="final_calc"
       item-key="name"
       class="elevation-1"
     ></v-data-table>
@@ -139,22 +142,20 @@ export default {
       beneficio: false,
       pesquisa: {},
       loading: true,
-      reajuste: [],
       infos: [],
       dtInicial: "",
       dtFinal: "",
       salarioInicial: null,
       headers: [
         { value: "data", text: "Data" },
-        { value: "reajuste", text: "Reajuste" },
+        { value: "reajusteAcumulado", text: "Reajuste" },
         { value: "salario", text: "Salário" },
-        // { value: "correcao", text: "Correção Salarial" },
+        { value: "correcao", text: "Correção Salarial" },
+        { value: "juros", text: "Juros" },
       ],
       logo: require("../assets/logo.png"),
-      arr: [],
-      arr2: [],
-      correcao: [],
-      taxa_acumulada: [],
+      todas_taxas: [],
+      final_calc: [],
     };
   },
   methods: {
@@ -216,8 +217,9 @@ export default {
       newWin.print();
       newWin.close();
     },
-    midoriya() {
-      var arrFiltrado = [];
+    informacoesCalculo() {
+      var arr_todasTaxas = [];
+      var taxas = [];
 
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       const dtFinal = this.dtFinal.split("-").reverse().join("/");
@@ -229,30 +231,22 @@ export default {
       let anoInicial = parseInt(dtInicial.split("/")[2]),
         anoFinal = parseInt(dtFinal.split("/")[2]);
 
-      const url = `${baseApiUrl}/reajuste/listar`;
+      const url = `${baseApiUrl}/taxas/todasTaxas/1/1`;
       axios(url)
         .then((res) => {
-          this.reajuste = res.data.forEach((obj) => {
-            const dataInicial = new Date(this.dtInicial);
-            const dataFinal = new Date(this.dtFinal);
-            const data = obj.data.split("T");
-            const dataReajuste = data.splice(0, 1);
-            const dataObjeto = new Date(dataReajuste);
+          this.todas_taxas = res.data.map((obj) => {
+            if (obj) {
+              const data = obj.data.split("T");
+              const dataReajuste = data.splice(0, 1);
 
-            const maiorQueDataInicial =
-              dataObjeto.valueOf() >= dataInicial.valueOf();
-            const menorQueDataFinal =
-              dataObjeto.valueOf() <= dataFinal.valueOf();
+              obj.data = dataReajuste.toString().split("-").reverse().join("/");
 
-            if (maiorQueDataInicial && menorQueDataFinal) {
-              arrFiltrado.push(obj);
+              arr_todasTaxas.push(obj);
             }
           });
-
-          // console.log(arrFiltrado);
-
-          const taxas = this.saitama(arrFiltrado);
-          // console.log("Taxaaaas", taxas);
+          // console.log(arr_todasTaxas);
+          taxas = this.taxasPorAno(arr_todasTaxas);
+          // console.log(taxas);
 
           this.infos = [];
 
@@ -271,31 +265,50 @@ export default {
             if (+anoInicial < +anoFinal)
               return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
           };
-
           compute(anoInicial, salarioInicial, mesInicial, 0);
+
+          // console.log("REAJUSTE ", this.infos);
+          // console.log("CORREÇÃO", arr_todasTaxas);
+
+          this.final_calc = this.infos.map((obj) => {
+            const temp = {};
+
+            arr_todasTaxas
+              .filter((item) => item.data === obj.data)
+              .forEach(
+                (i) => (
+                  (temp.correcao = i.correcaoAcumulado),
+                  (temp.juros = i.jurosAcumulado)
+                )
+              );
+
+            return { ...obj, ...temp };
+          });
+          // console.log("FINAAALLL", this.final_calc);
         })
         .catch((error) => {
           alert(error.response.data.msg);
         });
     },
-    saitama(response = []) {
+    taxasPorAno(response = []) {
       const taxas = {};
 
       response.forEach((dado) => {
-        const anoVigente = dado.data.split("-")[0];
+        const anoVigente = dado.data.split("/")[2];
 
         if (taxas[anoVigente.toString()]) {
-          taxas[anoVigente.toString()].push(dado.reajusteAcumulado);
+          taxas[anoVigente.toString()].push(dado.reajuste);
         } else {
           taxas[anoVigente.toString()] = [];
-          taxas[anoVigente.toString()].push(dado.reajusteAcumulado);
+          taxas[anoVigente.toString()].push(dado.reajuste);
         }
       });
 
       return taxas;
     },
     test() {
-      var arrFiltrado = [];
+      var arr_reajuste = [];
+      var taxas = [];
 
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       const dtFinal = this.dtFinal.split("-").reverse().join("/");
@@ -307,31 +320,32 @@ export default {
       let anoInicial = parseInt(dtInicial.split("/")[2]),
         anoFinal = parseInt(dtFinal.split("/")[2]);
 
-      const url = `${baseApiUrl}/taxas/todas/1/1`;
+      const url = `${baseApiUrl}/taxas/todasTaxas/1/1`;
       axios(url)
         .then((res) => {
-          this.reajuste = res.data.forEach((obj) => {
-            const dataInicial = new Date(this.dtInicial);
-            const dataFinal = new Date(this.dtFinal);
-            const data = obj.data.split("T");
-            const dataReajuste = data.splice(0, 1);
-            const dataObjeto = new Date(dataReajuste);
-            // console.log(obj);
+          this.reajuste = res.data.map((obj) => {
+            if (obj) {
+              // const dataInicial = new Date(this.dtInicial);
+              // const dataFinal = new Date(this.dtFinal);
+              const data = obj.data.split("T");
+              const dataReajuste = data.splice(0, 1);
+              // const dataObjeto = new Date(dataReajuste);
 
-            const maiorQueDataInicial =
-              dataObjeto.valueOf() >= dataInicial.valueOf();
-            const menorQueDataFinal =
-              dataObjeto.valueOf() <= dataFinal.valueOf();
+              obj.data = dataReajuste.toString().split("-").reverse().join("/");
 
-            if (maiorQueDataInicial && menorQueDataFinal) {
-              arrFiltrado.push(obj);
+              // const maiorQueDataInicial =
+              //   dataObjeto.valueOf() >= dataInicial.valueOf();
+              // const menorQueDataFinal =
+              //   dataObjeto.valueOf() <= dataFinal.valueOf();
+
+              // if (maiorQueDataInicial && menorQueDataFinal) {
+              // }
+              arr_reajuste.push(obj);
             }
           });
-
-          console.log(arrFiltrado);
-
-          const taxas = this.saitama(arrFiltrado);
-          // console.log("Taxaaaas", taxas);
+          console.log(arr_reajuste);
+          taxas = this.taxasPorAno(arr_reajuste);
+          console.log(taxas);
 
           this.infos = [];
 
@@ -350,8 +364,26 @@ export default {
             if (+anoInicial < +anoFinal)
               return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
           };
-
           compute(anoInicial, salarioInicial, mesInicial, 0);
+
+          console.log("REAJUSTE ", this.infos);
+          // console.log("CORREÇÃO", arr_reajuste);
+
+          this.final_calc = this.infos.map((obj) => {
+            const temp = {};
+
+            arr_reajuste
+              .filter((item) => item.data === obj.data)
+              .forEach(
+                (i) => (
+                  (temp.correcao = i.correcaoAcumulado),
+                  (temp.juros = i.jurosAcumulado)
+                )
+              );
+
+            return { ...obj, ...temp };
+          });
+          console.log("FINAAALLL", this.final_calc);
         })
         .catch((error) => {
           alert(error.response.data.msg);
