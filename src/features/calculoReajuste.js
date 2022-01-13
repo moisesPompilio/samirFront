@@ -29,7 +29,6 @@ export function calculaReajuste(
   taxaAnoAnterior,
   anoFim,
   mesFim,
-  // correcao = [],
   infos = []
 ) {
   // extrai as taxas de acordo com mes de inicio e
@@ -51,7 +50,10 @@ export function calculaReajuste(
   // no calculo de "qtdMeses"
   while (+mesInicio <= qtdMeses) {
     infos.push({
-      data: `01/${mesInicio + 1}/${anoInicio}`,
+      data:
+        mesInicio < 9
+          ? `01/0${mesInicio + 1}/${anoInicio}`
+          : `01/${mesInicio + 1}/${anoInicio}`,
       salario: salario,
       reajusteAcumulado: mesInicio === 0 ? taxaAnoAnterior : 1
       // correcao: correcao
