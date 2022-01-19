@@ -112,7 +112,7 @@
     <v-data-table
       v-if="mode === 'table'"
       :headers="headers"
-      :items="final_calc"
+      :items="calc_total"
       item-key="name"
       class="elevation-1"
     ></v-data-table>
@@ -151,11 +151,15 @@ export default {
         { value: "reajusteAcumulado", text: "Reajuste" },
         { value: "salario", text: "Salário" },
         { value: "correcao", text: "Correção Salarial" },
+        { value: "salarioCorrigido", text: "Salário Corrigido" },
         { value: "juros", text: "Juros" },
+        { value: "salarioJuros", text: "Salário Juros" },
+        { value: "salarioTotal", text: "Total" },
       ],
       logo: require("../assets/logo.png"),
       todas_taxas: [],
-      final_calc: [],
+      all_info: [],
+      calc_total: [],
     };
   },
   methods: {
@@ -270,7 +274,7 @@ export default {
           // console.log("REAJUSTE ", this.infos);
           // console.log("CORREÇÃO", arr_todasTaxas);
 
-          this.final_calc = this.infos.map((obj) => {
+          this.all_info = this.infos.map((obj) => {
             const temp = {};
 
             arr_todasTaxas
@@ -284,7 +288,24 @@ export default {
 
             return { ...obj, ...temp };
           });
-          // console.log("FINAAALLL", this.final_calc);
+
+          this.calc_total = this.all_info.map((obj) => {
+            const temp = {
+              salarioCorrigido:
+                Math.floor(obj.salario * obj.correcao * 100) / 100,
+              salarioJuros:
+                Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100,
+              salarioTotal:
+                Math.floor(
+                  (obj.salario * obj.correcao * obj.juros +
+                    obj.salario * obj.correcao) *
+                    100
+                ) / 100,
+            };
+
+            return { ...obj, ...temp };
+          });
+          // console.log("FINAAALLL", this.calc_total);
         })
         .catch((error) => {
           alert(error.response.data.msg);
@@ -369,7 +390,7 @@ export default {
           console.log("REAJUSTE ", this.infos);
           // console.log("CORREÇÃO", arr_reajuste);
 
-          this.final_calc = this.infos.map((obj) => {
+          this.all_info = this.infos.map((obj) => {
             const temp = {};
 
             arr_reajuste
@@ -383,7 +404,7 @@ export default {
 
             return { ...obj, ...temp };
           });
-          console.log("FINAAALLL", this.final_calc);
+          console.log("FINAAALLL", this.all_info);
         })
         .catch((error) => {
           alert(error.response.data.msg);
