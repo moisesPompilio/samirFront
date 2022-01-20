@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     signin() {
-      this.$router.push({ path: "/home" });
+      this.$router.push({ path: "/processos" });
     },
     async validate() {
       try {
