@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     signin() {
-      this.$router.push({ path: "/home" });
+      this.$router.push({ path: "/processos" });
     },
     async validate() {
       try {
@@ -61,7 +61,7 @@ export default {
         this.$snackbar({ message: "ERROR!", snackbarColor: "#FF5252" });
       } finally {
         this.loading = true;
-        this.$router.push({ path: "/home" });
+        this.$router.push({ path: "/processos" });
       }
     },
   },

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
+import Processos from '@/pages/Processos'
 
 // import { userKey } from '@/global'
 
@@ -18,6 +19,11 @@ const routes = [
     name: 'home',
     path: '/home',
     component: Home
+  },
+  {
+    name: 'processos',
+    path: '/processos',
+    component: Processos
   }
 ]
 
