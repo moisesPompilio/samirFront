@@ -101,7 +101,12 @@
           >
         </v-col>
         <v-col cols="1">
-          <v-btn depressed color="secondary" @click="mode = ''">cancelar</v-btn>
+          <v-btn
+            depressed
+            color="secondary"
+            @click="(mode = ''), redirectToCalculo()"
+            >cancelar</v-btn
+          >
         </v-col>
       </v-row>
     </v-card>
@@ -326,6 +331,9 @@ export default {
       });
 
       return taxas;
+    },
+    redirectToCalculo() {
+      this.$router.push("/processos").catch(() => {});
     },
     test() {
       var arr_reajuste = [];
