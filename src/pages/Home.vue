@@ -10,6 +10,9 @@
         <v-tab @click="add_taxa = true">Adicionar Taxa</v-tab>
       </v-tabs>
     </v-card>
+    <v-card>
+        <bloco-informacoes></bloco-informacoes>
+    </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
       <v-row>
         <v-col cols="12" sm="6" md="3">
@@ -113,14 +116,19 @@
 
     <adicionar-taxa v-if="add_taxa == true" />
     <!-- TABELA PRNCIPAL -->
-
+  <div id="areaToPrint">
+    <h1> Narutinho </h1> 
+    <img src="" alt="">
     <v-data-table
+     id="areaToPrint"
       v-if="mode === 'table'"
       :headers="headers"
       :items="calc_total"
       item-key="name"
       class="elevation-1"
     ></v-data-table>
+  </div>
+    
 
     <div v-show="mode === 'table'">
       <b-button variant="primary" @click="printDiv()"
@@ -136,10 +144,13 @@ import { calculaReajuste } from "../features/calculoReajuste";
 import { baseApiUrl } from "../global";
 import axios from "axios";
 import AdicionarTaxa from "./AdicionarTaxa.vue";
-
+import BlocoDeInformacoes from "../components/BlocoDeInformacoes.vue";
 export default {
   name: "Home",
-  components: { AdicionarTaxa },
+  components: { 
+    AdicionarTaxa,
+  "bloco-informacoes": BlocoDeInformacoes
+  },
   data: function () {
     return {
       mode: "",
