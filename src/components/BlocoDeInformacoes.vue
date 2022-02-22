@@ -135,16 +135,17 @@
             <td
               class="py-3"
               style="color: rgb(107, 107, 218); cursor: pointer"
-              @click="redirectToCalculo"
+              @click="redirectToCalculo, preencherFields(item.id)"
             >
               {{ item.numeroDoProcesso }}
             </td>
             <td>{{ item.nome }}</td>
             <td>
-              <v-btn icon @click="redirectToCalculo">
+              <v-btn icon @click="redirectToCalculo, preencherFields(item.id)">
                 <v-icon color="success">mdi-file-eye-outline</v-icon>
               </v-btn>
             </td>
+            <td>{{item.id}}</td>
           </tr>
         </template>
       </v-data-table>
@@ -156,6 +157,7 @@ export default {
   name: "Processos",
   data: function () {
     return {
+      id: 0,
       numeroDoProcesso: "",
       nome: "",
       dataAjuizamento: "",
@@ -168,6 +170,7 @@ export default {
       dip: "",
       aps: "",
       headers: [
+        {value: "id", text: "ID"},
         { value: "numeroDoProcesso", text: "NUP" },
         { value: "nome", text: "Nome " },
         { value: "actions" },
@@ -183,8 +186,8 @@ export default {
       if (!this.numeroDoProcesso) {
         return;
       }
-
       this.infos.push({
+        id: this.infos.length,
         numeroDoProcesso: this.numeroDoProcesso,
         nome: this.nome,
         dataAjuizamento: this.dataAjuizamento,
@@ -221,6 +224,20 @@ export default {
       this.dip = "";
       this.aps = "";
     },
+    preencherFields(y){
+      this.numeroDoProcesso = this.infos[y].numeroDoProcesso;
+      this.nome = this.infos[y].nome;
+      this.dataAjuizamento = this.infos[y].dataAjuizamento;
+      this.cpf = this.infos[y].cpf;
+      this.dibInicial = this.infos[y].dibInicial;
+      this.dibFinal = this.infos[y].dibFinal;
+      this.rmi = this.infos[y].rmi;
+      this.beneficio = this.infos[y].beneficio;
+      this.nb = this.infos[y].nb;
+      this.dip = this.infos[y].dip;
+      this.aps = this.infos[y].aps;
+
+    }
   },
   mounted() {
     if (localStorage.getItem("infos")) {
