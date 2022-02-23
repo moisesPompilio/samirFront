@@ -181,7 +181,7 @@ export default {
   methods: {
     atualizarTodosDados(){
       console.log(this.info_calculo);
-      this.salarioInicial = this.info_calculo.rmi;
+      this.salarioInicial = parseFloat(this.info_calculo.rmi);
       this.dtInicial = this.info_calculo.dibInicial;
       this.dtFinal = this.info_calculo.dip;
     },
