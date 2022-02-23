@@ -135,13 +135,13 @@
             <td
               class="py-3"
               style="color: rgb(107, 107, 218); cursor: pointer"
-              @click="redirectToCalculo, preencherFields(item.id)"
+              @click="tranferir(item.id)"
             >
               {{ item.numeroDoProcesso }}
             </td>
             <td>{{ item.nome }}</td>
             <td>
-              <v-btn icon @click="redirectToCalculo, preencherFields(item.id)">
+              <v-btn icon @click="tranferir(item.id)">
                 <v-icon color="success">mdi-file-eye-outline</v-icon>
               </v-btn>
             </td>
@@ -175,7 +175,8 @@ export default {
         { value: "nome", text: "Nome " },
         { value: "actions" },
       ],
-      infos: []
+      infos: [],
+      calculo:{},
     };
   },
   methods: {
@@ -237,7 +238,13 @@ export default {
       this.dip = this.infos[y].dip;
       this.aps = this.infos[y].aps;
 
-    }
+    },
+     tranferir(y){
+      this.redirectToCalculo();
+      this.preencherFields(y);
+      this.calculo = this.infos[y];
+      this.$emit("calculo", this.calculo)
+    },
   },
   mounted() {
     if (localStorage.getItem("infos")) {

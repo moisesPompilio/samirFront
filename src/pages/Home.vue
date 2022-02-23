@@ -11,7 +11,7 @@
       </v-tabs>
     </v-card>
     <v-card>
-        <bloco-informacoes></bloco-informacoes>
+        <bloco-informacoes @calculo= "info_calculo = $event, atualizarTodosDados()"></bloco-informacoes>
     </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
       <v-row>
@@ -21,7 +21,6 @@
             v-model="dtInicial"
             id="data-inicial"
             dense
-            type="date"
             outlined
           ></v-text-field>
         </v-col>
@@ -31,7 +30,6 @@
             v-model="dtFinal"
             id="data-final"
             dense
-            type="date"
             outlined
           ></v-text-field>
         </v-col>
@@ -41,9 +39,10 @@
             v-model="salarioInicial"
             id="valor-devido"
             dense
-            placeholder="R$ - "
+            placeholder="nada"
             outlined
           ></v-text-field>
+          <label for="valor-devido" class="labels pb-3"> {{info_calculo.nome}}</label>
         </v-col>
       </v-row>
 
@@ -161,7 +160,7 @@ export default {
       infos: [],
       dtInicial: "",
       dtFinal: "",
-      salarioInicial: null,
+      salarioInicial:"",
       headers: [
         { value: "data", text: "Data" },
         { value: "reajusteAcumulado", text: "Reajuste" },
@@ -176,9 +175,27 @@ export default {
       todas_taxas: [],
       all_info: [],
       calc_total: [],
+      info_calculo:{},
     };
   },
   methods: {
+    atualizarTodosDados(){
+      console.log(this.info_calculo);
+      this.salarioInicial = this.info_calculo.rmi;
+      this.dtInicial = this.info_calculo.dibInicial;
+      this.dtFinal = this.info_calculo.dip;
+    },
+    converterData(dateStr) {
+    let dataString = dateStr.split("/");
+
+/* Define a data com os valores separados */
+this.dataIni = new Date(dataString[2], dataString[1]-1, dataString[0]);
+//this.dataFin = this.dataIni.toLocaleDateString("pt-BR");
+
+console.log( this.dataIni.toString() );
+console.log( this.dataIni.toLocaleDateString("pt-BR") );
+
+},
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
 
@@ -430,6 +447,7 @@ export default {
         });
     },
   },
+  
   mounted() {
     // this.maitoGai();
   },
