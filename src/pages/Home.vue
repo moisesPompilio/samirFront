@@ -199,6 +199,7 @@ export default {
         (this.calc_total[0].salarioCorrigido / 30) * inical_calculo;
       this.calc_total[0].salarioTotal =
         (this.calc_total[0].salarioTotal / 30) * inical_calculo;
+        this.calc_total[0].data = dtInicial;
 
       let x = this.calc_total.length - 1;
       this.calc_total[x].salario = (this.calc_total[x].salario / 30) * dfinal;
@@ -206,6 +207,7 @@ export default {
         (this.calc_total[x].salarioCorrigido / 30) * dfinal;
       this.calc_total[x].salarioTotal =
         (this.calc_total[x].salarioTotal / 30) * dfinal;
+        this.calc_total[x].data = dtFinal;
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
     },
