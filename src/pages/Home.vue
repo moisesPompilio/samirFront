@@ -102,7 +102,7 @@
           <v-btn
             depressed
             color="primary"
-            @click="(mode = 'table'), adicionar()"
+            @click="(mode = 'table'), informacoesCalculo()"
             >Calcular</v-btn
           >
         </v-col>
@@ -208,13 +208,6 @@ export default {
         (this.calc_total[x].salarioTotal / 30) * dfinal;
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
-    },
-    async adicionar() {
-     const x = await this.informacoesCalculo().then(this.iniciarCalculo());
-     const y = await this.iniciarCalculo();
-     console.log(x);
-     console.log(y);
-
     },
     atualizarTodosDados() {
       this.salarioInicial = this.info_calculo.rmi.replace(".", "");
@@ -364,12 +357,11 @@ export default {
 
             return { ...obj, ...temp };
           });
-           return true;
+           this.iniciarCalculo();
         })
         .catch((error) => {
           alert(error.response.data.msg);
         });
-        this.iniciarCalculo();
     },
     taxasPorAno(response = []) {
       const taxas = {};
