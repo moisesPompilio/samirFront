@@ -11,7 +11,9 @@
       </v-tabs>
     </v-card>
     <v-card>
-        <bloco-informacoes @calculo= "info_calculo = $event, atualizarTodosDados()"></bloco-informacoes>
+      <bloco-informacoes
+        @calculo="(info_calculo = $event), atualizarTodosDados()"
+      ></bloco-informacoes>
     </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
       <v-row>
@@ -42,7 +44,9 @@
             placeholder="nada"
             outlined
           ></v-text-field>
-          <label for="valor-devido" class="labels pb-3"> {{info_calculo.nome}}</label>
+          <label for="valor-devido" class="labels pb-3">
+            {{ info_calculo.nome }}</label
+          >
         </v-col>
       </v-row>
 
@@ -98,7 +102,7 @@
           <v-btn
             depressed
             color="primary"
-            @click="(mode = 'table'), informacoesCalculo()"
+            @click="(mode = 'table'), adicionar()"
             >Calcular</v-btn
           >
         </v-col>
@@ -110,24 +114,28 @@
             >cancelar</v-btn
           >
         </v-col>
+        <v-col cols="1">
+          <v-btn depressed color="secondary" @click="iniciarCalculo()"
+            >Atualizar</v-btn
+          >
+        </v-col>
       </v-row>
     </v-card>
 
     <adicionar-taxa v-if="add_taxa == true" />
     <!-- TABELA PRNCIPAL -->
-  <div id="areaToPrint">
-    <h1> Narutinho </h1> 
-    <img src="" alt="">
-    <v-data-table
-     id="areaToPrint"
-      v-if="mode === 'table'"
-      :headers="headers"
-      :items="calc_total"
-      item-key="name"
-      class="elevation-1"
-    ></v-data-table>
-  </div>
-    
+    <div id="areaToPrint">
+      <h1>Narutinho</h1>
+      <img src="" alt="" />
+      <v-data-table
+        id="areaToPrint"
+        v-if="mode === 'table'"
+        :headers="headers"
+        :items="calc_total"
+        item-key="name"
+        class="elevation-1"
+      ></v-data-table>
+    </div>
 
     <div v-show="mode === 'table'">
       <b-button variant="primary" @click="printDiv()"
@@ -146,9 +154,9 @@ import AdicionarTaxa from "./AdicionarTaxa.vue";
 import BlocoDeInformacoes from "../components/BlocoDeInformacoes.vue";
 export default {
   name: "Home",
-  components: { 
+  components: {
     AdicionarTaxa,
-  "bloco-informacoes": BlocoDeInformacoes
+    "bloco-informacoes": BlocoDeInformacoes,
   },
   data: function () {
     return {
@@ -160,7 +168,7 @@ export default {
       infos: [],
       dtInicial: "",
       dtFinal: "",
-      salarioInicial:"",
+      salarioInicial: "",
       headers: [
         { value: "data", text: "Data" },
         { value: "reajusteAcumulado", text: "Reajuste" },
@@ -175,29 +183,46 @@ export default {
       todas_taxas: [],
       all_info: [],
       calc_total: [],
-      info_calculo:{},
+      info_calculo: {},
     };
   },
   methods: {
-    atualizarTodosDados(){
-      console.log(this.info_calculo);
-      this.salarioInicial = this.info_calculo.rmi.replace('.','');
-      this.salarioInicial = this.salarioInicial.replace(',','.');
+    iniciarCalculo() {
+     const dtInicial = this.dtInicial.split("-").reverse().join("/");
+      const dtFinal = this.dtFinal.split("-").reverse().join("/");
+      let dinicial = parseInt(dtInicial.split("/")[0]);
+      let dfinal = parseInt(dtFinal.split("/")[0]);
+      let inical_calculo = (dinicial - 30) * -1;
+      this.calc_total[0].salario =
+        (this.calc_total[0].salario / 30) * inical_calculo;
+      this.calc_total[0].salarioCorrigido =
+        (this.calc_total[0].salarioCorrigido / 30) * inical_calculo;
+      this.calc_total[0].salarioTotal =
+        (this.calc_total[0].salarioTotal / 30) * inical_calculo;
+
+      let x = this.calc_total.length - 1;
+      this.calc_total[x].salario = (this.calc_total[x].salario / 30) * dfinal;
+      this.calc_total[x].salarioCorrigido =
+        (this.calc_total[x].salarioCorrigido / 30) * dfinal;
+      this.calc_total[x].salarioTotal =
+        (this.calc_total[x].salarioTotal / 30) * dfinal;
+      console.log(this.calc_total[0]);
+      console.log(this.calc_total[x]);
+    },
+    async adicionar() {
+     const x = await this.informacoesCalculo().then(this.iniciarCalculo());
+     const y = await this.iniciarCalculo();
+     console.log(x);
+     console.log(y);
+
+    },
+    atualizarTodosDados() {
+      this.salarioInicial = this.info_calculo.rmi.replace(".", "");
+      this.salarioInicial = this.salarioInicial.replace(",", ".");
       this.salarioInicial = parseFloat(this.salarioInicial);
       this.dtInicial = this.info_calculo.dibInicial;
       this.dtFinal = this.info_calculo.dip;
     },
-    converterData(dateStr) {
-    let dataString = dateStr.split("/");
-
-/* Define a data com os valores separados */
-this.dataIni = new Date(dataString[2], dataString[1]-1, dataString[0]);
-//this.dataFin = this.dataIni.toLocaleDateString("pt-BR");
-
-console.log( this.dataIni.toString() );
-console.log( this.dataIni.toLocaleDateString("pt-BR") );
-
-},
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
 
@@ -320,7 +345,6 @@ console.log( this.dataIni.toLocaleDateString("pt-BR") );
                   (temp.juros = i.jurosAcumulado)
                 )
               );
-
             return { ...obj, ...temp };
           });
 
@@ -340,11 +364,12 @@ console.log( this.dataIni.toLocaleDateString("pt-BR") );
 
             return { ...obj, ...temp };
           });
-          // console.log("FINAAALLL", this.calc_total);
+           return true;
         })
         .catch((error) => {
           alert(error.response.data.msg);
         });
+        this.iniciarCalculo();
     },
     taxasPorAno(response = []) {
       const taxas = {};
@@ -449,7 +474,7 @@ console.log( this.dataIni.toLocaleDateString("pt-BR") );
         });
     },
   },
-  
+
   mounted() {
     // this.maitoGai();
   },
