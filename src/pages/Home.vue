@@ -115,7 +115,7 @@
           >
         </v-col>
         <v-col cols="1">
-          <v-btn depressed color="secondary" @click="iniciarCalculo()"
+          <v-btn depressed color="secondary" @click="pararJuros()"
             >Atualizar</v-btn
           >
         </v-col>
@@ -211,12 +211,33 @@ export default {
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
     },
+    pararJuros(){
+      const dataAjuizamentoRequerida =  this.info_calculo.dataAjuizamento.split("-").reverse().join("/");
+      console.log(dataAjuizamentoRequerida.split("/")[0] + "/" + dataAjuizamentoRequerida.split("/")[1] + "/" + dataAjuizamentoRequerida.split("/")[2])
+      for(var i = 0; i < this.calc_total.lengt; i++ ){
+        
+       var dataFornecida = this.calc_total[i].data.split("-").reverse().join("/");
+       var dataDeJuizamento = dataFornecida.split("/")[0] + "/" + dataAjuizamentoRequerida.split("/")[1] + "/" + dataAjuizamentoRequerida.split("/")[2];
+       console.log(dataDeJuizamento)
+        if( this.calc_total[i].data == dataDeJuizamento){
+          const juros = this.calc_total[i].juros;
+          for(let x = 0; x <= i; x++){
+            this.calc_total[x].salarioTotal = (this.calc_total[x].salarioTotal - this.calc_total[x].salarioJuros) + (this.calc_total[x].salarioCorrigido * juros);
+            this.calc_total[x].juros = juros;
+            this.calc_total[x].salarioJuros = this.calc_total[x].salarioCorrigido * juros;
+            console.log(juros);
+          }
+          i = this.calc_total.lengt;
+        }
+      }
+    },
     atualizarTodosDados() {
       this.salarioInicial = this.info_calculo.rmi.replace(".", "");
       this.salarioInicial = this.salarioInicial.replace(",", ".");
       this.salarioInicial = parseFloat(this.salarioInicial);
       this.dtInicial = this.info_calculo.dibInicial;
       this.dtFinal = this.info_calculo.dip;
+      this.calc_total = [];
     },
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
@@ -359,6 +380,7 @@ export default {
 
             return { ...obj, ...temp };
           });
+           this.pararJuros();
            this.iniciarCalculo();
         })
         .catch((error) => {
