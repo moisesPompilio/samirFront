@@ -134,7 +134,38 @@
         :items="calc_total"
         item-key="name"
         class="elevation-1"
-      ></v-data-table>
+      >
+      </v-data-table>
+      <v-row class="mx-3">
+          <v-col cols="12" sm="6" md="3">
+            <label for="valor_corrigido" class="labels pb-3">Valor total corrigido</label>
+          <v-text-field
+            v-model="valor_corrigido"
+            id="valor_corrigido"
+          ><label for="valor_corrigido" class="labels pb-3">{{valor_corrigido}}</label></v-text-field>
+          </v-col>
+          <label for="valor_corrigido" class="labels pb-3">{{valor_corrigido}}</label>
+          <v-col cols="12" sm="6" md="3">
+            <label for="valor_juros" class="labels pb-3">Valor total juros</label>
+          <v-text-field
+            v-model="valor_juros"
+            id="valor_juros"
+            dense
+            placeholder="Valor total juros"
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+         <label for="valor_total" class="labels pb-3">Valor total</label>
+          <v-text-field
+            v-model="valor_total"
+            id="valor_total"
+            dense
+            placeholder="Valor total"
+            outlined
+          ></v-text-field>
+          </v-col>
+      </v-row>
     </div>
 
     <div v-show="mode === 'table'">
@@ -148,6 +179,7 @@
 <script>
 // import TabelaDib from "../features/TabelaDib.vue";
 import { calculaReajuste } from "../features/calculoReajuste";
+//import { pararJurosTeste } from "../features/pararJuros";
 import { baseApiUrl } from "../global";
 import axios from "axios";
 import AdicionarTaxa from "./AdicionarTaxa.vue";
@@ -184,52 +216,107 @@ export default {
       all_info: [],
       calc_total: [],
       info_calculo: {},
+      valor_total: 0,
+      valor_juros: 0,
+      valor_corrigido: 0,
     };
   },
   methods: {
     iniciarCalculo() {
-     const dtInicial = this.dtInicial.split("-").reverse().join("/");
+      const dtInicial = this.dtInicial.split("-").reverse().join("/");
       const dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
       let dfinal = parseInt(dtFinal.split("/")[0]);
       let inical_calculo = (dinicial - 30) * -1;
       this.calc_total[0].salario =
-        (this.calc_total[0].salario / 30) * inical_calculo;
+        Math.floor((this.calc_total[0].salario / 30) * inical_calculo * 100) /
+        100;
       this.calc_total[0].salarioCorrigido =
-        (this.calc_total[0].salarioCorrigido / 30) * inical_calculo;
+        Math.floor(
+          (this.calc_total[0].salarioCorrigido / 30) * inical_calculo * 100
+        ) / 100;
       this.calc_total[0].salarioTotal =
-        (this.calc_total[0].salarioTotal / 30) * inical_calculo;
-        this.calc_total[0].data = dtInicial;
+        Math.floor(
+          (this.calc_total[0].salarioTotal / 30) * inical_calculo * 100
+        ) / 100;
+      this.calc_total[0].data = dtInicial;
 
       let x = this.calc_total.length - 1;
-      this.calc_total[x].salario = (this.calc_total[x].salario / 30) * dfinal;
+      this.calc_total[x].salario =
+        Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
       this.calc_total[x].salarioCorrigido =
-        (this.calc_total[x].salarioCorrigido / 30) * dfinal;
+        Math.floor((this.calc_total[x].salarioCorrigido / 30) * dfinal * 100) /
+        100;
       this.calc_total[x].salarioTotal =
-        (this.calc_total[x].salarioTotal / 30) * dfinal;
-        this.calc_total[x].data = dtFinal;
+        Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) / 100;
+      this.calc_total[x].data = dtFinal;
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
+      this.pararJuros();
     },
-    pararJuros(){
-      const dataAjuizamentoRequerida =  this.info_calculo.dataAjuizamento.split("-").reverse().join("/");
-      console.log(dataAjuizamentoRequerida.split("/")[0] + "/" + dataAjuizamentoRequerida.split("/")[1] + "/" + dataAjuizamentoRequerida.split("/")[2])
-      for(var i = 0; i < this.calc_total.lengt; i++ ){
-        
-       var dataFornecida = this.calc_total[i].data.split("-").reverse().join("/");
-       var dataDeJuizamento = dataFornecida.split("/")[0] + "/" + dataAjuizamentoRequerida.split("/")[1] + "/" + dataAjuizamentoRequerida.split("/")[2];
-       console.log(dataDeJuizamento)
-        if( this.calc_total[i].data == dataDeJuizamento){
-          const juros = this.calc_total[i].juros;
-          for(let x = 0; x <= i; x++){
-            this.calc_total[x].salarioTotal = (this.calc_total[x].salarioTotal - this.calc_total[x].salarioJuros) + (this.calc_total[x].salarioCorrigido * juros);
-            this.calc_total[x].juros = juros;
-            this.calc_total[x].salarioJuros = this.calc_total[x].salarioCorrigido * juros;
-            console.log(juros);
+    pararJuros() {
+      const dataAjuizamentoRequerida = this.info_calculo.dataAjuizamento
+        .split("-")
+        .reverse()
+        .join("/");
+      try {
+        var i = 0;
+        for (const value of this.calc_total) {
+          console.log(value);
+          var dataFornecida = this.calc_total[i].data
+            .split("-")
+            .reverse()
+            .join("/");
+          var dataDeJuizamento =
+            dataFornecida.split("/")[0] +
+            "/" +
+            dataAjuizamentoRequerida.split("/")[1] +
+            "/" +
+            dataAjuizamentoRequerida.split("/")[2];
+          var dateTabela =
+            dataFornecida.split("/")[0] +
+            "/" +
+            dataFornecida.split("/")[1] +
+            "/" +
+            dataFornecida.split("/")[2];
+          console.log(dataDeJuizamento);
+          console.log(dateTabela);
+          if (dateTabela == dataDeJuizamento) {
+            const juros = this.calc_total[i].juros;
+            for (let x = 0; x <= i; x++) {
+              this.calc_total[x].salarioTotal =
+                Math.floor(
+                  (this.calc_total[x].salarioTotal -
+                    this.calc_total[x].salarioJuros +
+                    this.calc_total[x].salarioCorrigido * juros) *
+                    100
+                ) / 100;
+              this.calc_total[x].juros = juros;
+              this.calc_total[x].salarioJuros =
+                Math.floor(this.calc_total[x].salarioCorrigido * juros * 100) /
+                100;
+            }
           }
-          i = this.calc_total.lengt;
+          i++;
+          this.totaisSalario();
         }
+      } catch (error) {
+        console.log(error);
       }
+    },
+    totaisSalario(){
+      this.valor_total = 0;
+      this.valor_juros = 0;
+      this.valor_corrigido = 0;
+      for (const value of this.calc_total){
+        this.valor_total += value.salarioTotal;
+          this.valor_juros += value.salarioJuros;
+          this.valor_corrigido += value.salarioCorrigido;
+          //corta as cassais decimais
+      }
+      this.valor_total = Math.floor(this.valor_total * 100) /100;
+        this.valor_juros = Math.floor(this.valor_juros * 100) /100;
+        this.valor_corrigido = Math.floor(this.valor_corrigido * 100) /100;
     },
     atualizarTodosDados() {
       this.salarioInicial = this.info_calculo.rmi.replace(".", "");
@@ -238,6 +325,9 @@ export default {
       this.dtInicial = this.info_calculo.dibInicial;
       this.dtFinal = this.info_calculo.dip;
       this.calc_total = [];
+      this.valor_total = 0;
+      this.valor_juros = 0;
+      this.valor_corrigido = 0;
     },
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
@@ -380,8 +470,7 @@ export default {
 
             return { ...obj, ...temp };
           });
-           this.pararJuros();
-           this.iniciarCalculo();
+          this.iniciarCalculo();
         })
         .catch((error) => {
           alert(error.response.data.msg);
