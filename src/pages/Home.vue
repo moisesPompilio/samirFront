@@ -125,10 +125,352 @@
 
     <adicionar-taxa v-if="add_taxa == true" />
     <!-- TABELA PRNCIPAL -->
-    <div
+      <h1 class="titulo">PREENCHA OS DADOS</h1>
+        <h4 class="center">REVISÃO DE BENEFÍCIOS</h4>
+        <div class="rowInputs">
+          <div class="column">
+            <label class="camposInput"> Processo: <input v-model="info_calculo.numeroDoProcesso" placeholder="XXXX-XX.XXXX.XXX.XXXX"></label>
+            <label
+              class="inputToPrint"
+              id="processoForm"
+            />
+            <br />
+            <label class="camposInput"> Autor: <input v-model="info_calculo.nome" placeholder="Jennifer Walters"></label>
+            <label
+              class="inputToPrint"
+              id="autorForm"
+            />
+            <br />
+            <label class="camposInput">Objeto: <input v-model="objetoDoCalculo" placeholder="Ex.: CÁLCULO DE BENEFÍCIO PREVIDENCIÁRIO"></label
+            ><label
+              class="inputToPrint"
+              id="objetoForm"
+            />
+            <br />
+            <label class="camposInput">Vara: <input v-model="varaPrevidenciaria" placeholder="Ex.: Previdenciária"></label
+            ><label
+              class="inputToPrint"
+              id="varaForm"
+            />
+            <br />
+            <label class="camposInput">Juros: <input placeholder="Ex.: 12% a.a. até 06/09 + ..."></label
+            ><label
+              class="inputToPrint"
+              id="jurosForm"
+            />
+            <br />
+          </div>
+          <div class="column">
+            <label class="camposInput">Ajuizamento: <input v-model="info_calculo.dataAjuizamento" placeholder="XX/XX/XXXX"></label
+            ><label
+              class="inputToPrint"
+              id="ajuizamentoForm"
+            />
+            <br />
+            <label class="camposInput">Início do Juros: <input v-model="info_calculo.dataAjuizamento" placeholder="XX/XXXX"></label
+            ><label
+              class="inputToPrint"
+              id="inicioJurosForm"
+            />
+            <br />
+            <!-- Criar Função -->
+            <label class="camposInput">Calculado em: <input placeholder="XX/XXXX"></label
+            ><label
+              class="inputToPrint"
+              id="calculadoEmForm"
+            />
+            <br />
+            <label class="camposInput">Honorário: <input placeholder="Ex.:"></label
+            ><label
+              class="inputToPrint"
+              id="honorarioForm"
+            />
+            <br />
+          </div>
+        </div>
+      <h4 class="center">RESUMO DO PROCESSO</h4>
+      <div>
+        <div class="resumoProcesso">
+            <div class="columnResumoProcesso">
+                <h6>N.B.</h6>
+                <input v-model="info_calculo.nb" placeholder="XXX.XXX.XXX-X">
+                <label class="inputToPrintResumo"
+                  id="resumoNB"
+                />
+            </div>
+            <div class="columnResumoProcessoParte">
+                <h6>Parte</h6>
+                <input v-model="info_calculo.nome" placeholder="Ex.: Matthew M. Murdock">
+                <label class="inputToPrintResumoParte"
+                  id="resumoParte"
+                />
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Principal</h6>
+                <input v-model="valor_corrigido" placeholder="XX.XXX,XX">
+                <label class="inputToPrintResumo"
+                  id="resumoPrincipal"
+                />
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Juros</h6>
+                <input v-model="valor_juros" placeholder="X.XXX,XX">
+                <label class="inputToPrintResumo"
+                  id="resumoJuros"
+                />
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Total</h6>
+                <input v-model="valor_total" placeholder="XX.XXX,XX">
+                <label class="inputToPrintResumo"
+                  id="resumoTotal"
+                />
+            </div>
+        </div>
+      </div>
+      <br />
+      <div class="rowCalculo">
+        <div class="columnRight">
+          <label class="camposInput">Soma do Principal: </label>
+            <br />
+          <label class="camposInput">Soma do Juros: </label>
+            <br />
+          <label class="camposInput">Devido ao(s) Reclamante(s): </label>
+            <br />
+            <br />
+          <label class="camposInput">12 Parcelas Vincendas: </label>
+            <br />
+          <label class="camposInput">Honorários Advocatícios: </label>
+            <br />
+            <br />
+          <label class="camposInput">Total do Processo: </label>
+            <br />            
+            <br />
+            <br />
+        </div>
+        <div class="column">  
+          <input v-model="valor_corrigido" placeholder="XX.XXX,XX">
+          <label
+            class="inputCalculo"
+            id="somaPrincipal"
+          />
+            <br />
+          <input v-model="valor_juros" placeholder="XX.XXX,XX">
+          <label
+            class="inputCalculo"
+            id="somaJuros"
+          />    
+            <br />         
+          <input v-model="valor_total" placeholder="XX.XXX,XX">   
+          <label
+            class="inputCalculo"
+            id="somaTotal"
+          />
+            <br /> 
+            <br />        
+          <input placeholder="XX.XXX,XX">  
+          <label
+            class="inputCalculo"
+            id="parcelasVincendas"
+          />
+            <br />
+          <input placeholder="XX.XXX,XX">
+          <label
+            class="inputCalculo"
+            id="honorariosAdvocativos"
+          />
+            <br />
+            <br />
+          <input v-model="valor_total" placeholder="XX.XXX,XX">
+          <label
+            class="inputCalculo"
+            id="totalProcesso"
+          />
+            <br />
+        </div>
+      </div>
+      <!-- Gerar pdf -->
+
+    <h1 class="titulo">GERADOR DE PDF</h1>
+
+    <v-card
     v-if="!add_taxa"
      id="areaToPrint">
-      <h1>Narutinho</h1>
+
+
+    <div>
+        <h2 class="centerAGU">AGU</h2>
+        <h3 class="center">PROCURADORIA GERAL FEDERAL</h3>
+        <h3 class="center">
+          EQUIPE REGIONAL DE CÁLCULOS E PAGAMENTOS PREVIDENCIÁRIOS 1ª REGIÃO
+        </h3>
+        <h4 class="center">REVISÃO DE BENEFÍCIOS</h4>
+        <div class="rowInputs">
+          <div class="column">
+            <label class="camposInput"> Processo: </label>
+            <label
+              class="inputToPrint"
+              id="processoForm"
+            /> 
+            {{info_calculo.numeroDoProcesso}}
+            <br />
+            <label class="camposInput"> Autor: </label>
+            <label
+              class="inputToPrint"
+              id="autorForm"
+            />
+            {{info_calculo.nome}}
+            <br />
+            <label class="camposInput">Objeto:</label
+            ><label
+              class="inputToPrint"
+              id="objetoForm"
+            />
+            {{objetoDoCalculo}}
+            <br />
+            <label class="camposInput">Vara:</label
+            ><label
+              class="inputToPrint"
+              id="varaForm"
+            />
+            {{varaPrevidenciaria}}
+            <br />
+            <label class="camposInput">Juros:</label
+            ><label
+              class="inputToPrint"
+              id="jurosForm"
+            />
+            <br />
+          </div>
+          <div class="column">
+            <label class="camposInput">Ajuizamento:</label
+            ><label
+              class="inputToPrint"
+              id="ajuizamentoForm"
+            />
+            {{info_calculo.dataAjuizamento}}
+            <br />
+            <label class="camposInput">Início do Juros:</label
+            ><label
+              class="inputToPrint"
+              id="inicioJurosForm"
+            />
+            {{info_calculo.dataAjuizamento}}
+            <br />
+            <label class="camposInput">Calculado em:</label
+            ><label
+              class="inputToPrint"
+              id="calculadoEmForm"
+            />
+            <!--Função-->
+            <br />
+            <label class="camposInput">Honorário:</label
+            ><label
+              class="inputToPrint"
+              id="honorarioForm"
+            />
+            <br />
+          </div>
+        </div>
+      </div>
+      <h4 class="center">RESUMO DO PROCESSO</h4>
+      <div>
+        <div class="resumoProcesso">
+            <div class="columnResumoProcesso">
+                <h6>N.B.</h6>
+                <label class="inputToPrintResumo"
+                  id="resumoNB"
+                />
+                {{info_calculo.nb}}
+            </div>
+            <div class="columnResumoProcessoParte">
+                <h6>Parte</h6>
+                <label class="inputToPrintResumoParte"
+                  id="resumoParte"
+                />
+                {{info_calculo.nome}}
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Principal</h6>
+                <label class="inputToPrintResumo"
+                  id="resumoPrincipal"
+                />
+                {{valor_corrigido}}
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Juros</h6>
+                <label class="inputToPrintResumo"
+                  id="resumoJuros"
+                />
+                {{valor_juros}}
+            </div>
+            <div class="columnResumoProcesso">
+                <h6>Total</h6>
+                <label class="inputToPrintResumo"
+                  id="resumoTotal"
+                />
+                {{valor_total}}
+            </div>
+        </div>
+      </div>
+      <br />
+      <div class="rowCalculo">
+        <div class="columnRight">
+          <label class="camposInput">Soma do Principal: </label>
+            <br />
+          <label class="camposInput">Soma do Juros: </label>
+            <br />
+          <label class="camposInput">Devido ao(s) Reclamante(s): </label>
+            <br />
+            <br />
+          <label class="camposInput">12 Parcelas Vincendas: </label>
+            <br />
+          <label class="camposInput">Honorários Advocatícios: </label>
+            <br />
+            <br />
+          <label class="camposInput">Total do Processo: </label>
+            <br />            
+        </div>
+        <div class="column">  
+          <label
+            class="inputCalculo"
+            id="somaPrincipal"
+          />
+          {{valor_corrigido}}
+            <br />
+          <label
+            class="inputCalculo"
+            id="somaJuros"
+          />
+          {{valor_juros}}    
+            <br />            
+          <label
+            class="inputCalculo"
+            id="somaTotal"
+          />
+          {{valor_total}}
+            <br /> 
+            <br />          
+          <label
+            class="inputCalculo"
+            id="parcelasVincendas"
+          />
+            <br />
+          <label
+            class="inputCalculo"
+            id="honorariosAdvocativos"
+          />
+            <br />
+            <br />
+          <label
+            class="inputCalculo"
+            id="totalProcesso"
+          />
+          {{valor_total}}
+        </div>
+      </div>
+
+
       <img src="" alt="" />
       <v-data-table
         id="areaToPrint"
@@ -139,37 +481,7 @@
         class="elevation-1"
       >
       </v-data-table>
-      <v-row class="mx-3">
-          <v-col cols="12" sm="6" md="3">
-            <label for="valor_corrigido" class="labels pb-3">Valor total corrigido</label>
-          <v-text-field
-            v-model="valor_corrigido"
-            id="valor_corrigido"
-          ><label for="valor_corrigido" class="labels pb-3">{{valor_corrigido}}</label></v-text-field>
-          </v-col>
-          <label for="valor_corrigido" class="labels pb-3">{{valor_corrigido}}</label>
-          <v-col cols="12" sm="6" md="3">
-            <label for="valor_juros" class="labels pb-3">Valor total juros</label>
-          <v-text-field
-            v-model="valor_juros"
-            id="valor_juros"
-            dense
-            placeholder="Valor total juros"
-            outlined
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-         <label for="valor_total" class="labels pb-3">Valor total</label>
-          <v-text-field
-            v-model="valor_total"
-            id="valor_total"
-            dense
-            placeholder="Valor total"
-            outlined
-          ></v-text-field>
-          </v-col>
-      </v-row>
-    </div>
+    </v-card>
 
     <div v-show="mode === 'table'">
       <b-button variant="primary" @click="printDiv()"
@@ -204,6 +516,8 @@ export default {
       dtInicial: "",
       dtFinal: "",
       salarioInicial: "",
+      objetoDoCalculo: "CÁLCULO DE BENEFÍCIO PREVIDENCIÁRIO",
+      varaPrevidenciaria: "Previdenciária",
       headers: [
         { value: "data", text: "Data" },
         { value: "reajusteAcumulado", text: "Reajuste" },
@@ -331,6 +645,8 @@ export default {
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
+      this.info_calculo.numeroDoProcesso
+      
     },
     atualizarCalculadora(){
     },
@@ -381,9 +697,6 @@ export default {
       // newWin.document.write(`<img class="logo" src="${this.logo}">`);
       newWin.document.write(`
       <div class="center">
-        <h1 class="agu">AGU</h1> 
-        <h2>PROCURADORIA GERAL FEDERAL</h2>
-        <h3>EQUIPE REGIONAL DE CÁLCULOS E PAGAMENTOS PREVIDENCIÁRIOS 1ª REGIÃO</h3>
       </div>`);
 
       newWin.document.write(divToPrint.outerHTML);
@@ -627,6 +940,90 @@ export default {
 /* .row-buttons {
   justify-content: flex-end;
 } */
+
+.titulo {
+  text-align: center;
+}
+
+.camposInput {
+  text-align: left;
+  margin-left: 3%;
+}
+
+.center {
+  text-align: center;
+}
+
+.centerAGU {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+.columnRight {
+  float: left;
+  text-align: right;
+  width: 50%;
+}
+
+
+.rowInputs:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.resumoProcesso:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.columnResumoProcesso {
+  float: left;
+  width: 14%;
+  margin-left: 1%;
+}
+
+.columnResumoProcessoParte {
+  float: left;
+  width: 39%;
+  margin-left: 1%;
+}
+
+.centerMargin {
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.inputToPrint {
+  margin-left: 10px;
+}
+
+.inputToPrintResumo {
+  margin-left: 0px;
+}
+
+.inputToPrintResumoParte {
+  float: left;
+  width: 500px;
+}
+
+.inputCalculo {
+  text-align: left;
+  margin-left: 1%;
+}
+
+.rowCalculo:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
 .page {
   padding-top: 3px;
