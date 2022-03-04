@@ -173,7 +173,7 @@ export default {
         {value: "id", text: "ID"},
         { value: "numeroDoProcesso", text: "NUP" },
         { value: "nome", text: "Nome " },
-        { value: "actions" },
+        { value: "actions" , text: ""},
       ],
       infos: [],
       calculo:{},

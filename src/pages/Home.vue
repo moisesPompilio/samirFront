@@ -12,6 +12,7 @@
     </v-card>
     <v-card>
       <bloco-informacoes
+        v-if="!add_taxa"
         @calculo="(info_calculo = $event), atualizarTodosDados()"
       ></bloco-informacoes>
     </v-card>
@@ -124,7 +125,9 @@
 
     <adicionar-taxa v-if="add_taxa == true" />
     <!-- TABELA PRNCIPAL -->
-    <div id="areaToPrint">
+    <div
+    v-if="!add_taxa"
+     id="areaToPrint">
       <h1>Narutinho</h1>
       <img src="" alt="" />
       <v-data-table
@@ -328,6 +331,8 @@ export default {
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
+    },
+    atualizarCalculadora(){
     },
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
