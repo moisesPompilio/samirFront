@@ -652,7 +652,7 @@ export default {
       this.info_calculo.numeroDoProcesso;
       this.dataDoJuros = "";
       this.valorDoJuros = 0;
-      if (this.info_calculo.beneficio == "21 - PENSAO POR MORTE") {
+      if (this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA") {
         this.pensaoPorMorte = "PENSÃO POR MORTE - RIVISAR TERMO INICIAL";
       }
     },
