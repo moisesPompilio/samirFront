@@ -30,7 +30,7 @@
             v-for="option in options"
             v-bind:value="option.value"
             v-bind:key="option.value"
-            v-on:click="seletarTipoTaxa()"
+            v-on:click="limpa(), id_elemento()"
           >
             {{ option.text }}
           </option>
@@ -46,7 +46,7 @@
             v-bind:value="tipos.value"
             v-bind:key="tipos.value"
             dense
-            @click="tipo_execuçao(tipo)"
+            @click="tipo_execuçao()"
           >
             {{ tipos.text }}
           </option>
@@ -55,7 +55,7 @@
     </v-row>
     <v-row>
       <v-col cols="12" sm="6" md="3">
-        <v-btn @click="tipo_execuçao(true)"> Adicionar </v-btn>
+        <v-btn @click="id_elemento()"> Adicionar </v-btn>
       </v-col>
       <v-col cols="12" sm="6" md="3">
         <v-btn @click="seletarTipoTaxa()"> Excluir </v-btn>
@@ -66,11 +66,11 @@
       <v-data-table
         :headers="headers"
         :items="taxas_exibir"
-        item-key="name"
+        item-key="codigo"
         class="elevation-1"
       >
       </v-data-table>
-      {{ informacao_taxa }}
+      {{ id_taxa }}
     </v-row>
   </v-card>
 </template>
@@ -88,9 +88,10 @@ export default {
       headers: [
         { value: "data", text: "Data" },
         { value: "taxaAcumulada", text: "Taxa acumulada" },
-        { value: "percentual", text: "Percentual" },
       ],
       taxas_exibir: [],
+      todos_taxas:[],
+      id_taxa: null,
 
       options: [
         { text: "Correção", value: "correcao" },
@@ -102,50 +103,81 @@ export default {
         { text: "Tipo 2", value: "2" },
         { text: "Tipo 3", value: "3" },
       ],
+      preguica: [1,2,3],
       tipo: "tipo 1, taxade 1023189dwjq,knSSds",
       informacao_taxa: [],
       int: 0,
     };
   },
   methods: {
+    limpa(){
+      this.taxas_exibir = [];
+      this.id_taxa = null;
+      this.informacao_taxa = [];
+      this.todos_taxas = [];
+      this.int = 0;
+
+    },
     seletarTipoTaxa() {
-      console.log("sleetar " + this.int);
-      this.int += 1;
-      this.informacao_taxa.forEach((value, index) => {
-        if (index >= this.informacao_taxa.length - 6) {
+      this.informacao_taxa.reverse;
+      this.int = 0;
+      this.informacao_taxa.forEach((value) => {
+        if (this.int <=6) {
           const objeto = {
             data: value.data,
             taxaAcumulada: value.taxaAcumulada,
-            percentual: value.percentual,
           };
           this.taxas_exibir.push(objeto);
-          console.log(this.taxas_exibir);
+          console.log(objeto);
+        }
+        else{
+          console.logo('nada')
         }
       });
       console.log(this.taxas_exibir);
     },
-    mounted() {
-      axios
-        .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-        .then((response) => (this.informacao_taxa = response));
+    tipo_execuçao() {
+      const url = `${baseApiUrl}/${this.taxa_modelo}/procurarPorTipo/${this.tipo}`
+    /*  axios
+        .get(url)
+        .then((response) => (this.informacao_taxa = response.data));*/
+         axios(url)
+        .then((res) => {
+          this.todas_taxas = res.data.map((obj) => {
+            if (obj) {
+              let data = obj.data.split("T");
+              let dataReajuste = data.splice(0, 1);
+
+              obj.data = dataReajuste.toString().split("-").reverse().join("/");
+
+              this.informacao_taxa.push(obj);
+              this.seletarTipoTaxa();
+            }
+          });
+        })
+        
     },
-    tipo_execuçao(varia) {
-      console.log(varia);
-      axios
-        .get(`${baseApiUrl}/${this.taxa_modelo}/procurarPorTipo/${this.tipo}`)
-        .then((response) => (this.informacao_taxa = response));
-      this.informacao_taxa.forEach((value, index) => {
-        if (index >= this.informacao_taxa.length - 6) {
-          const objeto = {
-            data: this.informacao_taxa[index].data,
-            taxaAcumulada: this.informacao_taxa[index].taxaAcumulada,
-            percentual: this.informacao_taxa[index].percentual
-          };
-          this.taxas_exibir.push(objeto);
-          console.log(index);
-        }
-      });
-      console.log(this.taxas_exibir);
+    id_elemento(){
+      let url = `${baseApiUrl}/${this.taxa_modelo}/listar`
+      /* axios
+        .get(url)
+        .then((response) => (this.todos_taxas = response.data));
+         this.id_taxa = this.todos_taxas.length;*/
+         axios(url)
+        .then((res) => {
+          this.todas_taxas = res.data.map((obj) => {
+            if (obj) {
+              let data = obj.data.split("T");
+              let dataReajuste = data.splice(0, 1);
+
+              obj.data = dataReajuste.toString().split("-").reverse().join("/");
+
+              this.todos_taxas.push(obj);
+              this.id_taxa = this.todos_taxas.length + 1;
+            }
+          });
+        })
+         
     },
   },
 };

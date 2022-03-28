@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import vuetify from './plugins/vuetify'
 import router from './config/router'
+import VueMask from 'v-mask';
+Vue.use(VueMask);
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)

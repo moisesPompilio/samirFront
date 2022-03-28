@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="exibir">
       <v-row class="mx-3">
         <v-col cols="12" sm="6" md="3">
           <label for="numeroProcesso" class="labels pb-3"
@@ -48,7 +48,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="dtDibInicial" class="labels pb-3">Dib Inicial</label>
+          <label for="dtDibInicial" class="labels pb-3">Termo Inicial</label>
           <v-text-field
             v-model="dibInicial"
             id="dtDibInicial"
@@ -58,7 +58,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="dtDibFinal" class="labels pb-3">Dib Final</label>
+          <label for="dtDibFinal" class="labels pb-3">Termo Final</label>
           <v-text-field
             v-model="dibFinal"
             id="dtDibFinal"
@@ -74,6 +74,7 @@
             id="rmi"
             dense
             placeholder="R$ - "
+            @input="rmi = formataçao(rmi)"
             outlined
           ></v-text-field>
         </v-col>
@@ -100,7 +101,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="dip" class="labels pb-3">Data Início de Pgt</label>
+          <label for="dip" class="labels pb-3">Data Início de Pagamento</label>
           <v-text-field
             v-model="dip"
             id="dip"
@@ -177,6 +178,7 @@ export default {
       ],
       infos: [],
       calculo:{},
+      exibir: true,
     };
   },
   methods: {
@@ -225,6 +227,13 @@ export default {
       this.dip = "";
       this.aps = "";
     },
+     formataçao(valor){
+       if(valor.includes('R$') ){
+         valor = "R$" + valor;
+       }
+       
+       return valor;
+     },
     preencherFields(y){
       this.numeroDoProcesso = this.infos[y].numeroDoProcesso;
       this.nome = this.infos[y].nome;
