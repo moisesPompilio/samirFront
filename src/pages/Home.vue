@@ -410,7 +410,6 @@
       ></b-button>
     </div>
     <v-card>
-      {{array_juros[1]}}
     </v-card>
   </v-container>
 </template>
@@ -597,34 +596,35 @@ export default {
         console.log(error);
       }*/
     },
-    colocarOjuros(mesDoAjuizamento , anoAjuizamento) {
-
-      let i = 0;
+    colocarOjuros(mesDoAjuizamento , anoAjuizamento) { async () =>{
+        let i = 0;
       console.log("PARAR JUROS");
-      for (const value of this.calc_total) {
-        var dateJuros = value.data.split("-").reverse().join("/");
+      for await (const value of this.calc_total) {
+        var dateJuros = await value.data.split("-").reverse().join("/");
         console.log("data da tabela: " + dateJuros);
-        var mesDoJuros = dateJuros.split("/")[1];
-        var anoDoJuros = dateJuros.split("/")[1];
+        var mesDoJuros = await dateJuros.split("/")[1];
+        var anoDoJuros = await dateJuros.split("/")[1];
         if (anoDoJuros == anoAjuizamento) {
           if (mesDoAjuizamento <= mesDoJuros) {
-            this.calc_total[i].salarioTotal = (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+            this.calc_total[i].salarioTotal = await (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros);
-            this.calc_total[i].salarioJuros =
+            this.calc_total[i].salarioJuros = await
               (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros;
             this.calc_total[i].juros = this.valorDoJuros;
           }
         } else if (anoDoJuros <= anoAjuizamento) {
-          this.calc_total[i].salarioTotal = (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+         this.calc_total[i].salarioTotal = await (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros);
-          this.calc_total[i].salarioJuros =
+          this.calc_total[i].salarioJuros = await
             (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
             this.valorDoJuros;
-          this.calc_total[i].juros = this.valorDoJuros;
+          this.calc_total[i].juros = await this.valorDoJuros;
         }
         i++;
       }
+      this.totaisSalario()
+    }
     },
     totaisSalario() {
       this.valor_total = 0;
