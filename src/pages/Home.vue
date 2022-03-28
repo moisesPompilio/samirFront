@@ -467,35 +467,37 @@ export default {
     };
   },
   methods: {
-    iniciarCalculo() {
+    iniciarCalculo()  { async() =>{
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       const dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
       let dfinal = parseInt(dtFinal.split("/")[0]);
       let inical_calculo;
-      this.inical_calculo = 1;
+       this.inical_calculo = 1;
       if (dinicial == 31) {
-        inical_calculo = (30 - dinicial) * -1;
-        this.formatçao_do_inicio(inical_calculo, dtInicial);
+         inical_calculo = (30 - dinicial) * -1;
+        await this.formatçao_do_inicio(inical_calculo, dtInicial);
       } else {
         inical_calculo = 30 - dinicial;
-        this.formatçao_do_inicio(inical_calculo, dtInicial);
+        await this.formatçao_do_inicio(inical_calculo, dtInicial);
       }
 
       let x = this.calc_total.length - 1;
-      this.calc_total[x].salario =
+      this.calc_total[x].salario = await
         Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
       this.calc_total[x].salarioCorrigido =
         Math.floor((this.calc_total[x].salarioCorrigido / 30) * dfinal * 100) /
         100;
-      this.calc_total[x].salarioJuros =
+      this.calc_total[x].salarioJuros = await
         Math.floor((this.calc_total[x].salarioJuros / 30) * dfinal * 100) / 100;
-      this.calc_total[x].salarioTotal =
+      this.calc_total[x].salarioTotal = await
         Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) / 100;
       this.calc_total[x].data = dtFinal;
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
-      this.pararJuros();
+      await this.pararJuros();
+    }
+      
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
       this.calc_total[0].salario =
