@@ -466,7 +466,7 @@ export default {
     };
   },
   methods: {
-    iniciarCalculo()  { async() =>{
+    iniciarCalculo() {
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       const dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
@@ -475,27 +475,26 @@ export default {
        this.inical_calculo = 1;
       if (dinicial == 31) {
          inical_calculo = (30 - dinicial) * -1;
-        await this.formatçao_do_inicio(inical_calculo, dtInicial);
+         this.formatçao_do_inicio(inical_calculo, dtInicial);
       } else {
         inical_calculo = 30 - dinicial;
-        await this.formatçao_do_inicio(inical_calculo, dtInicial);
+         this.formatçao_do_inicio(inical_calculo, dtInicial);
       }
 
       let x = this.calc_total.length - 1;
-      this.calc_total[x].salario = await
+      this.calc_total[x].salario = 
         Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
       this.calc_total[x].salarioCorrigido =
         Math.floor((this.calc_total[x].salarioCorrigido / 30) * dfinal * 100) /
         100;
-      this.calc_total[x].salarioJuros = await
+      this.calc_total[x].salarioJuros = 
         Math.floor((this.calc_total[x].salarioJuros / 30) * dfinal * 100) / 100;
-      this.calc_total[x].salarioTotal = await
+      this.calc_total[x].salarioTotal =
         Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) / 100;
       this.calc_total[x].data = dtFinal;
       console.log(this.calc_total[0]);
       console.log(this.calc_total[x]);
-      await this.pararJuros();
-    }
+       this.pararJuros();
       
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
@@ -596,35 +595,35 @@ export default {
         console.log(error);
       }*/
     },
-    colocarOjuros(mesDoAjuizamento , anoAjuizamento) { async () =>{
+    colocarOjuros(mesDoAjuizamento , anoAjuizamento) { 
         let i = 0;
       console.log("PARAR JUROS");
-      for await (const value of this.calc_total) {
-        var dateJuros = await value.data.split("-").reverse().join("/");
+      for  (const value of this.calc_total) {
+        var dateJuros =  value.data.split("-").reverse().join("/");
         console.log("data da tabela: " + dateJuros);
-        var mesDoJuros = await dateJuros.split("/")[1];
-        var anoDoJuros = await dateJuros.split("/")[1];
+        var mesDoJuros =  dateJuros.split("/")[1];
+        var anoDoJuros =  dateJuros.split("/")[1];
         if (anoDoJuros == anoAjuizamento) {
           if (mesDoAjuizamento <= mesDoJuros) {
-            this.calc_total[i].salarioTotal = await (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+            this.calc_total[i].salarioTotal =  (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros);
-            this.calc_total[i].salarioJuros = await
+            this.calc_total[i].salarioJuros = 
               (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros;
             this.calc_total[i].juros = this.valorDoJuros;
           }
         } else if (anoDoJuros <= anoAjuizamento) {
-         this.calc_total[i].salarioTotal = await (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+         this.calc_total[i].salarioTotal =  (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros);
-          this.calc_total[i].salarioJuros = await
+          this.calc_total[i].salarioJuros = 
             (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
             this.valorDoJuros;
-          this.calc_total[i].juros = await this.valorDoJuros;
+          this.calc_total[i].juros =  this.valorDoJuros;
         }
         i++;
       }
       this.totaisSalario()
-    }
+    
     },
     totaisSalario() {
       this.valor_total = 0;
