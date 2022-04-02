@@ -70,7 +70,7 @@
         class="elevation-1"
       >
       </v-data-table>
-      {{ id_taxa }}
+      {{ descriçao_juros }}
     </v-row>
   </v-card>
 </template>
@@ -98,14 +98,12 @@ export default {
         { text: "Reajuste", value: "reajuste" },
         { text: "Juros", value: "juros" },
       ],
-      tipo_taxa: [
-        { text: "tipo 1", value: "1" },
-        { text: "Tipo 2", value: "2" },
-        { text: "Tipo 3", value: "3" },
-      ],
+      tipo_taxa: [],
       preguica: [1,2,3],
       tipo: "tipo 1, taxade 1023189dwjq,knSSds",
       informacao_taxa: [],
+      descriçao_juros:[],
+      descriçao_correcao:[],
       int: 0,
     };
   },
@@ -179,7 +177,29 @@ export default {
         })
          
     },
+    verificar_descriçao(arry_descricao, tipo){
+      for(let item of arry_descricao){
+        if(item.tipo ==  tipo){
+          return true
+        }
+      }
+      return false;
+    }
   },
+  mounted(){
+    const url = `${baseApiUrl}/juros/listar`;
+    axios(url).then((res) => {
+      let obj = {};
+      this.descriçao_correcao = res.data;
+        const array_juros = res.data;
+        for (let item of array_juros){
+          if(!this.verificar_descriçao(this.descriçao_juros, item.tipo)){
+            obj = {descriçao: item.descricao, tipo: item.tipo}
+            this.descriçao_juros.push(obj);
+          }
+        }
+      });
+  }
 };
 </script>
 

@@ -1,6 +1,6 @@
 <template>
-    <div v-if="exibir">
-      <v-row class="mx-3">
+    <div v-if="exibir.tudo">
+      <v-row  class="mx-3">
         <v-col cols="12" sm="6" md="3">
           <label for="numeroProcesso" class="labels pb-3"
             >Número do Processo</label
@@ -36,7 +36,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row class="mx-3">
+      <v-row class="mx-3" v-if="exibir.tudo">
         <v-col cols="12" sm="6" md="3">
           <label for="cpf" class="labels pb-3">CPF</label>
           <v-text-field
@@ -79,7 +79,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row class="mx-3">
+      <v-row class="mx-3" v-if="exibir.tudo">
         <v-col cols="12" sm="6" md="3">
           <label for="beneficio" class="labels pb-3">Benefício</label>
           <v-text-field
@@ -111,7 +111,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row class="mx-3">
+      <v-row class="mx-3" v-if="exibir.tudo">
         <v-col cols="12" sm="6" md="6">
           <label for="aps" class="labels pb-3">APS</label>
           <v-text-field
@@ -123,13 +123,15 @@
           ></v-text-field>
         </v-col>
         <v-btn color="primary" @click="pushInfos(infos)">Adicionar</v-btn>
-      </v-row>
-      <v-card-title class="mt-5">Tabela de Processos</v-card-title>
-      <v-data-table
+      </v-row > 
+      <v-card-title v-if="exibir.processos" class="mt-5">Tabela de Processos</v-card-title>
+      <v-data-table v-if="exibir.processos"
         :headers="headers"
         :items="infos"
         item-key="name"
         class="elevation-1"
+
+        
       >
         <template v-slot:item="{ item }">
           <tr>
@@ -150,6 +152,7 @@
           </tr>
         </template>
       </v-data-table>
+      <v-btn color="primary" @click="exibirProcessos()">Exibir processos</v-btn>
     </div>
 </template>
 
@@ -178,7 +181,7 @@ export default {
       ],
       infos: [],
       calculo:{},
-      exibir: true,
+      exibir: {tudo: true, processos: false },
     };
   },
   methods: {
@@ -254,6 +257,10 @@ export default {
       this.calculo = this.infos[y];
       this.$emit("calculo", this.calculo)
     },
+    exibirProcessos(){
+      this.exibir.processos = !this.exibir.processos;
+    },
+    
   },
   mounted() {
     if (localStorage.getItem("infos")) {
