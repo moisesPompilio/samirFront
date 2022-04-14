@@ -583,7 +583,6 @@ export default {
             }
           }
         });
-      console.log("terminei");
       /*this.iniciarCalculo();
       if (this.boolJuros) {
         this.pararJuros();
@@ -658,8 +657,6 @@ export default {
           Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) /
           100;
         this.calc_total[x].data = dtFinal;
-        console.log(this.calc_total[0]);
-        console.log(this.calc_total[x]);
       } else {
         this.calc_total[x].salario =
           Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
@@ -674,8 +671,6 @@ export default {
           Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) /
           100;
         this.calc_total[x].data = dtFinal;
-        console.log(this.calc_total[0]);
-        console.log(this.calc_total[x]);
       }
       /*if (this.boolJuros) {
         this.pararJuros();
@@ -766,19 +761,11 @@ export default {
           const ArraydataJuros = item.data.split("T");
           const dataJuros = ArraydataJuros[0].split("-");
 
-          var dataDeJuizamento = mesAjuizamento + "/" + anoAjuizamento;
-
-          var dataDeJuros = dataJuros[1] + "/" + dataJuros[0];
-          console.log("data Ajuizamento: " + dataDeJuizamento);
-          console.log("data do juros" + dataDeJuros);
-          console.log("juros acumulado: " + item.jurosAcumulados / 100);
-
           if (
             mesAjuizamento == dataJuros[1] &&
             anoAjuizamento == dataJuros[0]
           ) {
             this.valorDoJuros = item.jurosAcumulados / 100;
-            console.log("aaaaaaaaaaaeeeeeeeeeeee");
           }
         }
         this.colocarOjuros(mesAjuizamento, anoAjuizamento);
@@ -823,21 +810,22 @@ export default {
       this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
-      if (this.procntagem_acordo > 0) {
+      if (this.procntagem_acordo) {
         for (const value of this.calc_total) {
-          this.valor_total += value.salarioTotal;
+          this.valor_total += value.salarioTotal; 
           this.valor_juros += value.salarioJuros;
           this.valor_corrigido += value.salarioCorrigido;
+          
           //corta as cassais decimais
         }
         this.valor_total =
-          Math.floor(this.valor_total * this.procntagem_acordo * 100) / 100;
+          Math.floor(this.valor_total * this.procntagem_acordo) / 100;
         this.valor_juros =
-          Math.floor(this.valor_juros * this.procntagem_acordo * 100) / 100;
+          Math.floor(this.valor_juros * this.procntagem_acordo) / 100;
         this.valor_corrigido =
-          Math.floor(this.valor_corrigido * this.procntagem_acordo * 100) / 100;
-        this.total_processos +=
-          Math.floor(this.valor_total * this.procntagem_acordo * 100) / 100;
+          Math.floor(this.valor_corrigido * this.procntagem_acordo) / 100;
+        this.total_processos =
+          Math.floor(this.valor_total * this.procntagem_acordo) / 100;
         this.formatacao();
       } else {
         for (const value of this.calc_total) {
@@ -849,12 +837,11 @@ export default {
         this.valor_total = Math.floor(this.valor_total * 100) / 100;
         this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
         this.valor_corrigido = Math.floor(this.valor_corrigido * 100) / 100;
-        this.total_processos += Math.floor(this.valor_total * 100) / 100;
+        this.total_processos = Math.floor(this.valor_total * 100) / 100;
         this.formatacao();
       }
       if (!this.porcentagemHonorarios && !this.DataHonorarios) {
         this.textoHonorarios = null;
-        this.total_processos += this.valor_total;
       } else {
         this.textoHonorarios =
           this.porcentagemHonorarios +
@@ -873,7 +860,7 @@ export default {
     honorarios(mesHonorarios, anoHonorarios) {
       let i = 0;
       for (const value of this.calc_total) {
-        var dateTable = value.data.split("-").reverse().join("/");
+        var dateTable = value.data;
         var mesDoTable = dateTable.split("/")[1];
         var anoDoTable = dateTable.split("/")[2];
         if (anoDoTable == anoHonorarios) {
@@ -897,8 +884,9 @@ export default {
       let arr_13Salario = [];
       let juros13 = 0;
       let corrigido13 = 0;
+      var honorariosCom13 = 0;
       for (const value of this.calc_total) {
-        var dateTable = value.data.split("-").reverse().join("/");
+        var dateTable = value.data;
         var mesDoTable = dateTable.split("/")[1];
         var diaTable = dateTable.split("/")[0];
         var anoDoTable = dateTable.split("/")[2];
@@ -935,10 +923,10 @@ export default {
               let anoHonorarios = this.DataHonorarios.split("/")[2];
               if (anoDoTable == anoHonorarios) {
                 if (mesDoTable <= mesHonorarios) {
-                  this.valorHonorarios += salario13Valor;
+                  honorariosCom13 += Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
                 }
               } else if (anoDoTable < anoHonorarios) {
-                this.valorHonorarios += salario13Valor;
+                honorariosCom13 += Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
               }
             }
           } else {
@@ -949,10 +937,11 @@ export default {
       }
       this.arr_Salario13 = arr_13Salario;
       this.valor_total += this.valorSalario13;
-      this.total_processos += this.valorSalario13;
+      this.total_processos += this.valorSalario13 + honorariosCom13;
       this.valor_corrigido += this.corrigido13Valor;
+      this.valorHonorarios += honorariosCom13;
       this.valor_juros += this.juros13Valor;
-      this.formatacao();
+      //this.total_processos = this.valor_juros + this.valor_corrigido + this.valorHonorarios;
     },
     atualizarTodosDados() {
       this.salarioInicial = this.info_calculo.rmi.replace(".", "");
@@ -1173,7 +1162,7 @@ export default {
               mesFinal,
               this.infos
             );
-
+            console.log("taxa de rejuste; " + taxaReajuste);
             if (+anoInicial < +anoFinal)
               return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
           };

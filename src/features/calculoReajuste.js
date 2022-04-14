@@ -4,8 +4,8 @@ function calculaValorReajuste(salarioBase, taxaReajuste) {
 function maiorTaxaAno(taxas = []) {
   let maiorTaxa = 1
 
-  taxas.forEach((taxaAtual) => {
-    if (taxaAtual > maiorTaxa) maiorTaxa = taxaAtual
+  taxas.forEach((taxaAtual,idex) => {
+    if (idex == 0) maiorTaxa = taxaAtual
   })
 
   return maiorTaxa
