@@ -102,10 +102,20 @@
             dense
             outlined
           ></v-text-field>
+          
         </v-col>
         <v-col cols="12" sm="6" md="3">
+         <label class="labels pb-3">Juros</label>
+         <v-select outlined placeholder="Escolha uma opção" :items="optionsJuros" v-model="tipoJuros"></v-select>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+         <label class="labels pb-3">Correção</label>
+          <v-select outlined placeholder="Escolha uma opção" :items="optionsCorrecao" v-model="tipoCorrecao"></v-select>
+        </v-col>
+      <div class="d-block p-0">
+        <v-col cols="12" sm="6" md="3">
           <input
-            class="form-check-input"
+            class="form-check-input "
             type="checkbox"
             style="margin-right: 5px"
             v-model="boolJuros"
@@ -113,6 +123,7 @@
           />
           <label for="honorarios_Advocativos" class="labels pb-3">Juros</label>
         </v-col>
+      </div>
       </v-row>
 
       <!-- CHECKBOX  -->
@@ -560,6 +571,10 @@ export default {
       total_processos: 0,
       procntagem_acordo: null,
       boolJuros: true,
+      optionsJuros : [],
+      tipoJuros :0,
+      optionsCorrecao : [],
+      tipoCorrecao : 0
     };
   },
 
@@ -1317,7 +1332,39 @@ export default {
   },
 
   mounted() {
-    "";
+    let contJuros = [];
+    let jurosUnicos = [];
+    let contCorrecao = [];
+    let correcaoUnicos = [];
+    axios.get(baseApiUrl + "/juros/listar").then(response=> {
+      jurosUnicos[0] = response.data[0];
+      contJuros[0] = response.data[0].tipo;
+      for( let i of response.data) {
+        if (contJuros.indexOf(i.tipo) == -1) {
+          jurosUnicos.push(i);
+          contJuros.push(i.tipo);
+        }
+      }
+      this.optionsJuros = jurosUnicos.map(obj => ({
+      text: `Tipo: ${obj.tipo}. Descrição : ${obj.descricao}`,
+      value: obj.tipo
+    }))
+    })
+
+    axios.get(baseApiUrl + "/correcao/listar").then(response2=> {
+      correcaoUnicos[0] = response2.data[0];
+      contCorrecao[0] = response2.data[0].tipo;
+      for( let i of response2.data) {
+        if (contCorrecao.indexOf(i.tipo) == -1) {
+          correcaoUnicos.push(i);
+          contCorrecao.push(i.tipo);
+        }
+        }
+      this.optionsCorrecao = correcaoUnicos.map(obj => ({
+      text: `Tipo: ${obj.tipo}. Descrição : ${obj.descricao}`,
+      value: obj.tipo
+    }))
+    })
   },
 };
 </script>
