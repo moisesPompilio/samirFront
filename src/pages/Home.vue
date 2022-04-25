@@ -576,7 +576,7 @@ export default {
       optionsJuros : [],
       tipoJuros :0,
       optionsCorrecao : [],
-      tipoCorrecao : 0
+      tipoCorrecao : 0,
       BlocoDeInformacoes_tudo:false,
       BlocoDeInformacoes_processos: true,
 
