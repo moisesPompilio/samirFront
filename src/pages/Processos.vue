@@ -9,7 +9,10 @@
     </v-card>
     <v-card class="mt-5">
       <v-card>
-        <bloco-informacoes></bloco-informacoes>
+        <bloco-informacoes
+        :exibir="{tudo: BlocoDeInformacoes_tudo, processos: BlocoDeInformacoes_processos }"
+        @dados="BlocoDeInformacoes_tudo = $event"
+        @processos="BlocoDeInformacoes_processos = $event"></bloco-informacoes>
     </v-card>
      
     </v-card>
@@ -43,6 +46,8 @@ export default {
         { value: "interessados", text: "Interessados " },
         { value: "actions" },
       ],
+       BlocoDeInformacoes_tudo:true,
+      BlocoDeInformacoes_processos: false,
     };
   },
   methods: {
