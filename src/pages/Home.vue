@@ -14,6 +14,9 @@
       <bloco-informacoes
         v-if="!add_taxa"
         @calculo="(info_calculo = $event), atualizarTodosDados()"
+        :exibir="{tudo: BlocoDeInformacoes_tudo, processos: BlocoDeInformacoes_processos }"
+        @dados="BlocoDeInformacoes_tudo = $event"
+        @processos="BlocoDeInformacoes_processos = $event"
       ></bloco-informacoes>
     </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
@@ -248,9 +251,7 @@
         <br />
         <label class="camposInput"
           >Início do Juros:
-          <input
-            v-model="info_calculo.dataAjuizamento"
-            placeholder="XX/XXXX" /></label
+          <input v-model="inicio_juros" placeholder="XX/XXXX" /></label
         ><label class="inputToPrint" id="inicioJurosForm" />
         <br />
         <!-- Criar Função -->
@@ -382,7 +383,7 @@
             <br />
             <label class="camposInput">Início do Juros:</label
             ><label class="inputToPrint" id="inicioJurosForm" />
-            {{ info_calculo.dataAjuizamento }}
+            {{ inicio_juros }}
             <br />
             <label class="camposInput">Calculado em:</label
             ><label class="inputToPrint" id="calculadoEmForm" />
@@ -560,6 +561,8 @@ export default {
       total_processos: 0,
       procntagem_acordo: null,
       boolJuros: true,
+      BlocoDeInformacoes_tudo:false,
+      BlocoDeInformacoes_processos: true,
     };
   },
 
@@ -810,12 +813,27 @@ export default {
       this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
+      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
+        this.textoHonorarios = null;
+      } else {
+        this.textoHonorarios =
+          this.porcentagemHonorarios +
+          "% com parcelas até " +
+          this.DataHonorarios;
+        this.honorarios(
+          this.DataHonorarios.split("/")[1],
+          this.DataHonorarios.split("/")[2]
+        );
+      }
+      if (this.salario13) {
+        this.colocarsalario13();
+      }
       if (this.procntagem_acordo) {
         for (const value of this.calc_total) {
-          this.valor_total += value.salarioTotal; 
+          this.valor_total += value.salarioTotal;
           this.valor_juros += value.salarioJuros;
           this.valor_corrigido += value.salarioCorrigido;
-          
+
           //corta as cassais decimais
         }
         this.valor_total =
@@ -840,21 +858,7 @@ export default {
         this.total_processos = Math.floor(this.valor_total * 100) / 100;
         this.formatacao();
       }
-      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
-        this.textoHonorarios = null;
-      } else {
-        this.textoHonorarios =
-          this.porcentagemHonorarios +
-          "% com parcelas até " +
-          this.DataHonorarios;
-        this.honorarios(
-          this.DataHonorarios.split("/")[1],
-          this.DataHonorarios.split("/")[2]
-        );
-      }
-      if (this.salario13) {
-        this.colocarsalario13();
-      }
+
       this.formatacao();
     },
     honorarios(mesHonorarios, anoHonorarios) {
@@ -884,6 +888,7 @@ export default {
       let arr_13Salario = [];
       let juros13 = 0;
       let corrigido13 = 0;
+      let taxaReajusteAcumulada13 = 1;
       var honorariosCom13 = 0;
       for (const value of this.calc_total) {
         var dateTable = value.data;
@@ -897,15 +902,43 @@ export default {
         } else {
           if (mesDoTable == 12) {
             quantidadeAno += 1;
-            juros13 += Math.floor((value.salarioJuros / 12) * quantidadeAno * 100) / 100;
-            corrigido13 += Math.floor((value.salarioCorrigido / 12) * quantidadeAno * 100) / 100;
-            salario13Valor = Math.floor((value.salarioTotal / 12) * quantidadeAno * 100) / 100;
-            let salario = Math.floor((value.salario / 12) * quantidadeAno * 100) / 100;
+            juros13 +=
+              Math.floor(
+                ((this.salarioInicial * taxaReajusteAcumulada13 * value.juros) /
+                  12) *
+                  quantidadeAno *
+                  100
+              ) / 100;
+            corrigido13 +=
+              Math.floor(
+                ((this.salarioInicial *
+                  taxaReajusteAcumulada13 *
+                  value.correcao) /
+                  12) *
+                  quantidadeAno *
+                  100
+              ) / 100;
+            salario13Valor =
+              Math.floor(
+                ((this.salarioInicial *
+                  taxaReajusteAcumulada13 *
+                  value.correcao *
+                  (1 + value.juros)) /
+                  12) *
+                  quantidadeAno *
+                  100
+              ) / 100;
+            let salario =
+              Math.floor(
+                ((this.salarioInicial * taxaReajusteAcumulada13) / 12) *
+                  quantidadeAno *
+                  100
+              ) / 100;
             quantidadeAno = 0;
             arr_13Salario.push({
               data: 31 + "/" + mesDoTable + "/" + anoDoTable,
               reajusteAcumulado: value.reajusteAcumulado,
-              salario:  Math.floor(salario * 100)/100,
+              salario: Math.floor(salario * 100) / 100,
               correcao: value.correcao,
               salarioCorrigido: Math.floor(corrigido13 * 100) / 100,
               juros: value.juros,
@@ -923,12 +956,19 @@ export default {
               let anoHonorarios = this.DataHonorarios.split("/")[2];
               if (anoDoTable == anoHonorarios) {
                 if (mesDoTable <= mesHonorarios) {
-                  honorariosCom13 += Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
+                  honorariosCom13 +=
+                    Math.floor(salario13Valor * this.porcentagemHonorarios) /
+                    100;
                 }
               } else if (anoDoTable < anoHonorarios) {
-                honorariosCom13 += Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
+                honorariosCom13 +=
+                  Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
               }
             }
+          } else if (mesDoTable == 1) {
+            taxaReajusteAcumulada13 =
+              taxaReajusteAcumulada13 * value.reajusteAcumulado;
+            quantidadeAno += 1;
           } else {
             quantidadeAno += 1;
           }
@@ -948,7 +988,22 @@ export default {
       this.salarioInicial = this.salarioInicial.replace(",", ".");
       this.salarioInicial = parseFloat(this.salarioInicial);
       this.dtInicial = this.info_calculo.dibInicial;
-      this.dtFinal = this.info_calculo.dip;
+      let datafinal = this.info_calculo.dip.split("/");
+      if (datafinal[0] == 1) {
+        if (datafinal[1] == 1) {
+          this.dtFinal = "31/12/" + (datafinal[2] - 1);
+        } else {
+          if(datafinal[1] <= 9){
+            this.dtFinal = "30/" + "0" + (datafinal[1] - 1) + "/" + datafinal[2];
+          }else{
+            this.dtFinal = "30/" + (datafinal[1] - 1) + "/" + datafinal[2];
+          }
+          
+        }
+      }else{
+        this.dtFinal = (datafinal[0] - 1) + "/" + (datafinal[1]) + "/" + datafinal[2]
+      }
+      //this.dtFinal = this.info_calculo.dip;
       this.pensaoPorMorte = "";
       this.calc_total = [];
       this.valor_total = 0;

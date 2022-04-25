@@ -1,6 +1,9 @@
 <template>
-    <div v-if="exibir.tudo">
-      <v-row  class="mx-3">
+    <div>
+      <v-row>
+        <button @click="dadosActive()">Prencher dados Manualmente <v-icon>mdi-menu-up</v-icon></button>
+      </v-row>
+      <v-row v-if="exibir.tudo"  class="mx-3">
         <v-col cols="12" sm="6" md="3">
           <label for="numeroProcesso" class="labels pb-3"
             >Número do Processo</label
@@ -124,7 +127,7 @@
         </v-col>
         <v-btn color="primary" @click="pushInfos(infos)">Adicionar</v-btn>
       </v-row > 
-      <v-card-title v-if="exibir.processos" class="mt-5">Tabela de Processos</v-card-title>
+      <v-card-title class="mt-5" > <button @click="exibirActive(), redirectToCalculo()">Tabela de Processos <v-icon>mdi-menu-up</v-icon></button></v-card-title>
       <v-data-table v-if="exibir.processos"
         :headers="headers"
         :items="infos"
@@ -152,13 +155,13 @@
           </tr>
         </template>
       </v-data-table>
-      <v-btn color="primary" @click="exibirProcessos()">Exibir processos</v-btn>
     </div>
 </template>
 
 <script>
 export default {
   name: "Processos",
+  props: ["exibir"],
   data: function () {
     return {
       id: 0,
@@ -181,12 +184,20 @@ export default {
       ],
       infos: [],
       calculo:{},
-      exibir: {tudo: true, processos: false },
+     //exibir: {tudo: true, processos: false },
     };
   },
   methods: {
     redirectToCalculo() {
       this.$router.push(`/home`).catch(() => {});
+    },
+    dadosActive(){
+      let dados = !this.exibir.tudo
+      this.$emit("dados", dados)
+    },
+    exibirActive(){
+      let processos = !this.exibir.processos;
+      this.$emit("processos", processos)
     },
     pushInfos() {
       if (!this.numeroDoProcesso) {
@@ -231,10 +242,6 @@ export default {
       this.aps = "";
     },
      formataçao(valor){
-       if(valor.includes('R$') ){
-         valor = "R$" + valor;
-       }
-       
        return valor;
      },
     preencherFields(y){
@@ -257,9 +264,7 @@ export default {
       this.calculo = this.infos[y];
       this.$emit("calculo", this.calculo)
     },
-    exibirProcessos(){
-      this.exibir.processos = !this.exibir.processos;
-    },
+    
     
   },
   mounted() {
