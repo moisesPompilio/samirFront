@@ -188,6 +188,7 @@ export default {
     };
   },
   methods: {
+    //teste
     redirectToCalculo() {
       this.$router.push(`/home`).catch(() => {});
     },
