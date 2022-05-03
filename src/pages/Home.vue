@@ -216,14 +216,7 @@
             >cancelar</v-btn
           >
         </v-col>
-        <v-col cols="1">
-          <v-btn
-            depressed
-            color="secondary"
-            @click="(mode = 'table'), introduzrAsTaxas()"
-            >Atualizar</v-btn
-          >
-        </v-col>
+        
       </v-row>
     </v-card>
 
@@ -638,7 +631,7 @@ export default {
       this.projetarArrayBeneficio();
     },
     projetarArrayBeneficio() {
-      console.log("aqui")
+      console.log("aqui");
       let array = [];
       let dataInicio = this.dtInicial.split("/");
       let dataFinal = this.dtFinal.split("/");
@@ -646,23 +639,32 @@ export default {
       let reajuste = this.arrayReajusteRencete.filter(
         (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
       );
+      console.log("mes: " + dataFinal[1]);
+      console.log("ano: " + dataFinal[2]);
       let valorDevido = this.salarioInicial;
       let mes = datasBeneficio[1];
-        let ano = datasBeneficio[2];
-      do {
+      let ano = datasBeneficio[2];
+      console.log("mes: " + mes);
+      console.log("ano: " + ano);
+      console.log("Reajuste: " + reajuste);
+      console.log("valor devido: " + valorDevido);
+      console.log("array: " + array);
+      /* do {
+        console.log("mes: " + mes);
+        console.log("ano: " + ano);
         let taxaCorrecao = this.arrayCorrecaoRencete.filter(
           (taxas) => taxas.data == "01/" + mes + "/" + ano
         );
         let taxaJuros = this.arrayJurosRencete.filter(
           (taxas) => taxas.data == "01/" + mes + "/" + ano
         );
-        let obj= {}
+        let obj = {};
 
         if (mes > 12) {
           ano += 1;
           mes += 1;
           valorDevido *= reajuste;
-           obj = {
+          obj = {
             data: "01/" + mes + "/" + ano,
             reajuste: reajuste,
             salario: valorDevido,
@@ -671,12 +673,11 @@ export default {
             taxaJuros,
             valorJuros: valorDevido * taxaCorrecao * taxaJuros,
           };
-          reajuste =  this.arrayReajusteRencete.filter(
-        (taxas) => taxas.data == "01/" + mes + "/" + ano
-      );
-        }
-        else{
-           obj = {
+          reajuste = this.arrayReajusteRencete.filter(
+            (taxas) => taxas.data == "01/" + mes + "/" + ano
+          );
+        } else {
+          obj = {
             data: "01/" + mes + "/" + ano,
             reajuste: 1,
             salario: valorDevido,
@@ -688,12 +689,9 @@ export default {
         }
         array.push(obj);
         mes += 1;
-        console.log("aqui2")
-      } while (
-        mes != dataFinal[1] &&
-        ano != dataFinal[2]
-      );
-      this.arrayTeste = array;
+        console.log("aqui2");
+      } while (mes != dataFinal[1] && ano != dataFinal[2]);
+      this.arrayTeste = array;*/
     },
     ajusteData(data) {
       let array1 = data.split("T");
@@ -893,9 +891,11 @@ export default {
         }
         i++;
       }
+      this.formatacao();
       this.totaisSalario();
     },
     totaisSalario() {
+      this.formatacao();
       this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
@@ -916,9 +916,10 @@ export default {
       }
       if (this.procntagem_acordo) {
         for (const value of this.calc_total) {
-          this.valor_total += value.salarioTotal;
-          this.valor_juros += value.salarioJuros;
-          this.valor_corrigido += value.salarioCorrigido;
+          this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
+          this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
+          this.valor_corrigido +=
+            Math.floor(value.salarioCorrigido * 100) / 100;
 
           //corta as cassais decimais
         }
@@ -933,15 +934,18 @@ export default {
         this.formatacao();
       } else {
         for (const value of this.calc_total) {
-          this.valor_total += value.salarioTotal;
-          this.valor_juros += value.salarioJuros;
-          this.valor_corrigido += value.salarioCorrigido;
+          this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
+          this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
+          this.valor_corrigido +=
+            Math.floor(value.salarioCorrigido * 100) / 100;
           //corta as cassais decimais
         }
-        this.valor_total = Math.floor(this.valor_total * 100) / 100;
+        this.valor_total =
+          Math.floor((this.valor_corrigido + this.valor_juros) * 100) / 100;
         this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
         this.valor_corrigido = Math.floor(this.valor_corrigido * 100) / 100;
-        this.total_processos = Math.floor(this.valor_total * 100) / 100;
+        this.total_processos =
+          Math.floor((this.valor_total + this.valorHonorarios) * 100) / 100;
         this.formatacao();
       }
 
@@ -1080,8 +1084,7 @@ export default {
           this.dtFinal = "31/12/" + (datafinal[2] - 1);
         } else {
           if (datafinal[1] < 10) {
-            this.dtFinal =
-              "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
+            this.dtFinal = "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
           } else {
             this.dtFinal = "30/" + (datafinal[1] - 1) + "/" + datafinal[2];
           }
@@ -1329,16 +1332,17 @@ export default {
 
           this.calc_total = this.all_info.map((obj) => {
             const temp = {
-              salarioCorrigido:
-                Math.floor(obj.salario * obj.correcao * 100) / 100,
-              salarioJuros:
-                Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100,
+              salarioCorrigido: (
+                Math.floor(obj.salario * obj.correcao * 100) / 100
+              ).toFixed(2),
+              salarioJuros: (
+                Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100
+              ).toFixed(2),
               salarioTotal:
-                Math.floor(
-                  (obj.salario * obj.correcao * obj.juros +
-                    obj.salario * obj.correcao) *
-                    100
-                ) / 100,
+                ((
+                  Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100
+                ) +
+                (Math.floor(obj.salario * obj.correcao * 100) / 100)),
             };
 
             return { ...obj, ...temp };
