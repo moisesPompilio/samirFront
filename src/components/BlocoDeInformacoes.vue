@@ -125,7 +125,7 @@
             outlined
           ></v-text-field>
         </v-col>
-        <button color="primary" @click="pushInfos(infos)" id="adicionarButton">Adicionar</button>
+        <v-btn color="primary" @click="pushInfos(infos)" id="adicionarButton">Adicionar</v-btn>
       </v-row > 
       <v-card-title class="mt-5" > <button @click="exibirActive(), redirectToCalculo()">Tabela de Processos <v-icon>mdi-menu-up</v-icon></button></v-card-title>
       <v-data-table v-if="exibir.processos"
