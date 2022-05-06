@@ -1090,8 +1090,13 @@ export default {
           }
         }
       } else {
-        this.dtFinal =
-          datafinal[0] - 1 + "/" + datafinal[1] + "/" + datafinal[2];
+        if(datafinal[0]<=10){
+          this.dtFinal =
+          "0" + (datafinal[0] - 1) + "/" + datafinal[1] + "/" + datafinal[2];
+        }else{
+          this.dtFinal =
+          + (datafinal[0] - 1) + "/" + datafinal[1] + "/" + datafinal[2];
+        }
       }
       //this.dtFinal = this.info_calculo.dip;
       this.pensaoPorMorte = "";
@@ -1107,7 +1112,7 @@ export default {
       ) {
         this.pensaoPorMorte = "PENSÃO POR MORTE - RIVISAR TERMO INICIAL";
       }
-      this.inicio_juros = this.info_calculo.dataAjuizamento;
+      this.inicio_juros = this.info_calculo.citacao;
       this.DataHonorarios = null;
       this.porcentagemHonorarios = 0;
       this.valorHonorarios = 0;
