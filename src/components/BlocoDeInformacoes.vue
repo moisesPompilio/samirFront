@@ -73,7 +73,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" md="3">
-        <label for="rmi" class="labels pb-3">Renda Mensal</label>
+        <label for="rmi" class="labels pb-3">RMI</label>
         <v-text-field
           v-model="rmi"
           id="rmi"
@@ -137,6 +137,51 @@
           outlined
         ></v-text-field>
       </v-col>
+      <v-row class="mx-3" v-if="exibir.tudo">
+        <v-col cols="12" sm="6" md="2">
+          <label for="beneficioAcumulado.beneficio" class="labels pb-3">Beneficio Acumulado?</label>
+          <v-text-field
+            v-model="beneficioAcumulado.beneficio"
+            id="beneficioAcumulado_beneficio"
+            dense
+            placeholder=""
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <label for="beneficioAcumulado.dib" class="labels pb-3">DIB </label>
+          <v-text-field
+            v-model="beneficioAcumulado.dib"
+            id="beneficioAcumulado_dib"
+            dense
+            placeholder=""
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <label for="beneficioAcumulado.dif" class="labels pb-3">DIF</label>
+          <v-text-field
+            v-model="beneficioAcumulado.dif"
+            id="beneficioAcumulado_dif"
+            dense
+            placeholder=""
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <label for="beneficioAcumulado.rmi" class="labels pb-3">RMI</label>
+          <v-text-field
+            v-model="beneficioAcumulado.rmi"
+            id="beneficioAcumulado_rmi"
+            dense
+            placeholder=""
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <v-btn color="primary" @click="pushBeneficio()" id="beneficioBtn" >Adicinar Beneficio</v-btn>
+        </v-col>
+      </v-row>
       <v-btn color="primary" @click="pushInfos(infos)" id="adicionarButton"
         >Adicionar</v-btn
       >
@@ -192,7 +237,7 @@ export default {
       beneficio: "",
       nb: "",
       dip: "",
-      citacao:"",
+      citacao: "",
       aps: "",
       headers: [
         { value: "id", text: "ID" },
@@ -202,6 +247,8 @@ export default {
       ],
       infos: [],
       calculo: {},
+      beneficioAcumulado: {beneficio: null, dib: null, dif: null, rmi: null},
+      array_beneficioAcumulado: [],
       //exibir: {tudo: true, processos: false },
     };
   },
@@ -236,6 +283,7 @@ export default {
         dip: this.dip,
         aps: this.aps,
         citacao: this.citacao,
+        beneficiosAcumulados: this.array_beneficioAcumulado,
       });
       this.cleanFields();
       this.saveInfos();
@@ -261,6 +309,7 @@ export default {
       this.dip = "";
       this.aps = "";
       this.citacao = "";
+      this.array_beneficioAcumulado = [];
     },
     formataçao(valor) {
       return valor;
@@ -278,6 +327,13 @@ export default {
       this.dip = this.infos[y].dip;
       this.aps = this.infos[y].aps;
       this.citacao = this.infos[y].citacao;
+    },
+    pushBeneficio(){
+      this.array_beneficioAcumulado.push(this.beneficioAcumulado);
+      this.cleanBeneficio();
+    },
+    cleanBeneficio(){
+      this.beneficioAcumulado = {beneficio: null, dib: null, dif: null, rmi: null};
     },
     tranferir(y) {
       this.redirectToCalculo();
