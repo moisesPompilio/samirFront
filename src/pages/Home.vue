@@ -538,9 +538,6 @@
         ><i class="fa fa-file"></i
       ></b-button>
     </div>
-    <v-card>
-      {{ arrayTeste[1] }}
-    </v-card>
   </v-container>
 </template>
 
@@ -626,6 +623,7 @@ export default {
       // },
       arrayBenficios: [],
       arrayTeste: [],
+      beneficiosInacumulaveis: [],
     };
   },
 
@@ -1239,6 +1237,20 @@ export default {
       if (this.info_calculo.beneficiosAcumulados) {
         this.beneficio = true;
         this.arrayBenficios = this.info_calculo.beneficiosAcumulados;
+        this.arrayBenficios.forEach((value,index) =>{
+          let verificarPonto = value.rmi.includes(",")
+          if(verificarPonto){
+            let array = value.rmi.split(",");
+          console.log(array)
+          let array0 = array[0].split(".");
+          array[0] = array0.join("");
+          let rmi = array.join(".")
+          this.arrayBenficios[index].rmi = rmi;
+          }else{
+            this.arrayBenficios[index].rmi = value.rmi
+          }
+          
+        })
       } else {
         this.pushBeneficiosAcumulados();
       }
@@ -1633,6 +1645,9 @@ export default {
         value: obj.tipo,
       }));
     });
+    axios.get(baseApiUrl + "/beneficio/listar").then((res) =>{
+      this.beneficiosInacumulaveis = res.data;
+    })
   },
 };
 </script>
