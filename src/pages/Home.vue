@@ -168,50 +168,51 @@
           >
         </b-col>
       </b-row>
-      <b-row class="row-one my-3 align-items-center" v-for="obj_beneficioAcumulado of arrayBenficios"
-          :key="obj_beneficioAcumulado.dib">
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio" class="labels">Qual Benefício?</label>
-            <b-form-input
-              id="beneficio"
-              v-model="obj_beneficioAcumulado.beneficio"
-              type="text"
-              size="sm"
-              placeholder="Ex: Auxílio Desemprego"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio_inicial" class="labels"
-              >Início do Benefício</label
-            >
-            <b-form-input
-              id="beneficio_inicial"
-              v-model="obj_beneficioAcumulado.dib"
-              type="text"
-              size="sm"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio_final" class="labels">Fim do Benefício</label>
-            <b-form-input
-              v-model="obj_beneficioAcumulado.dif"
-              id="beneficio_final"
-              type="text"
-              size="sm"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio" class="labels"
-              >RMI</label
-            >
-            <b-form-input
-              v-model="obj_beneficioAcumulado.rmi"
-              id="beneficio"
-              type="text"
-              size="sm"
-              placeholder="Ex:1000"
-            ></b-form-input>
-          </b-col>
+      <b-row
+        class="row-one my-3 align-items-center"
+        v-for="obj_beneficioAcumulado of arrayBenficios"
+        :key="obj_beneficioAcumulado.dib"
+      >
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio" class="labels">Qual Benefício?</label>
+          <b-form-input
+            id="beneficio"
+            v-model="obj_beneficioAcumulado.beneficio"
+            type="text"
+            size="sm"
+            placeholder="Ex: Auxílio Desemprego"
+          ></b-form-input>
+        </b-col>
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio_inicial" class="labels"
+            >Início do Benefício</label
+          >
+          <b-form-input
+            id="beneficio_inicial"
+            v-model="obj_beneficioAcumulado.dib"
+            type="text"
+            size="sm"
+          ></b-form-input>
+        </b-col>
+        <b-col sm="2" v-if="beneficio === true">
+          <label for="beneficio_final" class="labels">Fim do Benefício</label>
+          <b-form-input
+            v-model="obj_beneficioAcumulado.dif"
+            id="beneficio_final"
+            type="text"
+            size="sm"
+          ></b-form-input>
+        </b-col>
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio" class="labels">RMI</label>
+          <b-form-input
+            v-model="obj_beneficioAcumulado.rmi"
+            id="beneficio"
+            type="text"
+            size="sm"
+            placeholder="Ex:1000"
+          ></b-form-input>
+        </b-col>
       </b-row>
 
       <!-- BOTÕES -->
@@ -385,6 +386,24 @@
         <br />
       </div>
     </div>
+    <v-row
+      class="mx-3"
+      v-for="beneficio of beneficioInacumulavel"
+      :key="beneficio.dib"
+    >
+      <v-col cols="12" sm="6" md="3">
+        <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>DIB: {{ beneficio.dib }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>DIF: {{ beneficio.dif }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>RMI: {{ beneficio.rmi }}</p>
+      </v-col>
+    </v-row>
     <!-- Gerar pdf -->
 
     <h1 v-if="add_taxa == false" class="titulo">GERADOR DE PDF</h1>
@@ -508,7 +527,20 @@
           {{ total_processos }}
         </div>
       </div>
-
+      <v-row v-for="beneficio of beneficioInacumulavel" :key="beneficio">
+        <v-col cols="12" sm="6" md="3">
+          <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <p>DIB: {{ beneficio.dib }}</p>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <p>DIF: {{ beneficio.dif }}</p>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <p>RMI: {{ beneficio.rmi }}</p>
+        </v-col>
+      </v-row>
       <img src="" alt="" />
       <v-data-table
         id="areaToPrint"
@@ -623,7 +655,8 @@ export default {
       // },
       arrayBenficios: [],
       arrayTeste: [],
-      beneficiosInacumulaveis: [],
+      beneficiosInacumulveisBanco: [],
+      beneficioInacumulavel: [],
     };
   },
 
@@ -631,10 +664,10 @@ export default {
     fatorador() {
       let reajuste_cumulado = this.salarioInicial;
       this.calc_total.forEach((value, index) => {
-        if(value.reajusteAcumulado != 0){
+        if (value.reajusteAcumulado != 0) {
           reajuste_cumulado *= value.reajusteAcumulado;
         }
-        
+
         let salario = Math.floor(reajuste_cumulado * 100) / 100;
         this.calc_total[index].salario = salario;
         this.calc_total[index].salarioCorrigido =
@@ -657,23 +690,23 @@ export default {
     },
     projetarArrayBeneficio() {
       console.log("aqui");
-      let array = [];
-      let dataInicio = this.dtInicial.split("/");
-      let dataFinal = this.dtFinal.split("/");
-      let datasBeneficio = dataInicio;
-      let reajuste = this.arrayReajusteRencete.filter(
-        (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
-      );
-      console.log("mes: " + dataFinal[1]);
-      console.log("ano: " + dataFinal[2]);
-      let valorDevido = this.salarioInicial;
-      let mes = datasBeneficio[1];
-      let ano = datasBeneficio[2];
-      console.log("mes: " + mes);
-      console.log("ano: " + ano);
-      console.log("Reajuste: " + reajuste);
-      console.log("valor devido: " + valorDevido);
-      console.log("array: " + array);
+      // let array = [];
+      // let dataInicio = this.dtInicial.split("/");
+      // let dataFinal = this.dtFinal.split("/");
+      // let datasBeneficio = dataInicio;
+      // let reajuste = this.arrayReajusteRencete.filter(
+      //   (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
+      // );
+      // console.log("mes: " + dataFinal[1]);
+      // console.log("ano: " + dataFinal[2]);
+      // let valorDevido = this.salarioInicial;
+      // let mes = datasBeneficio[1];
+      // let ano = datasBeneficio[2];
+      // console.log("mes: " + mes);
+      // console.log("ano: " + ano);
+      // console.log("Reajuste: " + reajuste);
+      // console.log("valor devido: " + valorDevido);
+      // console.log("array: " + array);
       /* do {
         console.log("mes: " + mes);
         console.log("ano: " + ano);
@@ -736,6 +769,7 @@ export default {
       this.corrigido13Valor = 0;
     },
     iniciarCalculo() {
+      this.beneficioInacumulavel = [];
       if (this.total_processos > 0) {
         this.zeraDadosDocalculo();
       }
@@ -784,7 +818,28 @@ export default {
           100;
         this.calc_total[x].data = dtFinal;
       }
-      if (this.beneficio) {
+      if (this.beneficio == true) {
+        let beneficioProvisorio;
+        this.beneficiosInacumulveisBanco.forEach((value) => {
+          if (
+            parseInt(value.name.split("-")[0]) ==
+            parseInt(this.info_calculo.beneficio.split("-")[0])
+          ) {
+            console.log("Beneficio provisorio: " + value.name);
+            beneficioProvisorio = value;
+          }
+        });
+        this.arrayBenficios.forEach((value) => {
+          beneficioProvisorio.inacumulavel.forEach((dado) => {
+            if (
+              parseInt(dado.split("-")[0]) ==
+              parseInt(value.beneficio.split("-")[0])
+            ) {
+              this.beneficioInacumulavel.push(value);
+            }
+          });
+        });
+        console.log("size: " + this.beneficioInacumulavel.length);
         this.headers = [
           { value: "data", text: "Data" },
           { value: "reajusteAcumulado", text: "Reajuste" },
@@ -797,85 +852,98 @@ export default {
           { value: "salarioJuros", text: "Salário Juros R$" },
           { value: "salarioTotal", text: "Total R$" },
         ];
-        this.beneficioAcumuladoCalculo()
+        this.beneficioAcumuladoCalculo();
+      } else {
+        this.headers = [
+          { value: "data", text: "Data" },
+          { value: "reajusteAcumulado", text: "Reajuste" },
+          { value: "salario", text: "Salário R$" },
+          { value: "correcao", text: "Correção Salarial" },
+          { value: "salarioCorrigido", text: "Salário Corrigido R$" },
+          { value: "juros", text: "Juros" },
+          { value: "salarioJuros", text: "Salário Juros R$" },
+          { value: "salarioTotal", text: "Total" },
+        ];
       }
     },
-    beneficioAcumuladoCalculo(){
-      function decontar(value,dado){
+    beneficioAcumuladoCalculo() {
+      function decontar(value, dado, index) {
+        // if (index > 0) {
+        let recebido = (dado.recebido * 100 + value.rmi * 100) / 100;
+        //index > 0 ? console.log("recebido: " + dado.recebido + " rmi: " + value.rmi + " valor final: " + ((value.rmi * 100) + (dado.recebido * 100))) : console.log("rmi: " + value.rmi)
         return {
-                    data: dado.data,
-                    reajusteAcumulado: dado.reajusteAcumulado,
-                    devido: dado.salario,
-                    recebido: value.rmi,
-                    salario: dado.salario - value.rmi,
-                    correcao: dado.correcao,
-                    salarioCorrigido:
-                      Math.floor(
-                        (dado.salario - value.rmi) * dado.correcao * 100
-                      ) / 100,
-                    juros: dado.juros,
-                    salarioJuros:
-                      Math.floor(
-                        (dado.salario - value.rmi) *
-                          dado.juros *
-                          dado.correcao *
-                          100
-                      ) / 100,
-                    salarioTotal:
-                      Math.floor(
-                        (dado.salario - value.rmi) *
-                          (dado.juros + 1) *
-                          dado.correcao *
-                          100
-                      ) / 100,
-                  };
+          data: dado.data,
+          reajusteAcumulado: dado.reajusteAcumulado,
+          devido: index > 0 ? dado.devido : dado.salario,
+          recebido: index > 0 ? recebido : value.rmi,
+          salario: dado.salario - value.rmi,
+          correcao: dado.correcao,
+          salarioCorrigido:
+            Math.floor((dado.salario - value.rmi) * dado.correcao * 100) / 100,
+          juros: dado.juros,
+          salarioJuros:
+            Math.floor(
+              (dado.salario - value.rmi) * dado.juros * dado.correcao * 100
+            ) / 100,
+          salarioTotal:
+            Math.floor(
+              (dado.salario - value.rmi) *
+                (dado.juros + 1) *
+                dado.correcao *
+                100
+            ) / 100,
+        };
+        // }
       }
-      function manter(value,dado){
+      function manter(value, dado, index) {
+        // console.log("slario juros: " + dado.salarioJuros);
         return {
-                  data: dado.data,
-                  reajusteAcumulado: dado.reajusteAcumulado,
-                  devido: dado.salario,
-                  recebido: 0,
-                  salario: dado.salario,
-                  correcao: dado.correcao,
-                  salarioCorrigido: dado.salarioCorrigido,
-                  juros: dado.juros,
-                  salarioJuros: dado.salarioJuros,
-                  salarioTotal:dado.salarioTotal,
-                }
+          data: dado.data,
+          reajusteAcumulado: dado.reajusteAcumulado,
+          devido: index > 0 ? dado.devido : dado.salario,
+          recebido: 0,
+          salario: dado.salario,
+          correcao: dado.correcao,
+          salarioCorrigido: dado.salarioCorrigido,
+          juros: dado.juros,
+          salarioJuros: dado.salarioJuros,
+          salarioTotal: dado.salarioTotal,
+        };
       }
-      this.arrayBenficios.forEach((value) => {
-          let new_array = [];
-          let dataDib = value.dib.split("/");
-          let dataDif = value.dif.split("/");
-          this.calc_total.forEach((dado) => {
-            let dataTabe = dado.data.split("/");
-            if (dataDib[2] <= dataTabe[2] && dataDif[2] >= dataTabe[2]) {
-              if (dataDif[2] == dataTabe[2] && dataDib[2] == dataTabe[2]) {
-                if(dataDib[1] <= dataTabe[1] && dataDif[1] >= dataTabe[1]){
-                 new_array.push(decontar(value,dado)); 
-                }
-              } else if (dataDif[2] == dataTabe[2]) {
-                if (dataTabe[1] <= dataDif[1]) {
-                  new_array.push(decontar(value,dado));
-                } else {
-                  new_array.push(manter(value,dado));
-                }
-              } else if (dataDib[2] == dataTabe[2]) {
-                if (dataTabe[1] >= dataDib[1]) {
-                  new_array.push(decontar(value,dado));
-                }else{
-                  new_array.push(manter(value,dado));
-                }
+      this.beneficioInacumulavel.forEach((value, index) => {
+        let new_array = [];
+        let dataDib = value.dib.split("/");
+        let dataDif = value.dif.split("/");
+        // value.rmi = value.rmi.replace(".", "");
+        // value.rmi = value.rmi.replace(",", ".");
+        this.calc_total.forEach((dado) => {
+          let dataTabe = dado.data.split("/");
+          if (dataDib[2] <= dataTabe[2] && dataDif[2] >= dataTabe[2]) {
+            if (dataDif[2] == dataTabe[2] && dataDib[2] == dataTabe[2]) {
+              if (dataDib[1] <= dataTabe[1] && dataDif[1] >= dataTabe[1]) {
+                new_array.push(decontar(value, dado));
+              }
+            } else if (dataDif[2] == dataTabe[2]) {
+              if (dataTabe[1] <= dataDif[1]) {
+                new_array.push(decontar(value, dado, index));
               } else {
-                new_array.push(decontar(value,dado));
+                new_array.push(manter(value, dado, index));
+              }
+            } else if (dataDib[2] == dataTabe[2]) {
+              if (dataTabe[1] >= dataDib[1]) {
+                new_array.push(decontar(value, dado, index));
+              } else {
+                new_array.push(manter(value, dado, index));
               }
             } else {
-              new_array.push(manter(value,dado));
+              new_array.push(decontar(value, dado, index));
             }
-          });
-          this.calc_total = new_array;
+          } else {
+            new_array.push(manter(value, dado, index));
+          }
         });
+        this.calc_total = new_array;
+      });
     },
     ZerarOJuros() {
       let index = 0;
@@ -1023,7 +1091,7 @@ export default {
 
       for (const value of this.calc_total) {
         this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
-        console.log(this.valor_total);
+        //console.log(this.valor_total);
         this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
         this.valor_corrigido += Math.floor(value.salarioCorrigido * 100) / 100;
         //corta as cassais decimais
@@ -1227,33 +1295,51 @@ export default {
       this.info_calculo.numeroDoProcesso;
       this.dataDoJuros = "";
       this.valorDoJuros = 0;
+      this.beneficioInacumulavel = [];
       if (
         this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA"
       ) {
         this.pensaoPorMorte = "PENSÃO POR MORTE - RIVISAR TERMO INICIAL";
       }
-      this.beneficio = false;
-      this.arrayBenficios = [];
-      if (this.info_calculo.beneficiosAcumulados) {
+      if (this.info_calculo.beneficiosAcumulados[0].rmi) {
         this.beneficio = true;
         this.arrayBenficios = this.info_calculo.beneficiosAcumulados;
-        this.arrayBenficios.forEach((value,index) =>{
-          let verificarPonto = value.rmi.includes(",")
-          if(verificarPonto){
-            let array = value.rmi.split(",");
-          console.log(array)
-          let array0 = array[0].split(".");
-          array[0] = array0.join("");
-          let rmi = array.join(".")
-          this.arrayBenficios[index].rmi = rmi;
-          }else{
-            this.arrayBenficios[index].rmi = value.rmi
+        this.arrayBenficios.forEach((value, index) => {
+          if (value.rmi.includes(",")) {
+            this.arrayBenficios[index].rmi = value.rmi.replace(".", "");
+            this.arrayBenficios[index].rmi = value.rmi.replace(",", ".");
           }
-          
-        })
+        });
       } else {
+        this.beneficio = false;
+        this.arrayBenficios = [];
         this.pushBeneficiosAcumulados();
       }
+      let beneficioProvisorio;
+      this.beneficiosInacumulveisBanco.forEach((value) => {
+        if (
+          parseInt(value.name.split("-")[0]) ==
+          parseInt(this.info_calculo.beneficio.split("-")[0])
+        ) {
+          console.log("Beneficio provisorio: " + value.name);
+          beneficioProvisorio = value;
+          this.salario13 = beneficioProvisorio.salario13;
+          if (beneficioProvisorio.dif) {
+            this.pensaoPorMorte = "Beneficio com DIF";
+          }
+        }
+      });
+      this.arrayBenficios.forEach((value) => {
+        beneficioProvisorio.inacumulavel.forEach((dado) => {
+          if (
+            parseInt(dado.split("-")[0]) ==
+            parseInt(value.beneficio.split("-")[0])
+          ) {
+            this.beneficioInacumulavel.push(value);
+          }
+        });
+      });
+      console.log("size: " + this.beneficioInacumulavel.length);
       this.inicio_juros = this.info_calculo.citacao;
       this.DataHonorarios = null;
       this.porcentagemHonorarios = 0;
@@ -1460,7 +1546,7 @@ export default {
               mesFinal,
               this.infos
             );
-            console.log("taxa de rejuste; " + taxaReajuste);
+            // console.log("taxa de rejuste; " + taxaReajuste);
             if (+anoInicial < +anoFinal)
               return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
           };
@@ -1563,9 +1649,9 @@ export default {
               arr_reajuste.push(obj);
             }
           });
-          console.log(arr_reajuste);
+          //console.log(arr_reajuste);
           taxas = this.taxasPorAno(arr_reajuste);
-          console.log(taxas);
+          // console.log(taxas);
 
           this.infos = [];
 
@@ -1586,7 +1672,7 @@ export default {
           };
           compute(anoInicial, salarioInicial, mesInicial, 0);
 
-          console.log("REAJUSTE ", this.infos);
+          // console.log("REAJUSTE ", this.infos);
           // console.log("CORREÇÃO", arr_reajuste);
 
           this.all_info = this.infos.map((obj) => {
@@ -1645,9 +1731,10 @@ export default {
         value: obj.tipo,
       }));
     });
-    axios.get(baseApiUrl + "/beneficio/listar").then((res) =>{
-      this.beneficiosInacumulaveis = res.data;
-    })
+    axios.get(baseApiUrl + "/beneficio/listar").then((res) => {
+      this.beneficiosInacumulveisBanco = res.data;
+    });
+
   },
 };
 </script>
