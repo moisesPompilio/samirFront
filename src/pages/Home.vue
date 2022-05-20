@@ -797,8 +797,16 @@ export default {
           { value: "salarioJuros", text: "Salário Juros R$" },
           { value: "salarioTotal", text: "Total R$" },
         ];
+        this.verificarInacumulavel()  
         this.beneficioAcumuladoCalculo()
       }
+    },
+    verificarInacumulavel(){
+      let beneficioTria = this.beneficiosInacumulaveis.filter((e) =>{
+        return e.name == this.info_calculo.beneficio;
+      })
+      console.log(beneficioTria);
+      
     },
     beneficioAcumuladoCalculo(){
       function decontar(value,dado){
