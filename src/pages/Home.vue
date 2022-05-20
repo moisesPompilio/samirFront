@@ -386,20 +386,24 @@
         <br />
       </div>
     </div>
-    <v-row class="mx-3" v-for="beneficio of beneficioInacumulavel" :key="beneficio.dib">
-        <v-col cols="12" sm="6" md="3">
-          <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <p>DIB: {{ beneficio.dib }}</p>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <p>DIF: {{ beneficio.dif }}</p>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <p>RMI: {{ beneficio.rmi }}</p>
-        </v-col>
-      </v-row>
+    <v-row
+      class="mx-3"
+      v-for="beneficio of beneficioInacumulavel"
+      :key="beneficio.dib"
+    >
+      <v-col cols="12" sm="6" md="3">
+        <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>DIB: {{ beneficio.dib }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>DIF: {{ beneficio.dif }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <p>RMI: {{ beneficio.rmi }}</p>
+      </v-col>
+    </v-row>
     <!-- Gerar pdf -->
 
     <h1 v-if="add_taxa == false" class="titulo">GERADOR DE PDF</h1>
@@ -819,27 +823,26 @@ export default {
       }
       if (this.beneficio == true) {
         let beneficioProvisorio;
-      this.beneficiosInacumulveisBanco.forEach((value) => {
-        if (
-          parseInt(value.name.split("-")[0]) ==
-          parseInt(this.info_calculo.beneficio.split("-")[0])
-        ) {
-          console.log("Beneficio provisorio: " + value.name);
-          beneficioProvisorio = value;
-        }
-      });
-      this.arrayBenficios.forEach((value) => {
-        beneficioProvisorio.inacumulavel.forEach((dado) => {
-         
+        this.beneficiosInacumulveisBanco.forEach((value) => {
+          if (
+            parseInt(value.name.split("-")[0]) ==
+            parseInt(this.info_calculo.beneficio.split("-")[0])
+          ) {
+            console.log("Beneficio provisorio: " + value.name);
+            beneficioProvisorio = value;
+          }
+        });
+        this.arrayBenficios.forEach((value) => {
+          beneficioProvisorio.inacumulavel.forEach((dado) => {
             if (
               parseInt(dado.split("-")[0]) ==
               parseInt(value.beneficio.split("-")[0])
             ) {
               this.beneficioInacumulavel.push(value);
             }
+          });
         });
-      });
-      console.log("size: " + this.beneficioInacumulavel.length);
+        console.log("size: " + this.beneficioInacumulavel.length);
         this.headers = [
           { value: "data", text: "Data" },
           { value: "reajusteAcumulado", text: "Reajuste" },
@@ -1316,10 +1319,6 @@ export default {
         this.pushBeneficiosAcumulados();
       }
       let beneficioProvisorio;
-      this.salario13 = beneficioProvisorio.salario13;
-      if(beneficioProvisorio.dif){
-        this.pensaoPorMorte = "Beneficio com DIF";
-      }
       this.beneficiosInacumulveisBanco.forEach((value) => {
         if (
           parseInt(value.name.split("-")[0]) ==
@@ -1327,17 +1326,20 @@ export default {
         ) {
           console.log("Beneficio provisorio: " + value.name);
           beneficioProvisorio = value;
+          this.salario13 = beneficioProvisorio.salario13;
+          if (beneficioProvisorio.dif) {
+            this.pensaoPorMorte = "Beneficio com DIF";
+          }
         }
       });
       this.arrayBenficios.forEach((value) => {
         beneficioProvisorio.inacumulavel.forEach((dado) => {
-         
-            if (
-              parseInt(dado.split("-")[0]) ==
-              parseInt(value.beneficio.split("-")[0])
-            ) {
-              this.beneficioInacumulavel.push(value);
-            }
+          if (
+            parseInt(dado.split("-")[0]) ==
+            parseInt(value.beneficio.split("-")[0])
+          ) {
+            this.beneficioInacumulavel.push(value);
+          }
         });
       });
       console.log("size: " + this.beneficioInacumulavel.length);
