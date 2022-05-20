@@ -14,12 +14,6 @@
       <bloco-informacoes
         v-if="!add_taxa"
         @calculo="(info_calculo = $event), atualizarTodosDados()"
-        :exibir="{
-          tudo: BlocoDeInformacoes_tudo,
-          processos: BlocoDeInformacoes_processos,
-        }"
-        @dados="BlocoDeInformacoes_tudo = $event"
-        @processos="BlocoDeInformacoes_processos = $event"
       ></bloco-informacoes>
     </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
@@ -54,93 +48,15 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="inicio_Juros" class="labels pb-3">Inicio do juros</label>
+          <label for="valor-devido R$" class="labels pb-3">Inicio do juros</label>
           <v-text-field
-            v-model="inicio_juros"
-            id="data-final"
+            v-model="InicioDoJuros"
+            id="valor-devido"
             dense
+            placeholder="nada"
             outlined
           ></v-text-field>
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Honorarios Advocativos Data</label
-          >
-          <v-text-field
-            v-model="DataHonorarios"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Honorarios Advocativos porcentagem %</label
-          >
-          <v-text-field
-            v-model="porcentagemHonorarios"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            style="margin-right: 5px"
-            v-model="salario13"
-            :value="salario13"
-          />
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Possui 13 salrio</label
-          >
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Acordo %</label
-          >
-          <v-text-field
-            v-model="procntagem_acordo"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <label class="labels pb-3">Juros</label>
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="optionsJuros"
-            v-model="tipoJuros"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <label class="labels pb-3">Correção</label>
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="optionsCorrecao"
-            v-model="tipoCorrecao"
-          ></v-select>
-        </v-col>
-        <div class="d-block p-0">
-          <v-col cols="12" sm="6" md="3">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              style="margin-right: 5px"
-              v-model="boolJuros"
-              :value="salario13"
-            />
-            <label for="honorarios_Advocativos" class="labels pb-3"
-              >Juros</label
-            >
-          </v-col>
-        </div>
       </v-row>
 
       <!-- CHECKBOX  -->
@@ -159,59 +75,33 @@
             Recebeu Benefício
           </label>
         </b-col>
-        <b-col sm="2" v-if="beneficio === true">
-          <b-button
-            id="button-beneficio"
-            color="primary"
-            @click="pushBeneficiosAcumulados()"
-            >Adicionar Beneficio</b-button
-          >
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio" class="labels">Qual Benefício?</label>
+          <b-form-input
+            id="beneficio"
+            type="text"
+            size="sm"
+            placeholder="Ex: Auxílio Desemprego"
+          ></b-form-input>
         </b-col>
-      </b-row>
-      <b-row class="row-one my-3 align-items-center" v-for="obj_beneficioAcumulado of arrayBenficios"
-          :key="obj_beneficioAcumulado.dib">
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio" class="labels">Qual Benefício?</label>
-            <b-form-input
-              id="beneficio"
-              v-model="obj_beneficioAcumulado.beneficio"
-              type="text"
-              size="sm"
-              placeholder="Ex: Auxílio Desemprego"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio_inicial" class="labels"
-              >Início do Benefício</label
-            >
-            <b-form-input
-              id="beneficio_inicial"
-              v-model="obj_beneficioAcumulado.dib"
-              type="text"
-              size="sm"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio_final" class="labels">Fim do Benefício</label>
-            <b-form-input
-              v-model="obj_beneficioAcumulado.dif"
-              id="beneficio_final"
-              type="text"
-              size="sm"
-            ></b-form-input>
-          </b-col>
-          <b-col sm="2" v-if="beneficio === true">
-            <label for="beneficio" class="labels"
-              >RMI</label
-            >
-            <b-form-input
-              v-model="obj_beneficioAcumulado.rmi"
-              id="beneficio"
-              type="text"
-              size="sm"
-              placeholder="Ex:1000"
-            ></b-form-input>
-          </b-col>
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio_inicial" class="labels"
+            >Início do Benefício</label
+          >
+          <b-form-input
+            id="beneficio_inicial"
+            type="date"
+            size="sm"
+          ></b-form-input>
+        </b-col>
+        <b-col sm="3" v-if="beneficio === true">
+          <label for="beneficio_final" class="labels">Fim do Benefício</label>
+          <b-form-input
+            id="beneficio_final"
+            type="date"
+            size="sm"
+          ></b-form-input>
+        </b-col>
       </b-row>
 
       <!-- BOTÕES -->
@@ -228,9 +118,7 @@
           <v-btn
             depressed
             color="primary"
-            @click="
-              zeraDadosDocalculo(), (mode = 'table'), informacoesCalculo()
-            "
+            @click="(mode = 'table'), informacoesCalculo()"
             >Calcular</v-btn
           >
         </v-col>
@@ -240,6 +128,11 @@
             color="secondary"
             @click="(mode = ''), redirectToCalculo()"
             >cancelar</v-btn
+          >
+        </v-col>
+        <v-col cols="1">
+          <v-btn depressed color="secondary" @click="pararJuros()"
+            >Atualizar</v-btn
           >
         </v-col>
       </v-row>
@@ -294,7 +187,9 @@
         <br />
         <label class="camposInput"
           >Início do Juros:
-          <input v-model="inicio_juros" placeholder="XX/XXXX" /></label
+          <input
+            v-model="info_calculo.dataAjuizamento"
+            placeholder="XX/XXXX" /></label
         ><label class="inputToPrint" id="inicioJurosForm" />
         <br />
         <!-- Criar Função -->
@@ -303,8 +198,7 @@
         ><label class="inputToPrint" id="calculadoEmForm" />
         <br />
         <label class="camposInput"
-          >Honorário:
-          <input placeholder="Ex.:" v-model="textoHonorarios" /></label
+          >Honorário: <input placeholder="Ex.:" /></label
         ><label class="inputToPrint" id="honorarioForm" />
         <br />
       </div>
@@ -376,11 +270,11 @@
         <input placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="parcelasVincendas" />
         <br />
-        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
+        <input placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="honorariosAdvocativos" />
         <br />
         <br />
-        <input v-model="total_processos" placeholder="XX.XXX,XX" />
+        <input v-model="valor_total" placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="totalProcesso" />
         <br />
       </div>
@@ -426,7 +320,7 @@
             <br />
             <label class="camposInput">Início do Juros:</label
             ><label class="inputToPrint" id="inicioJurosForm" />
-            {{ inicio_juros }}
+            {{ info_calculo.dataAjuizamento }}
             <br />
             <label class="camposInput">Calculado em:</label
             ><label class="inputToPrint" id="calculadoEmForm" />
@@ -434,7 +328,6 @@
             <br />
             <label class="camposInput">Honorário:</label
             ><label class="inputToPrint" id="honorarioForm" />
-            {{ textoHonorarios }}
             <br />
           </div>
         </div>
@@ -501,33 +394,24 @@
           <label class="inputCalculo" id="parcelasVincendas" />
           <br />
           <label class="inputCalculo" id="honorariosAdvocativos" />
-          {{ valorHonorarios }}
           <br />
           <br />
           <label class="inputCalculo" id="totalProcesso" />
-          {{ total_processos }}
+          {{ valor_total }}
         </div>
       </div>
 
       <img src="" alt="" />
       <v-data-table
         id="areaToPrint"
+        dense
         v-if="mode === 'table'"
+        border-bottom: medium
         :headers="headers"
         :items="calc_total"
+        :items-per-page="calc_total.length"
         item-key="name"
-        class="elevation-1"
-      >
-      </v-data-table>
-
-      <v-label>Tabela de 13 salario</v-label>
-
-      <v-data-table
-        id="areaToPrint"
-        v-if="arr_Salario13[0]"
-        :headers="headers"
-        :items="arr_Salario13"
-        item-key="data"
+        hide-default-footer
         class="elevation-1"
       >
       </v-data-table>
@@ -538,8 +422,14 @@
         ><i class="fa fa-file"></i
       ></b-button>
     </div>
+    <v-card>
+      <v-col>
+      </v-col>
+    </v-card>
   </v-container>
 </template>
+
+<div class="v-select__selection v-select__selection--comma">All</div>
 
 <script>
 // import TabelaDib from "../features/TabelaDib.vue";
@@ -590,326 +480,40 @@ export default {
       dataDoJuros: null,
       valorDoJuros: 0,
       array_juros: [],
-      inicio_juros: null,
-      DataHonorarios: null,
-      porcentagemHonorarios: 0,
-      valorHonorarios: 0,
-      textoHonorarios: null,
-      salario13: true,
-      valorSalario13: 0,
-      juros13Valor: 0,
-      corrigido13Valor: 0,
-      arr_Salario13: [],
-      total_processos: 0,
-      procntagem_acordo: null,
-      boolJuros: true,
-
-      optionsJuros: [],
-      tipoJuros: 0,
-      optionsCorrecao: [],
-      tipoCorrecao: 0,
-      BlocoDeInformacoes_tudo: false,
-      BlocoDeInformacoes_processos: true,
-      arrayReajusteRencete: [],
-      arrayJurosRencete: [],
-      arrayCorrecaoRencete: [],
-      tipoJurosRecente: null,
-      tipoCorrecaoRecente: null,
-      // obj_beneficioAcumulado: {
-      //   tipo: null,
-      //   dataInicio: null,
-      //   dataFinal: null,
-      //   valor: null,
-      // },
-      arrayBenficios: [],
-      arrayTeste: [],
-      beneficiosInacumulaveis: [],
+      InicioDoJuros: null,
     };
   },
-
   methods: {
-    fatorador() {
-      let reajuste_cumulado = this.salarioInicial;
-      this.calc_total.forEach((value, index) => {
-        if(value.reajusteAcumulado != 0){
-          reajuste_cumulado *= value.reajusteAcumulado;
-        }
-        
-        let salario = Math.floor(reajuste_cumulado * 100) / 100;
-        this.calc_total[index].salario = salario;
-        this.calc_total[index].salarioCorrigido =
-          this.calc_total[index].correcao * salario;
-        let salarioJuros =
-          value.juros * this.calc_total[index].correcao * salario;
-        this.calc_total[index].salarioJuros = salarioJuros;
-
-        this.calc_total[index].salarioTotal =
-          Math.floor(
-            (value.juros + 1) * this.calc_total[index].correcao * salario * 100
-          ) / 100;
-      });
-      this.iniciarCalculo();
-      if (this.boolJuros) {
-        this.pararJuros();
-      } else {
-        this.ZerarOJuros();
-      }
-    },
-    projetarArrayBeneficio() {
-      console.log("aqui");
-      let array = [];
-      let dataInicio = this.dtInicial.split("/");
-      let dataFinal = this.dtFinal.split("/");
-      let datasBeneficio = dataInicio;
-      let reajuste = this.arrayReajusteRencete.filter(
-        (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
-      );
-      console.log("mes: " + dataFinal[1]);
-      console.log("ano: " + dataFinal[2]);
-      let valorDevido = this.salarioInicial;
-      let mes = datasBeneficio[1];
-      let ano = datasBeneficio[2];
-      console.log("mes: " + mes);
-      console.log("ano: " + ano);
-      console.log("Reajuste: " + reajuste);
-      console.log("valor devido: " + valorDevido);
-      console.log("array: " + array);
-      /* do {
-        console.log("mes: " + mes);
-        console.log("ano: " + ano);
-        let taxaCorrecao = this.arrayCorrecaoRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let taxaJuros = this.arrayJurosRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let obj = {};
-
-        if (mes > 12) {
-          ano += 1;
-          mes += 1;
-          valorDevido *= reajuste;
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: reajuste,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
-          reajuste = this.arrayReajusteRencete.filter(
-            (taxas) => taxas.data == "01/" + mes + "/" + ano
-          );
-        } else {
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: 1,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
-        }
-        array.push(obj);
-        mes += 1;
-        console.log("aqui2");
-      } while (mes != dataFinal[1] && ano != dataFinal[2]);
-      this.arrayTeste = array;*/
-    },
-    ajusteData(data) {
-      let array1 = data.split("T");
-      let arry2 = array1[0].split("-").reverse().join("/");
-      return arry2;
-    },
-    zeraDadosDocalculo() {
-      this.total_processos = 0;
-      this.valorHonorarios = 0;
-      this.valor_total = 0;
-      this.valor_juros = 0;
-      this.valor_corrigido = 0;
-      this.calc_total = [];
-      this.valorSalario13 = 0;
-      this.arr_Salario13 = 0;
-      this.juros13Valor = 0;
-      this.corrigido13Valor = 0;
-    },
     iniciarCalculo() {
-      if (this.total_processos > 0) {
-        this.zeraDadosDocalculo();
-      }
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
-      var dtFinal = this.dtFinal.split("-").reverse().join("/");
+      const dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
-      var dfinal = parseInt(dtFinal.split("/")[0]);
+      let dfinal = parseInt(dtFinal.split("/")[0]);
       let inical_calculo;
-      this.inical_calculo = 1;
-      if (dinicial >= 30) {
-        inical_calculo = 1;
-        this.formatçao_do_inicio(inical_calculo, dtInicial);
+       this.inical_calculo = 1;
+      if (dinicial == 31) {
+         inical_calculo = (30 - dinicial) * -1;
+         this.formatçao_do_inicio(inical_calculo, dtInicial);
       } else {
-        inical_calculo = 30 - dinicial + 1;
-        this.formatçao_do_inicio(inical_calculo, dtInicial);
+        inical_calculo = 30 - dinicial;
+         this.formatçao_do_inicio(inical_calculo, dtInicial);
       }
 
       let x = this.calc_total.length - 1;
-      if (dfinal == 31) {
-        dfinal = 30;
-        this.calc_total[x].salario =
-          Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
-        this.calc_total[x].salarioCorrigido =
-          Math.floor(
-            (this.calc_total[x].salarioCorrigido / 30) * dfinal * 100
-          ) / 100;
-        this.calc_total[x].salarioJuros =
-          Math.floor((this.calc_total[x].salarioJuros / 30) * dfinal * 100) /
-          100;
-        this.calc_total[x].salarioTotal =
-          Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) /
-          100;
-        this.calc_total[x].data = dtFinal;
-      } else {
-        this.calc_total[x].salario =
-          Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
-        this.calc_total[x].salarioCorrigido =
-          Math.floor(
-            (this.calc_total[x].salarioCorrigido / 30) * dfinal * 100
-          ) / 100;
-        this.calc_total[x].salarioJuros =
-          Math.floor((this.calc_total[x].salarioJuros / 30) * dfinal * 100) /
-          100;
-        this.calc_total[x].salarioTotal =
-          Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) /
-          100;
-        this.calc_total[x].data = dtFinal;
-      }
-      if (this.beneficio) {
-        this.headers = [
-          { value: "data", text: "Data" },
-          { value: "reajusteAcumulado", text: "Reajuste" },
-          { value: "devido", text: "Devido R$" },
-          { value: "recebido", text: "Recebido R$" },
-          { value: "salario", text: "Salário R$" },
-          { value: "correcao", text: "Correção Salarial" },
-          { value: "salarioCorrigido", text: "Salário Corrigido R$" },
-          { value: "juros", text: "Juros" },
-          { value: "salarioJuros", text: "Salário Juros R$" },
-          { value: "salarioTotal", text: "Total R$" },
-        ];
-        this.verificarInacumulavel()  
-        this.beneficioAcumuladoCalculo()
-      }
-    },
-    verificarInacumulavel(){
-      let beneficioTria = this.beneficiosInacumulaveis.filter((e) =>{
-        return e.name == this.info_calculo.beneficio;
-      })
-      console.log(beneficioTria);
+      this.calc_total[x].salario = 
+        Math.floor((this.calc_total[x].salario / 30) * dfinal * 100) / 100;
+      this.calc_total[x].salarioCorrigido =
+        Math.floor((this.calc_total[x].salarioCorrigido / 30) * dfinal * 100) /
+        100;
+      this.calc_total[x].salarioJuros = 
+        Math.floor((this.calc_total[x].salarioJuros / 30) * dfinal * 100) / 100;
+      this.calc_total[x].salarioTotal =
+        Math.floor((this.calc_total[x].salarioTotal / 30) * dfinal * 100) / 100;
+      this.calc_total[x].data = dtFinal;
+      console.log(this.calc_total[0]);
+      console.log(this.calc_total[x]);
+       this.pararJuros();
       
-    },
-    beneficioAcumuladoCalculo(){
-      function decontar(value,dado){
-        return {
-                    data: dado.data,
-                    reajusteAcumulado: dado.reajusteAcumulado,
-                    devido: dado.salario,
-                    recebido: value.rmi,
-                    salario: dado.salario - value.rmi,
-                    correcao: dado.correcao,
-                    salarioCorrigido:
-                      Math.floor(
-                        (dado.salario - value.rmi) * dado.correcao * 100
-                      ) / 100,
-                    juros: dado.juros,
-                    salarioJuros:
-                      Math.floor(
-                        (dado.salario - value.rmi) *
-                          dado.juros *
-                          dado.correcao *
-                          100
-                      ) / 100,
-                    salarioTotal:
-                      Math.floor(
-                        (dado.salario - value.rmi) *
-                          (dado.juros + 1) *
-                          dado.correcao *
-                          100
-                      ) / 100,
-                  };
-      }
-      function manter(value,dado){
-        return {
-                  data: dado.data,
-                  reajusteAcumulado: dado.reajusteAcumulado,
-                  devido: dado.salario,
-                  recebido: 0,
-                  salario: dado.salario,
-                  correcao: dado.correcao,
-                  salarioCorrigido: dado.salarioCorrigido,
-                  juros: dado.juros,
-                  salarioJuros: dado.salarioJuros,
-                  salarioTotal:dado.salarioTotal,
-                }
-      }
-      this.arrayBenficios.forEach((value) => {
-          let new_array = [];
-          let dataDib = value.dib.split("/");
-          let dataDif = value.dif.split("/");
-          this.calc_total.forEach((dado) => {
-            let dataTabe = dado.data.split("/");
-            if (dataDib[2] <= dataTabe[2] && dataDif[2] >= dataTabe[2]) {
-              if (dataDif[2] == dataTabe[2] && dataDib[2] == dataTabe[2]) {
-                if(dataDib[1] <= dataTabe[1] && dataDif[1] >= dataTabe[1]){
-                 new_array.push(decontar(value,dado)); 
-                }
-              } else if (dataDif[2] == dataTabe[2]) {
-                if (dataTabe[1] <= dataDif[1]) {
-                  new_array.push(decontar(value,dado));
-                } else {
-                  new_array.push(manter(value,dado));
-                }
-              } else if (dataDib[2] == dataTabe[2]) {
-                if (dataTabe[1] >= dataDib[1]) {
-                  new_array.push(decontar(value,dado));
-                }else{
-                  new_array.push(manter(value,dado));
-                }
-              } else {
-                new_array.push(decontar(value,dado));
-              }
-            } else {
-              new_array.push(manter(value,dado));
-            }
-          });
-          this.calc_total = new_array;
-        });
-    },
-    ZerarOJuros() {
-      let index = 0;
-      for (const value of this.calc_total) {
-        this.calc_total[index].salarioTotal =
-          Math.floor((value.salarioTotal - value.salarioJuros) * 100) / 100;
-        this.calc_total[index].salarioJuros = 0;
-        this.calc_total[index].juros = 0;
-        index++;
-      }
-      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
-        this.textoHonorarios = null;
-      } else {
-        this.textoHonorarios =
-          this.porcentagemHonorarios +
-          "% com parcelas até " +
-          this.DataHonorarios;
-        this.honorarios(
-          this.DataHonorarios.split("/")[1],
-          this.DataHonorarios.split("/")[2]
-        );
-      }
-      if (this.salario13) {
-        this.colocarsalario13();
-      }
-      this.totaisSalario();
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
       this.calc_total[0].salario =
@@ -929,304 +533,136 @@ export default {
         ) / 100;
       this.calc_total[0].data = dtInicial;
     },
-    //Math.floor( * 100) / 100
-    formatacao() {
-      this.valor_total = Math.floor(this.valor_total * 100) / 100;
-      this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
-      this.valor_corrigido = Math.floor(this.valor_corrigido * 100) / 100;
-      this.total_processos = Math.floor(this.total_processos * 100) / 100;
-      this.valorHonorarios = Math.floor(this.valorHonorarios * 100) / 100;
-      let index = 0;
-      for (const value of this.calc_total) {
-        this.calc_total[index].salarioCorrigido =
-          Math.floor(value.salarioCorrigido * 100) / 100;
-        this.calc_total[index].salarioTotal =
-          Math.floor(value.salarioTotal * 100) / 100;
-        this.calc_total[index].salario = Math.floor(value.salario * 100) / 100;
-        this.calc_total[index].salarioJuros =
-          Math.floor(value.salarioJuros * 100) / 100;
-        this.calc_total[index].juros = Math.floor(value.juros * 10000) / 10000;
-        this.calc_total[index].correcao =
-          Math.floor(value.correcao * 10000) / 10000;
-        index++;
-      }
+    formataçao(valor) {
+      return valor;
     },
     pararJuros() {
       const url = `${baseApiUrl}/juros/procurarPorTipo/1`;
       axios(url).then((res) => {
         this.array_juros = res.data;
-        const dataAjuizamentoRequerida = this.inicio_juros.split("/");
-        const mesAjuizamento = dataAjuizamentoRequerida[1];
-        const anoAjuizamento = dataAjuizamentoRequerida[2];
-        for (let item of this.array_juros) {
-          const ArraydataJuros = item.data.split("T");
-          const dataJuros = ArraydataJuros[0].split("-");
+        const dataAjuizamentoRequerida =
+        this.InicioDoJuros.split("/");
+      console.log("data: " + dataAjuizamentoRequerida);
+      const mesAjuizamento = dataAjuizamentoRequerida[1];
+      const anoAjuizamento = dataAjuizamentoRequerida[2];
+      console.log("mes: " + mesAjuizamento);
+      console.log("Ano: " + anoAjuizamento);
+      for(let item of this.array_juros) {
+        const ArraydataJuros = item.data.split("T");
+        const dataJuros = ArraydataJuros[0].split("-");
 
-          if (
-            mesAjuizamento == dataJuros[1] &&
-            anoAjuizamento == dataJuros[0]
-          ) {
-            this.valorDoJuros = item.jurosAcumulados / 100;
-          }
+        
+        var dataDeJuizamento = mesAjuizamento + "/" + anoAjuizamento;
+        
+        var dataDeJuros =
+          dataJuros[1] + "/" + dataJuros[0];
+          console.log("data Ajuizamento: " + dataDeJuizamento);
+          console.log("data do juros" + dataDeJuros);
+          console.log("juros acumulado: " + (item.jurosAcumulados / 100));
+
+        if (mesAjuizamento == dataJuros[1] && anoAjuizamento==dataJuros[0] ) {
+          this.valorDoJuros = item.jurosAcumulados / 100;
+          console.log("aaaaaaaaaaaeeeeeeeeeeee")
         }
+      }
         this.colocarOjuros(mesAjuizamento, anoAjuizamento);
       });
+      
+      /*try {
+        var i = 0;
+        for (const value of this.calc_total) {
+          console.log(value);
+          var dataFornecida = this.calc_total[i].data
+            .split("-")
+            .reverse()
+            .join("/");
+          var dataDeJuizamento =
+            dataFornecida.split("/")[0] +
+            "/" +
+            dataAjuizamentoRequerida.split("/")[1] +
+            "/" +
+            dataAjuizamentoRequerida.split("/")[2];
+          var dateTabela =
+            dataFornecida.split("/")[0] +
+            "/" +
+            dataFornecida.split("/")[1] +
+            "/" +
+            dataFornecida.split("/")[2];
+          console.log(dataDeJuizamento);
+          console.log(dateTabela);
+          if (dateTabela == dataDeJuizamento) {
+            const juros = this.calc_total[i].juros;
+            for (let x = 0; x <= i; x++) {
+              this.calc_total[x].salarioTotal =
+                Math.floor(
+                  (this.calc_total[x].salarioTotal -
+                    this.calc_total[x].salarioJuros +
+                    this.calc_total[x].salarioCorrigido * juros) *
+                    100
+                ) / 100;
+              this.calc_total[x].juros = juros;
+              this.calc_total[x].salarioJuros =
+                Math.floor(this.calc_total[x].salarioCorrigido * juros * 100) /
+                100;
+            }
+          }
+          i++;
+          this.totaisSalario();
+        }
+      } catch (error) {
+        console.log(error);
+      }*/
     },
-    colocarOjuros(mesDoAjuizamento, anoAjuizamento) {
-      let i = 0;
-      for (const value of this.calc_total) {
-        var dateJuros = value.data.split("-").reverse().join("/");
-        var mesDoJuros = dateJuros.split("/")[1];
-        var anoDoJuros = dateJuros.split("/")[2];
+    colocarOjuros(mesDoAjuizamento , anoAjuizamento) { 
+        let i = 0;
+      console.log("PARAR JUROS");
+      for  (const value of this.calc_total) {
+        var dateJuros =  value.data.split("-").reverse().join("/");
+        console.log("data da tabela: " + dateJuros);
+        var mesDoJuros =  dateJuros.split("/")[1];
+        var anoDoJuros =  dateJuros.split("/")[1];
         if (anoDoJuros == anoAjuizamento) {
-          if (mesDoJuros <= mesDoAjuizamento) {
-            this.calc_total[i].salarioTotal =
-              this.calc_total[i].salarioTotal -
-              this.calc_total[i].salarioJuros +
-              (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-                this.valorDoJuros;
-            this.calc_total[i].salarioJuros =
+          if (mesDoAjuizamento <= mesDoJuros) {
+            this.calc_total[i].salarioTotal =  (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+              this.valorDoJuros);
+            this.calc_total[i].salarioJuros = 
               (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
               this.valorDoJuros;
             this.calc_total[i].juros = this.valorDoJuros;
           }
-        } else if (anoDoJuros < anoAjuizamento) {
-          this.calc_total[i].salarioTotal =
-            this.calc_total[i].salarioTotal -
-            this.calc_total[i].salarioJuros +
-            (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-              this.valorDoJuros;
-          this.calc_total[i].salarioJuros =
+        } else if (anoDoJuros <= anoAjuizamento) {
+         this.calc_total[i].salarioTotal =  (this.calc_total[i].salarioTotal - this.calc_total[i].salarioJuros ) + ((this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
+              this.valorDoJuros);
+          this.calc_total[i].salarioJuros = 
             (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
             this.valorDoJuros;
-          this.calc_total[i].juros = this.valorDoJuros;
-        } else {
-          console.log("entrei no else");
+          this.calc_total[i].juros =  this.valorDoJuros;
         }
         i++;
       }
-      this.formatacao();
-      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
-        this.textoHonorarios = null;
-      } else {
-        this.textoHonorarios =
-          this.porcentagemHonorarios +
-          "% com parcelas até " +
-          this.DataHonorarios;
-        this.honorarios(
-          this.DataHonorarios.split("/")[1],
-          this.DataHonorarios.split("/")[2]
-        );
-      }
-      if (this.salario13) {
-        this.colocarsalario13();
-      }
-      this.totaisSalario();
+      this.totaisSalario()
+    
     },
     totaisSalario() {
-      this.formatacao();
-      this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
-
+      this.valor_corrigido = 0;
       for (const value of this.calc_total) {
-        this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
-        console.log(this.valor_total);
-        this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
-        this.valor_corrigido += Math.floor(value.salarioCorrigido * 100) / 100;
+        this.valor_total += value.salarioTotal;
+        this.valor_juros += value.salarioJuros;
+        this.valor_corrigido += value.salarioCorrigido;
         //corta as cassais decimais
       }
-      if (this.procntagem_acordo) {
-        this.valor_total =
-          Math.floor(
-            (this.valor_total + this.valorSalario13) * this.procntagem_acordo
-          ) / 100;
-        this.valor_juros =
-          Math.floor(
-            (this.valor_juros + this.juros13Valor) * this.procntagem_acordo
-          ) / 100;
-        this.valor_corrigido =
-          Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
-        this.total_processos =
-          Math.floor(
-            (this.valor_corrigido +
-              this.valor_juros +
-              (this.valorHonorarios * this.procntagem_acordo) / 100) *
-              100
-          ) / 100;
-      } else {
-        this.valor_total =
-          Math.floor((this.valor_total + this.valorSalario13) * 100) / 100;
-        this.valor_juros =
-          Math.floor((this.valor_juros + this.juros13Valor) * 100) / 100;
-        this.valor_corrigido =
-          Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
-        this.total_processos =
-          Math.floor(
-            (this.valor_corrigido + this.valor_juros + this.valorHonorarios) *
-              100
-          ) / 100;
-      }
-
-      this.formatacao();
-    },
-    honorarios(mesHonorarios, anoHonorarios) {
-      let i = 0;
-      for (const value of this.calc_total) {
-        var dateTable = value.data;
-        var mesDoTable = dateTable.split("/")[1];
-        var anoDoTable = dateTable.split("/")[2];
-        if (anoDoTable == anoHonorarios) {
-          if (mesDoTable <= mesHonorarios) {
-            this.valorHonorarios += this.calc_total[i].salarioTotal;
-          }
-        } else if (anoDoTable < anoHonorarios) {
-          this.valorHonorarios += this.calc_total[i].salarioTotal;
-        }
-        i++;
-      }
-      this.valorHonorarios =
-        (this.valorHonorarios * this.porcentagemHonorarios) / 100;
-      this.formatacao();
-    },
-    colocarsalario13() {
-      let i = 0;
-      let quantidadeAno = 0;
-      let salario13Valor = 0;
-      let arr_13Salario = [];
-      let juros13 = 0;
-      let corrigido13 = 0;
-      let taxaReajusteAcumulada13 = 1;
-      var honorariosCom13 = 0;
-      for (const value of this.calc_total) {
-        var dateTable = value.data;
-        var mesDoTable = dateTable.split("/")[1];
-        var diaTable = dateTable.split("/")[0];
-        var anoDoTable = dateTable.split("/")[2];
-        if (i == 0) {
-          if (diaTable <= 15) {
-            quantidadeAno += 1;
-          }
-        } else {
-          if (mesDoTable == 12) {
-            quantidadeAno += 1;
-            juros13 +=
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.juros *
-                  value.correcao) /
-                  12) *
-                  quantidadeAno *
-                  100
-              ) / 100;
-            corrigido13 +=
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.correcao) /
-                  12) *
-                  quantidadeAno *
-                  100
-              ) / 100;
-            salario13Valor =
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.correcao *
-                  (1 + value.juros)) /
-                  12) *
-                  quantidadeAno *
-                  100
-              ) / 100;
-            let salario =
-              Math.floor(
-                ((this.salarioInicial * taxaReajusteAcumulada13) / 12) *
-                  quantidadeAno *
-                  100
-              ) / 100;
-            quantidadeAno = 0;
-            arr_13Salario.push({
-              data: 31 + "/" + mesDoTable + "/" + anoDoTable,
-              reajusteAcumulado: value.reajusteAcumulado,
-              salario: Math.floor(salario * 100) / 100,
-              correcao: value.correcao,
-              salarioCorrigido: Math.floor(corrigido13 * 100) / 100,
-              juros: value.juros,
-              salarioJuros: Math.floor(juros13 * 100) / 100,
-              salarioTotal: Math.floor(salario13Valor * 100) / 100,
-            });
-            this.valorSalario13 += salario13Valor;
-            this.juros13Valor += juros13;
-            this.corrigido13Valor += corrigido13;
-            if (
-              this.porcentagemHonorarios != null &&
-              this.DataHonorarios != null
-            ) {
-              let mesHonorarios = this.DataHonorarios.split("/")[1];
-              let anoHonorarios = this.DataHonorarios.split("/")[2];
-              if (anoDoTable == anoHonorarios) {
-                if (mesDoTable <= mesHonorarios) {
-                  honorariosCom13 +=
-                    Math.floor(salario13Valor * this.porcentagemHonorarios) /
-                    100;
-                }
-              } else if (anoDoTable < anoHonorarios) {
-                honorariosCom13 +=
-                  Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
-              }
-            }
-          } else if (mesDoTable == 1) {
-            taxaReajusteAcumulada13 =
-              taxaReajusteAcumulada13 * value.reajusteAcumulado;
-            quantidadeAno += 1;
-          } else {
-            quantidadeAno += 1;
-          }
-        }
-        i++;
-      }
-
-      this.valorHonorarios += honorariosCom13;
-      this.arr_Salario13 = arr_13Salario;
-      //this.total_processos = this.valor_juros + this.valor_corrigido + this.valorHonorarios;
+      this.valor_total = Math.floor(this.valor_total * 100) / 100;
+      this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
+      this.valor_corrigido = Math.floor(this.valor_corrigido * 100) / 100;
     },
     atualizarTodosDados() {
-      this.headers = [
-        { value: "data", text: "Data" },
-        { value: "reajusteAcumulado", text: "Reajuste" },
-        { value: "salario", text: "Salário R$" },
-        { value: "correcao", text: "Correção Salarial" },
-        { value: "salarioCorrigido", text: "Salário Corrigido R$" },
-        { value: "juros", text: "Juros" },
-        { value: "salarioJuros", text: "Salário Juros R$" },
-        { value: "salarioTotal", text: "Total" },
-      ];
       this.salarioInicial = this.info_calculo.rmi.replace(".", "");
       this.salarioInicial = this.salarioInicial.replace(",", ".");
       this.salarioInicial = parseFloat(this.salarioInicial);
       this.dtInicial = this.info_calculo.dibInicial;
-      let datafinal = this.info_calculo.dip.split("/");
-      if (datafinal[0] == 1) {
-        if (datafinal[1] == 1) {
-          this.dtFinal = "31/12/" + (datafinal[2] - 1);
-        } else {
-          if (datafinal[1] < 10) {
-            this.dtFinal = "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
-          } else {
-            this.dtFinal = "30/" + (datafinal[1] - 1) + "/" + datafinal[2];
-          }
-        }
-      } else {
-        if (datafinal[0] <= 10) {
-          this.dtFinal =
-            "0" + (datafinal[0] - 1) + "/" + datafinal[1] + "/" + datafinal[2];
-        } else {
-          this.dtFinal =
-            +(datafinal[0] - 1) + "/" + datafinal[1] + "/" + datafinal[2];
-        }
-      }
-      //this.dtFinal = this.info_calculo.dip;
+      this.dtFinal = this.info_calculo.dip;
       this.pensaoPorMorte = "";
       this.calc_total = [];
       this.valor_total = 0;
@@ -1235,51 +671,10 @@ export default {
       this.info_calculo.numeroDoProcesso;
       this.dataDoJuros = "";
       this.valorDoJuros = 0;
-      if (
-        this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA"
-      ) {
+      this.InicioDoJuros = this.info_calculo.dataAjuizamento;
+      if (this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA") {
         this.pensaoPorMorte = "PENSÃO POR MORTE - RIVISAR TERMO INICIAL";
       }
-      this.beneficio = false;
-      this.arrayBenficios = [];
-      if (this.info_calculo.beneficiosAcumulados) {
-        this.beneficio = true;
-        this.arrayBenficios = this.info_calculo.beneficiosAcumulados;
-        this.arrayBenficios.forEach((value,index) =>{
-          let verificarPonto = value.rmi.includes(",")
-          if(verificarPonto){
-            let array = value.rmi.split(",");
-          console.log(array)
-          let array0 = array[0].split(".");
-          array[0] = array0.join("");
-          let rmi = array.join(".")
-          this.arrayBenficios[index].rmi = rmi;
-          }else{
-            this.arrayBenficios[index].rmi = value.rmi
-          }
-          
-        })
-      } else {
-        this.pushBeneficiosAcumulados();
-      }
-      this.inicio_juros = this.info_calculo.citacao;
-      this.DataHonorarios = null;
-      this.porcentagemHonorarios = 0;
-      this.valorHonorarios = 0;
-      this.textoHonorarios = null;
-      this.valorSalario13 = 0;
-      this.arr_Salario13 = 0;
-      this.total_processos = 0;
-      this.procntagem_acordo = null;
-    },
-    pushBeneficiosAcumulados() {
-      let obj_beneficioAcumulado = {
-        beneficio: null,
-        dib: null,
-        dif: null,
-        rmi: null,
-      };
-      this.arrayBenficios.push(obj_beneficioAcumulado);
     },
     atualizarCalculadora() {},
     printDiv() {
@@ -1293,8 +688,18 @@ export default {
         * {box-sizing: border-box; margin: 0; padding: 0}
         div {margin-bottom: 3px;} label {font-weight: bold;}
         .titulo, h1, h2 {text-align: center;}
-        
-        
+
+        table tr {
+          border-right: 20px solid #000000;
+        }
+
+        table tr > td {
+          border-right: 20px solid #FFFFFF;
+        }
+
+        table tr < td {
+          border-up: 5px solid #FFFFFF;
+        }
 
         body {height: auto; width: 100vw;padding: 15px; font-size: 1.3rem;}
         .content{ padding: 15px;}
@@ -1313,8 +718,8 @@ export default {
 
         .agu {text-align: center; font-size: 1.3rem; font-weight: bold;}
         h1, h2, h3 {font-size: 1.2rem; font-weight: bold;}
-
-         .titulo {
+        
+        .titulo {
           text-align: center;
         }
 
@@ -1400,7 +805,7 @@ export default {
         .page {
           padding-top: 3px;
         }
-        
+
         `;
       style = style + "</style>";
 
@@ -1438,7 +843,7 @@ export default {
       let anoInicial = parseInt(dtInicial.split("/")[2]),
         anoFinal = parseInt(dtFinal.split("/")[2]);
 
-      const url = `${baseApiUrl}/taxas/todasTaxas/${this.tipoJuros}/${this.tipoCorrecao}`;
+      const url = `${baseApiUrl}/taxas/todasTaxas/1/1`;
       axios(url)
         .then((res) => {
           this.todas_taxas = res.data.map((obj) => {
@@ -1468,7 +873,7 @@ export default {
               mesFinal,
               this.infos
             );
-            console.log("taxa de rejuste; " + taxaReajuste);
+
             if (+anoInicial < +anoFinal)
               return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
           };
@@ -1498,18 +903,16 @@ export default {
               salarioJuros:
                 Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100,
               salarioTotal:
-                Math.floor(obj.salario * obj.correcao * (obj.juros + 1) * 100) /
-                100,
+                Math.floor(
+                  (obj.salario * obj.correcao * obj.juros +
+                    obj.salario * obj.correcao) *
+                    100
+                ) / 100,
             };
 
             return { ...obj, ...temp };
           });
-          this.fatorador();
-          /*if (this.boolJuros) {
-            this.pararJuros();
-          } else {
-            this.ZerarOJuros();
-          }*/
+          this.iniciarCalculo();
         })
         .catch((error) => {
           alert(error.response.data.msg);
@@ -1611,7 +1014,7 @@ export default {
 
             return { ...obj, ...temp };
           });
-          //console.log("FINAAALLL", this.all_info);
+          console.log("FINAAALLL", this.all_info);
         })
         .catch((error) => {
           alert(error.response.data.msg);
@@ -1620,46 +1023,13 @@ export default {
   },
 
   mounted() {
-    let contJuros = [];
-    let jurosUnicos = [];
-    let contCorrecao = [];
-    let correcaoUnicos = [];
-    axios.get(baseApiUrl + "/juros/listar").then((response) => {
-      jurosUnicos[0] = response.data[0];
-      contJuros[0] = response.data[0].tipo;
-      for (let i of response.data) {
-        if (contJuros.indexOf(i.tipo) == -1) {
-          jurosUnicos.push(i);
-          contJuros.push(i.tipo);
-        }
-      }
-      this.optionsJuros = jurosUnicos.map((obj) => ({
-        text: `Tipo: ${obj.tipo}. Descrição : ${obj.descricao}`,
-        value: obj.tipo,
-      }));
-    });
-
-    axios.get(baseApiUrl + "/correcao/listar").then((response2) => {
-      correcaoUnicos[0] = response2.data[0];
-      contCorrecao[0] = response2.data[0].tipo;
-      for (let i of response2.data) {
-        if (contCorrecao.indexOf(i.tipo) == -1) {
-          correcaoUnicos.push(i);
-          contCorrecao.push(i.tipo);
-        }
-      }
-      this.optionsCorrecao = correcaoUnicos.map((obj) => ({
-        text: `Tipo: ${obj.tipo}. Descrição : ${obj.descricao}`,
-        value: obj.tipo,
-      }));
-    });
-    axios.get(baseApiUrl + "/beneficio/listar").then((res) =>{
-      this.beneficiosInacumulaveis = res.data;
-    })
+    if (this.info_calculo.beneficio == "21 - PENSAO POR MORTE") {
+      this.info_calculo.nome = "nuulll";
+    }
   },
 };
 </script>
-<style >
+<style>
 .home {
   height: auto;
   min-height: 100vh;
