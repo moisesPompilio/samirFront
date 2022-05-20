@@ -570,9 +570,6 @@
         ><i class="fa fa-file"></i
       ></b-button>
     </div>
-    <v-card>
-      {{ arrayTeste[1] }}
-    </v-card>
   </v-container>
 </template>
 
@@ -1737,6 +1734,7 @@ export default {
     axios.get(baseApiUrl + "/beneficio/listar").then((res) => {
       this.beneficiosInacumulveisBanco = res.data;
     });
+
   },
 };
 </script>
