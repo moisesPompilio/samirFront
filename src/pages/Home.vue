@@ -544,11 +544,14 @@
       <img src="" alt="" />
       <v-data-table
         id="areaToPrint"
+        dense
         v-if="mode === 'table'"
         :headers="headers"
         :items="calc_total"
+        :items-per-page="calc_total.length"
         item-key="name"
         class="elevation-1"
+        hide-default-footer
       >
       </v-data-table>
 
@@ -1388,6 +1391,20 @@ export default {
           /* background-size: cover; */
           position: relative;
         }
+
+        table tr {
+          border-right: 20px solid #000000;
+        }
+
+        table tr > td {
+          border-right: 20px solid #FFFFFF;
+        }
+
+        table tr < td {
+          border-up: 5px solid #FFFFFF;
+        }
+
+
 
         .agu {text-align: center; font-size: 1.3rem; font-weight: bold;}
         h1, h2, h3 {font-size: 1.2rem; font-weight: bold;}
