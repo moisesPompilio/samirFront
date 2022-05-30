@@ -374,7 +374,7 @@
         <label class="inputCalculo" id="somaTotal" />
         <br />
         <br />
-        <input placeholder="XX.XXX,XX" />
+        <input placeholder="XX.XXX,XX" v-model="pacelasVencidas" />
         <label class="inputCalculo" id="parcelasVincendas" />
         <br />
         <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
@@ -518,6 +518,7 @@
           <br />
           <br />
           <label class="inputCalculo" id="parcelasVincendas" />
+          {{pacelasVencidas}}
           <br />
           <label class="inputCalculo" id="honorariosAdvocativos" />
           {{ valorHonorarios }}
@@ -559,11 +560,14 @@
 
       <v-data-table
         id="areaToPrint"
+        dense
         v-if="arr_Salario13[0]"
         :headers="headers"
         :items="arr_Salario13"
+        :items-per-page="arr_Salario13.length"
         item-key="data"
         class="elevation-1"
+        hide-default-footer
       >
       </v-data-table>
     </v-card>
@@ -660,6 +664,8 @@ export default {
       arrayTeste: [],
       beneficiosInacumulveisBanco: [],
       beneficioInacumulavel: [],
+      pacelasVencidas: 0,
+      salarioMinimoOssada:0,
     };
   },
 
@@ -690,69 +696,53 @@ export default {
       } else {
         this.ZerarOJuros();
       }
+      
     },
-    projetarArrayBeneficio() {
-      console.log("aqui");
-      // let array = [];
-      // let dataInicio = this.dtInicial.split("/");
-      // let dataFinal = this.dtFinal.split("/");
-      // let datasBeneficio = dataInicio;
-      // let reajuste = this.arrayReajusteRencete.filter(
-      //   (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
-      // );
-      // console.log("mes: " + dataFinal[1]);
-      // console.log("ano: " + dataFinal[2]);
-      // let valorDevido = this.salarioInicial;
-      // let mes = datasBeneficio[1];
-      // let ano = datasBeneficio[2];
-      // console.log("mes: " + mes);
-      // console.log("ano: " + ano);
-      // console.log("Reajuste: " + reajuste);
-      // console.log("valor devido: " + valorDevido);
-      // console.log("array: " + array);
-      /* do {
-        console.log("mes: " + mes);
-        console.log("ano: " + ano);
-        let taxaCorrecao = this.arrayCorrecaoRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let taxaJuros = this.arrayJurosRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let obj = {};
-
-        if (mes > 12) {
-          ano += 1;
-          mes += 1;
-          valorDevido *= reajuste;
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: reajuste,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
-          reajuste = this.arrayReajusteRencete.filter(
-            (taxas) => taxas.data == "01/" + mes + "/" + ano
-          );
-        } else {
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: 1,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
+    calculoDeOssada() {
+      let ossada = 0;
+      let date = this.info_calculo.dataAjuizamento.split("/");
+      let correcao = 1;
+      let juros = 0;
+      date[2] += 1;
+      this.calc_total.forEach((value) =>{
+        console.log(value.data.split("/")[2] == date[2] && value.data.split("/")[1] == date[1])
+        if(value.data.split("/")[2] == date[2] && value.data.split("/")[1] == date[1]){
+            correcao = value.correcao;
+            juros = value.juros;
+            console.log("correcao: " + correcao);
         }
-        array.push(obj);
-        mes += 1;
-        console.log("aqui2");
-      } while (mes != dataFinal[1] && ano != dataFinal[2]);
-      this.arrayTeste = array;*/
+        if(value.data.split("/")[2] <= date[2]){
+          if (value.data.split("/")[2] ==date[2] ){
+            if(value.data.split("/")[1] <=date[1]){
+              ossada += value.salario;
+            }
+          }else{
+            ossada += value.salario;
+          }
+        }
+      });
+      /*let salaraioMinimo;
+      const ossadaUrl = `http://localhost:8888/salarioMinimo/procuraPorAno/${this.info_calculo.dataAjuizamento.split("/")[2]}`;
+      console.log("url: " + ossadaUrl);
+      axios(ossadaUrl)
+        .then(async (res) =>{
+          const obj = await res.data;
+          const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
+          await obj.forEach(value =>{
+            if(value.data.split("/")[1] >= ajuizamento[1]){
+              salaraioMinimo = value.valor;
+              console.log("Salario minimo: " + salaraioMinimo);
+            }
+          });*/
+          console.log("Salario minimo2: " + this.salarioMinimoOssada);
+          this.salarioMinimoOssada *= 60;
+          console.log("Parcelas vencidas: " + ossada)
+        ossada = ossada - this.salarioMinimoOssada;
+        if(ossada < 0){
+          ossada = 0; 
+        }
+      this.pacelasVencidas = Math.floor(ossada * correcao * (juros + 1) *100) / 100 ;
+        //})
     },
     ajusteData(data) {
       let array1 = data.split("T");
@@ -1130,7 +1120,7 @@ export default {
               100
           ) / 100;
       }
-
+      this.calculoDeOssada();
       this.formatacao();
     },
     honorarios(mesHonorarios, anoHonorarios) {
@@ -1290,6 +1280,7 @@ export default {
         }
       }
       //this.dtFinal = this.info_calculo.dip;
+      this.pacelasVencidas = 0;
       this.pensaoPorMorte = "";
       this.calc_total = [];
       this.valor_total = 0;
@@ -1392,19 +1383,21 @@ export default {
           position: relative;
         }
 
-        table tr {
-          border-right: 20px solid #000000;
+        table th{
+          border: 20px solid #FFFFFF;
+          text-align: center;
         }
-
         table tr > td {
-          border-right: 20px solid #FFFFFF;
+          border: 20px solid #FFFFFF;
         }
 
         table tr < td {
           border-up: 5px solid #FFFFFF;
         }
-
-
+        
+        table td{
+          text-align: center;
+        }
 
         .agu {text-align: center; font-size: 1.3rem; font-weight: bold;}
         h1, h2, h3 {font-size: 1.2rem; font-weight: bold;}
@@ -1520,6 +1513,20 @@ export default {
       newWin.close();
     },
     informacoesCalculo() {
+      //let salaraioMinimo;
+      const ossadaUrl = `http://localhost:8888/salarioMinimo/procuraPorAno/${this.info_calculo.dataAjuizamento.split("/")[2]}`;
+      axios(ossadaUrl)
+        .then(async (res) =>{
+          const obj = await res.data;
+          const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
+          await obj.forEach(value =>{
+            console.log("valor: " + value.data.split("T")[0].split("-")[1])
+            if(value.data.split("T")[0].split("-")[1] <= ajuizamento[1]){
+              this.salarioMinimoOssada = value.valor;
+              console.log("Salario minimo: " + this.salarioMinimoOssada);
+            }
+          });
+        });
       var arr_todasTaxas = [];
       var taxas = [];
 
