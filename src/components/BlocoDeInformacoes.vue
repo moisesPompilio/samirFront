@@ -137,6 +137,16 @@
           outlined
         ></v-text-field>
       </v-col>
+      <v-col cols="12" sm="6" md="6">
+        <label for="urlProcesso" class="labels pb-3">URL do processo</label>
+        <v-text-field
+          v-model="urlProcesso"
+          id="urlProcesso"
+          dense
+          placeholder="Exp: https://sapiens.agu.gov.br"
+          outlined
+        ></v-text-field>
+      </v-col>
       <v-row class="mx-3" v-if="exibir.tudo">
         <v-col cols="12" sm="6" md="2">
           <label for="beneficioAcumulado.beneficio" class="labels pb-3">Beneficio Acumulado?</label>
@@ -239,6 +249,7 @@ export default {
       dip: "",
       citacao: "",
       aps: "",
+      urlProcesso: "",
       headers: [
         { value: "id", text: "ID" },
         { value: "numeroDoProcesso", text: "NUP" },
@@ -284,6 +295,7 @@ export default {
         aps: this.aps,
         citacao: this.citacao,
         beneficiosAcumulados: this.array_beneficioAcumulado,
+        urlProcesso: this.urlProcesso,
       });
       this.cleanFields();
       this.saveInfos();
@@ -310,6 +322,7 @@ export default {
       this.aps = "";
       this.citacao = "";
       this.array_beneficioAcumulado = [];
+      this.urlProcesso = "";
     },
     formataçao(valor) {
       return valor;
@@ -327,6 +340,7 @@ export default {
       this.dip = this.infos[y].dip;
       this.aps = this.infos[y].aps;
       this.citacao = this.infos[y].citacao;
+      this.urlProcesso = this.infos[y].urlProcesso;
     },
     pushBeneficio(){
       this.array_beneficioAcumulado.push(this.beneficioAcumulado);
