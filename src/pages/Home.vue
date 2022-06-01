@@ -87,18 +87,6 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            style="margin-right: 5px"
-            v-model="salario13"
-            :value="salario13"
-          />
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Possui 13 salrio</label
-          >
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
           <label for="honorarios_Advocativos" class="labels pb-3"
             >Acordo %</label
           >
@@ -108,6 +96,51 @@
             dense
             outlined
           ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <v-row>
+            <v-col cols="12" sm="6" md="1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="margin-right: 5px"
+                v-model="salario13"
+                :value="salario13"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+              <label for="salario13" class="labels pb-2">13Salario</label>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="margin-right: 5px"
+                v-model="boolJuros"
+                :value="boolJuros"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+              <label for="boolJuros" class="labels pb-2">Juros</label>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="1">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                style="margin-right: 5px"
+                :value="alcada"
+                v-model="alcada"
+                id="flexCheckDefault"
+              />
+              </v-col>
+              <v-col cols="12" sm="6" md="2">
+                <label for="alcada" class="labels pb-2">Alcada</label>
+              </v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="3">
           <label class="labels pb-3">Juros</label>
@@ -127,20 +160,24 @@
             v-model="tipoCorrecao"
           ></v-select>
         </v-col>
-        <div class="d-block p-0">
-          <v-col cols="12" sm="6" md="3">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              style="margin-right: 5px"
-              v-model="boolJuros"
-              :value="salario13"
-            />
-            <label for="honorarios_Advocativos" class="labels pb-3"
-              >Juros</label
-            >
-          </v-col>
-        </div>
+      </v-row>
+      <v-row v-if="alcada">
+        <v-col cols="12" sm="6" md="3">
+          <v-select
+            outlined
+            placeholder="Escolha uma opção"
+            :items="alcadaVencidaText"
+            v-model="alcadaVencidaBoolean"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <v-select
+            outlined
+            placeholder="Escolha uma opção"
+            :items="alcada13Text"
+            v-model="alcada13Boolean"
+          ></v-select>
+        </v-col>
       </v-row>
 
       <!-- CHECKBOX  -->
@@ -241,6 +278,16 @@
             color="secondary"
             @click="(mode = ''), redirectToCalculo()"
             >cancelar</v-btn
+          >
+        </v-col>
+        <v-col cols="1">
+          <v-btn
+            depressed
+            color="primary"
+            style="margin-left:20px"
+            :href="info_calculo.urlProcesso"
+            target="_blank"
+            >Consultar Processo</v-btn
           >
         </v-col>
       </v-row>
@@ -374,7 +421,7 @@
         <label class="inputCalculo" id="somaTotal" />
         <br />
         <br />
-        <input placeholder="XX.XXX,XX" />
+        <input placeholder="XX.XXX,XX" v-model="pacelasVencidas" />
         <label class="inputCalculo" id="parcelasVincendas" />
         <br />
         <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
@@ -518,6 +565,7 @@
           <br />
           <br />
           <label class="inputCalculo" id="parcelasVincendas" />
+          {{ pacelasVencidas }}
           <br />
           <label class="inputCalculo" id="honorariosAdvocativos" />
           {{ valorHonorarios }}
@@ -544,23 +592,29 @@
       <img src="" alt="" />
       <v-data-table
         id="areaToPrint"
+        dense
         v-if="mode === 'table'"
         :headers="headers"
         :items="calc_total"
+        :items-per-page="calc_total.length"
         item-key="name"
         class="elevation-1"
+        hide-default-footer
       >
       </v-data-table>
 
-      <v-label>Tabela de 13 salario</v-label>
+      <v-label v-if="arr_Salario13[0]">Tabela de 13 salario</v-label>
 
       <v-data-table
         id="areaToPrint"
+        dense
         v-if="arr_Salario13[0]"
         :headers="headers"
         :items="arr_Salario13"
+        :items-per-page="arr_Salario13.length"
         item-key="data"
         class="elevation-1"
+        hide-default-footer
       >
       </v-data-table>
     </v-card>
@@ -657,6 +711,19 @@ export default {
       arrayTeste: [],
       beneficiosInacumulveisBanco: [],
       beneficioInacumulavel: [],
+      pacelasVencidas: 0,
+      salarioMinimoOssada: 0,
+      alcada: true,
+      alcadaVencidaText: [
+        { value: true, text: "Vencida" },
+        { value: false, text: "Vincenda" },
+      ],
+      alcada13Text: [
+        { value: true, text: "12 compentecias (13 incluso)" },
+        { value: false, text: "12 compentecias (13 autonomo)" },
+      ],
+      alcadaVencidaBoolean: true,
+      alcada13Boolean: false,
     };
   },
 
@@ -688,68 +755,66 @@ export default {
         this.ZerarOJuros();
       }
     },
-    projetarArrayBeneficio() {
-      console.log("aqui");
-      // let array = [];
-      // let dataInicio = this.dtInicial.split("/");
-      // let dataFinal = this.dtFinal.split("/");
-      // let datasBeneficio = dataInicio;
-      // let reajuste = this.arrayReajusteRencete.filter(
-      //   (taxas) => taxas.data == "01/" + dataInicio[1] + "/" + dataInicio[2]
-      // );
-      // console.log("mes: " + dataFinal[1]);
-      // console.log("ano: " + dataFinal[2]);
-      // let valorDevido = this.salarioInicial;
-      // let mes = datasBeneficio[1];
-      // let ano = datasBeneficio[2];
-      // console.log("mes: " + mes);
-      // console.log("ano: " + ano);
-      // console.log("Reajuste: " + reajuste);
-      // console.log("valor devido: " + valorDevido);
-      // console.log("array: " + array);
-      /* do {
-        console.log("mes: " + mes);
-        console.log("ano: " + ano);
-        let taxaCorrecao = this.arrayCorrecaoRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let taxaJuros = this.arrayJurosRencete.filter(
-          (taxas) => taxas.data == "01/" + mes + "/" + ano
-        );
-        let obj = {};
-
-        if (mes > 12) {
-          ano += 1;
-          mes += 1;
-          valorDevido *= reajuste;
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: reajuste,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
-          reajuste = this.arrayReajusteRencete.filter(
-            (taxas) => taxas.data == "01/" + mes + "/" + ano
-          );
+    calculoDeOssada() {
+      let ossada = 0;
+      let date = this.info_calculo.dataAjuizamento.split("/");
+      let correcao = 1;
+      let juros = 0;
+      let valueMes = 11;
+      console.log("Value mes: " + valueMes);
+      if (this.alcadaVencidaBoolean) {
+        console.log("Value mes: " + valueMes);
+        valueMes += 1;
+      }
+      console.log("Value mes: " + valueMes);
+      if (this.alcada13Boolean) {
+        valueMes += 1;
+      }
+      console.log("Value mes: " + valueMes);
+      let mesOssada = date[1] + valueMes;
+      let anoOssada;
+      if (mesOssada > 12) {
+        if (mesOssada > 24) {
+          mesOssada -= 24;
+          anoOssada = date[2] + 2;
         } else {
-          obj = {
-            data: "01/" + mes + "/" + ano,
-            reajuste: 1,
-            salario: valorDevido,
-            correcao: taxaCorrecao.taxaAcumulada,
-            valorCorrigido: valorDevido * taxaCorrecao,
-            taxaJuros,
-            valorJuros: valorDevido * taxaCorrecao * taxaJuros,
-          };
+          mesOssada -= 12;
+          anoOssada = date[2] + 1;
         }
-        array.push(obj);
-        mes += 1;
-        console.log("aqui2");
-      } while (mes != dataFinal[1] && ano != dataFinal[2]);
-      this.arrayTeste = array;*/
+      }
+      this.calc_total.forEach((value) => {
+        if (
+          value.data.split("/")[2] == date[2] &&
+          value.data.split("/")[1] == date[1]
+        ) {
+          correcao = value.correcao;
+          juros = value.juros;
+        }
+        if (value.data.split("/")[2] <= anoOssada) {
+          if (value.data.split("/")[2] == anoOssada) {
+            if (value.data.split("/")[1] <= mesOssada) {
+              ossada += value.salario;
+            }
+          } else {
+            ossada += value.salario;
+          }
+        }
+      });
+      this.arr_Salario13.forEach((value) => {
+        if (value.data.split("/")[2] == date[2]) {
+          ossada += value.salario;
+        }
+      });
+      console.log("Salario minimo2: " + this.salarioMinimoOssada);
+      this.salarioMinimoOssada *= 60;
+      console.log("Parcelas vencidas: " + ossada);
+      ossada = ossada - this.salarioMinimoOssada;
+      // if (ossada < 0) {
+      //   ossada = 0;
+      // }
+      this.pacelasVencidas =
+        Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
+      //})
     },
     ajusteData(data) {
       let array1 = data.split("T");
@@ -767,6 +832,8 @@ export default {
       this.arr_Salario13 = 0;
       this.juros13Valor = 0;
       this.corrigido13Valor = 0;
+      this.pacelasVencidas = 0;
+      this.salarioMinimoOssada = 0;
     },
     iniciarCalculo() {
       this.beneficioInacumulavel = [];
@@ -1127,7 +1194,9 @@ export default {
               100
           ) / 100;
       }
-
+      if (this.alcada) {
+        this.calculoDeOssada();
+      }
       this.formatacao();
     },
     honorarios(mesHonorarios, anoHonorarios) {
@@ -1287,6 +1356,7 @@ export default {
         }
       }
       //this.dtFinal = this.info_calculo.dip;
+      this.pacelasVencidas = 0;
       this.pensaoPorMorte = "";
       this.calc_total = [];
       this.valor_total = 0;
@@ -1387,6 +1457,22 @@ export default {
           background-repeat: no-repeat;
           /* background-size: cover; */
           position: relative;
+        }
+
+        table th{
+          border: 20px solid #FFFFFF;
+          text-align: center;
+        }
+        table tr > td {
+          border: 20px solid #FFFFFF;
+        }
+
+        table tr < td {
+          border-up: 5px solid #FFFFFF;
+        }
+        
+        table td{
+          text-align: center;
         }
 
         .agu {text-align: center; font-size: 1.3rem; font-weight: bold;}
@@ -1503,6 +1589,21 @@ export default {
       newWin.close();
     },
     informacoesCalculo() {
+      //let salaraioMinimo;
+      const ossadaUrl = `${baseApiUrl}/salarioMinimo/procuraPorAno/${
+        this.info_calculo.dataAjuizamento.split("/")[2]
+      }`;
+      axios(ossadaUrl).then(async (res) => {
+        const obj = await res.data;
+        const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
+        await obj.forEach((value) => {
+          console.log("valor: " + value.data.split("T")[0].split("-")[1]);
+          if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
+            this.salarioMinimoOssada = value.valor;
+            console.log("Salario minimo: " + this.salarioMinimoOssada);
+          }
+        });
+      });
       var arr_todasTaxas = [];
       var taxas = [];
 
@@ -1734,7 +1835,6 @@ export default {
     axios.get(baseApiUrl + "/beneficio/listar").then((res) => {
       this.beneficiosInacumulveisBanco = res.data;
     });
-
   },
 };
 </script>
