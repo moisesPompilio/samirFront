@@ -161,24 +161,6 @@
           ></v-select>
         </v-col>
       </v-row>
-      <v-row v-if="alcada">
-        <v-col cols="12" sm="6" md="3">
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="alcadaVencidaText"
-            v-model="alcadaVencidaBoolean"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="alcada13Text"
-            v-model="alcada13Boolean"
-          ></v-select>
-        </v-col>
-      </v-row>
 
       <!-- CHECKBOX  -->
 
@@ -760,17 +742,7 @@ export default {
       let date = this.info_calculo.dataAjuizamento.split("/");
       let correcao = 1;
       let juros = 0;
-      let valueMes = 11;
-      console.log("Value mes: " + valueMes);
-      if (this.alcadaVencidaBoolean) {
-        console.log("Value mes: " + valueMes);
-        valueMes += 1;
-      }
-      console.log("Value mes: " + valueMes);
-      if (this.alcada13Boolean) {
-        valueMes += 1;
-      }
-      console.log("Value mes: " + valueMes);
+      let valueMes = 12;
       let mesOssada = date[1] + valueMes;
       let anoOssada;
       if (mesOssada > 12) {
@@ -801,19 +773,28 @@ export default {
         }
       });
       this.arr_Salario13.forEach((value) => {
-        if (value.data.split("/")[2] == date[2]) {
-          ossada += value.salario;
+        if (value.data.split("/")[2] <=anoOssada) {
+          if(value.data.split("/")[2] ==anoOssada){
+            if(value.data.split("/")[1] ==mesOssada)
+            ossada += value.salario;
+          }else{
+            ossada += value.salario;
+          }
         }
       });
       console.log("Salario minimo2: " + this.salarioMinimoOssada);
       this.salarioMinimoOssada *= 60;
+      console.log("Salario minimo2: " + this.salarioMinimoOssada);
       console.log("Parcelas vencidas: " + ossada);
       ossada = ossada - this.salarioMinimoOssada;
-      // if (ossada < 0) {
-      //   ossada = 0;
-      // }
-      this.pacelasVencidas =
+      console.log("Parcelas vencidas: " + ossada);
+      if (ossada < 0) {
+        ossada = 0;
+      }else{
+        this.pacelasVencidas =
         Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
+        this.total_processos = this.total_processos - this.pacelasVencidas;
+      }
       //})
     },
     ajusteData(data) {
@@ -934,7 +915,9 @@ export default {
       }
     },
     beneficioAcumuladoCalculo() {
+      let reajusteAcumulado = 1;
       function decontar(value, dado, index) {
+        reajusteAcumulado *= dado.reajusteAcumulado;
         // if (index > 0) {
         let recebido = (dado.recebido * 100 + value.rmi * 100) / 100;
         //index > 0 ? console.log("recebido: " + dado.recebido + " rmi: " + value.rmi + " valor final: " + ((value.rmi * 100) + (dado.recebido * 100))) : console.log("rmi: " + value.rmi)
@@ -942,15 +925,15 @@ export default {
           data: dado.data,
           reajusteAcumulado: dado.reajusteAcumulado,
           devido: index > 0 ? dado.devido : dado.salario,
-          recebido: index > 0 ? recebido : value.rmi,
-          salario: dado.salario - value.rmi,
+          recebido: index > 0 ? recebido :Math.floor( (value.rmi * reajusteAcumulado) * 100) / 100,
+          salario: dado.salario - (value.rmi * reajusteAcumulado),
           correcao: dado.correcao,
           salarioCorrigido:
-            Math.floor((dado.salario - value.rmi) * dado.correcao * 100) / 100,
+            Math.floor((dado.salario - (value.rmi * reajusteAcumulado)) * dado.correcao * 100) / 100,
           juros: dado.juros,
           salarioJuros:
             Math.floor(
-              (dado.salario - value.rmi) * dado.juros * dado.correcao * 100
+              (dado.salario - (value.rmi * reajusteAcumulado)) * dado.juros * dado.correcao * 100
             ) / 100,
           salarioTotal:
             Math.floor(
@@ -1010,6 +993,34 @@ export default {
           }
         });
         this.calc_total = new_array;
+        // let arrays13 = [];
+        // this.arr_Salario13.forEach((value,i) =>{
+        //   this.arr_Salario13[i] = {
+        //     data: value.data,
+        //   reajusteAcumulado: value.reajusteAcumulado,
+        //   devido: value.salario,
+        //   recebido: 0,
+        //   salario: value.salario,
+        //   correcao: value.correcao,
+        //   salarioCorrigido: value.salarioCorrigido,
+        //   juros: value.juros,
+        //   salarioJuros: value.salarioJuros,
+        //   salarioTotal: value.salarioTotal,
+        //   }
+        // })
+        // this.arr_Salario13 = arrays13;
+        if(!this.beneficioInacumulavel[0].rmi){
+          this.headers = [
+          { value: "data", text: "Data" },
+          { value: "reajusteAcumulado", text: "Reajuste" },
+          { value: "salario", text: "Salário R$" },
+          { value: "correcao", text: "Correção Salarial" },
+          { value: "salarioCorrigido", text: "Salário Corrigido R$" },
+          { value: "juros", text: "Juros" },
+          { value: "salarioJuros", text: "Salário Juros R$" },
+          { value: "salarioTotal", text: "Total" },
+        ];
+        }
       });
     },
     ZerarOJuros() {
@@ -1366,6 +1377,7 @@ export default {
       this.dataDoJuros = "";
       this.valorDoJuros = 0;
       this.beneficioInacumulavel = [];
+      this.arrayBenficios = [];
       if (
         this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA"
       ) {
@@ -1409,6 +1421,7 @@ export default {
           }
         });
       });
+      this.arrayBenficios = this.beneficioInacumulavel;
       console.log("size: " + this.beneficioInacumulavel.length);
       this.inicio_juros = this.info_calculo.citacao;
       this.DataHonorarios = null;
