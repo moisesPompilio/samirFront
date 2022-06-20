@@ -230,7 +230,7 @@
       <v-row class="my-3">
         <v-col cols="1" class="mr-6">
           <v-btn depressed color="primary" @click="
-            zeraDadosDocalculo(), (mode = 'table'), informacoesCalculo()
+            zeraDadosDocalculo(), (mode = 'table'), calculo()
           ">Calcular</v-btn>
         </v-col>
         <v-col cols="1">
@@ -244,15 +244,6 @@
         <v-col cols="1">
           <v-btn depressed color="primary" style="margin-left:145px" @click=adicionarLote() target="_blank">Adicionar ao
             Lote</v-btn>
-        </v-col>
-        <v-col cols="1" class="mr-6">
-          <v-btn
-            depressed
-            color="primary"
-            style="margin-left: 20px"
-            @click="zeraDadosDocalculo(), (mode = 'table'), calculo()"
-            >Calcular</v-btn
-          >
         </v-col>
       </v-row>
     </v-card>
