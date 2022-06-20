@@ -664,8 +664,9 @@ export default {
         salario13: this.salario13,
         dibAnterior: this.dibAnterior == "" ? null : this.dibAnterior,
       };
+      
       axios
-        .post("http://localhost:8888/calculo/calcular", body)
+        .post(`${baseApiUrl}/calculo/calcular`, body)
         .then(async (response) => {
           this.calc_total = await response.data;
           await this.iniciarCalculo();
@@ -779,8 +780,9 @@ export default {
             console.log("Salario minimo: " + this.salarioMinimoOssada);
           }
         });
+        
         axios
-          .post("http://localhost:8888/calculo/alcada", body)
+          .post(`${baseApiUrl}/calculo/alcada`, body)
           .then((response) => {
             console.log(response.data);
             let alcada = response.data;
@@ -810,9 +812,9 @@ export default {
               });
             });
             console.log("Parcelas vencidas: " + this.pacelasVencidas);
-            ossada = Math.floor(((this.pacelasVencidas * correcao * (juros + 1)) - this.salarioMinimoOssada) * 100) / 100;
+            ossada = Math.floor(((this.pacelasVencidas) - this.salarioMinimoOssada) * 100) / 100;
             console.log("Parcelas vencidas: " + ossada);
-            this.alcadaValue = Math.floor((this.pacelasVencidas * correcao * (juros + 1)) * 100) /100;
+            this.alcadaValue = Math.floor((this.pacelasVencidas) * 100) /100;
             if (ossada < 0) {
               ossada = 0
               this.pacelasVencidas = ossada;
@@ -1016,8 +1018,9 @@ export default {
             salario13: this.salario13,
             limiteMinimoMaximo: this.limiteMinimoMaximo,
           };
+          
           axios
-            .post("http://localhost:8888/calculo/beneficioAcumulado", body)
+            .post(`${baseApiUrl}/calculo/beneficioAcumulado`, body)
             .then((response) => {
               let newArrayCalculo = [];
               let alteracaoConfimada = false;
