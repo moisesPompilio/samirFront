@@ -11,21 +11,17 @@
       </v-tabs>
     </v-card>
     <v-card>
-      <bloco-informacoes
-        v-if="!add_taxa"
-        @calculo="(info_calculo = $event), atualizarTodosDados()"
-        :exibir="{
-          tudo: BlocoDeInformacoes_tudo,
-          processos: BlocoDeInformacoes_processos,
-        }"
-        @dados="BlocoDeInformacoes_tudo = $event"
-        @processos="BlocoDeInformacoes_processos = $event"
-      ></bloco-informacoes>
+      <bloco-informacoes v-if="!add_taxa" @calculo="(info_calculo = $event), atualizarTodosDados()" :exibir="{
+        tudo: BlocoDeInformacoes_tudo,
+        processos: BlocoDeInformacoes_processos,
+      }" @dados="BlocoDeInformacoes_tudo = $event" @processos="BlocoDeInformacoes_processos = $event">
+      </bloco-informacoes>
     </v-card>
     <v-card class="pa-3 my-3" v-if="add_taxa == false">
       <v-row>
         <v-col cols="12" sm="6" md="3">
           <label for="data-inicial" class="labels pb-3">Data Inicial</label>
+
           <v-text-field
             v-model="dtInicial"
             id="data-inicial"
@@ -65,52 +61,27 @@
             outlined
             required
           ></v-text-field>
+
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Honorarios Advocativos Data</label
-          >
-          <v-text-field
-            v-model="DataHonorarios"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
+          <label for="honorarios_Advocativos" class="labels pb-3">Honorarios Advocativos Data</label>
+          <v-text-field v-model="DataHonorarios" id="data-final" dense outlined></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Honorarios Advocativos porcentagem %</label
-          >
-          <v-text-field
-            v-model="porcentagemHonorarios"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
+          <label for="honorarios_Advocativos" class="labels pb-3">Honorarios Advocativos porcentagem %</label>
+          <v-text-field v-model="porcentagemHonorarios" id="data-final" dense outlined></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <label for="honorarios_Advocativos" class="labels pb-3"
-            >Acordo %</label
-          >
-          <v-text-field
-            v-model="procntagem_acordo"
-            id="data-final"
-            dense
-            outlined
-          ></v-text-field>
+          <label for="honorarios_Advocativos" class="labels pb-3">Acordo %</label>
+          <v-text-field v-model="procntagem_acordo" id="data-final" dense outlined></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
           <v-row>
             <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="salario13"
-                :value="salario13"
-              />
+              <input class="form-check-input" type="checkbox" style="margin-right: 5px" v-model="salario13"
+                :value="salario13" />
             </v-col>
             <v-col cols="12" sm="6" md="2">
               <label for="salario13" class="labels pb-2">13Salario</label>
@@ -118,13 +89,8 @@
           </v-row>
           <v-row>
             <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="boolJuros"
-                :value="boolJuros"
-              />
+              <input class="form-check-input" type="checkbox" style="margin-right: 5px" v-model="boolJuros"
+                :value="boolJuros" />
             </v-col>
             <v-col cols="12" sm="6" md="2">
               <label for="boolJuros" class="labels pb-2">Juros</label>
@@ -148,21 +114,11 @@
         </v-col>
         <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3">Juros</label>
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="optionsJuros"
-            v-model="tipoJuros"
-          ></v-select>
+          <v-select outlined placeholder="Escolha uma opção" :items="optionsJuros" v-model="tipoJuros"></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3">Correção</label>
-          <v-select
-            outlined
-            placeholder="Escolha uma opção"
-            :items="optionsCorrecao"
-            v-model="tipoCorrecao"
-          ></v-select>
+          <v-select outlined placeholder="Escolha uma opção" :items="optionsCorrecao" v-model="tipoCorrecao"></v-select>
         </v-col>
         <v-col cols="12" sm="6" md="2">
           <label for="atualizacao" class="labels pb-2">Atualizacao</label>
@@ -225,73 +181,42 @@
 
       <b-row class="row-one my-3 align-items-center">
         <b-col sm="2">
-          <input
-            class="form-check-input"
-            style="margin-right: 5px"
-            type="checkbox"
-            :value="beneficio"
-            v-model="beneficio"
-            id="flexCheckDefault"
-          />
+          <input class="form-check-input" style="margin-right: 5px" type="checkbox" :value="beneficio"
+            v-model="beneficio" id="flexCheckDefault" />
           <label class="form-check-label labels" for="flexCheckDefault">
             Recebeu Benefício
           </label>
         </b-col>
         <b-col sm="2" v-if="beneficio === true">
-          <b-button
-            id="button-beneficio"
-            color="primary"
-            @click="pushBeneficiosAcumulados()"
-            >Adicionar Beneficio</b-button
-          >
+          <b-button id="button-beneficio" color="primary" @click="pushBeneficiosAcumulados()">Adicionar Beneficio
+          </b-button>
         </b-col>
       </b-row>
-      <b-row
-        class="row-one my-3 align-items-center"
-        v-for="obj_beneficioAcumulado of arrayBenficios"
-        :key="obj_beneficioAcumulado.dib"
-      >
+      <b-row class="row-one my-3 align-items-center" v-for="obj_beneficioAcumulado of arrayBenficios"
+        :key="obj_beneficioAcumulado.dib">
         <b-col sm="3" v-if="beneficio === true">
           <label for="beneficio" class="labels">Qual Benefício?</label>
-          <b-form-input
-            id="beneficio"
-            v-model="obj_beneficioAcumulado.beneficio"
-            type="text"
-            size="sm"
-            placeholder="Ex: Auxílio Desemprego"
-          ></b-form-input>
+          <b-form-input id="beneficio" v-model="obj_beneficioAcumulado.beneficio" type="text" size="sm"
+            placeholder="Ex: Auxílio Desemprego"></b-form-input>
         </b-col>
         <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio_inicial" class="labels"
-            >Início do Benefício</label
-          >
-          <b-form-input
-            id="beneficio_inicial"
-            v-model="obj_beneficioAcumulado.dib"
-            type="text"
-            size="sm"
-          ></b-form-input>
+          <label for="beneficio_inicial" class="labels">Início do Benefício</label>
+          <b-form-input id="beneficio_inicial" v-model="obj_beneficioAcumulado.dib" type="text" size="sm">
+          </b-form-input>
         </b-col>
         <b-col sm="2" v-if="beneficio === true">
           <label for="beneficio_final" class="labels">Fim do Benefício</label>
-          <b-form-input
-            v-model="obj_beneficioAcumulado.dif"
-            id="beneficio_final"
-            type="text"
-            size="sm"
-          ></b-form-input>
+          <b-form-input v-model="obj_beneficioAcumulado.dif" id="beneficio_final" type="text" size="sm"></b-form-input>
         </b-col>
         <b-col sm="3" v-if="beneficio === true">
           <label for="beneficio" class="labels">RMI</label>
-          <b-form-input
-            v-model="obj_beneficioAcumulado.rmi"
-            id="beneficio"
-            type="text"
-            size="sm"
-            placeholder="Ex:1000"
-          ></b-form-input>
+          <b-form-input v-model="obj_beneficioAcumulado.rmi" id="beneficio" type="text" size="sm" placeholder="Ex:1000">
+          </b-form-input>
         </b-col>
       </b-row>
+      <template>
+        <v-data-table :headers="headersCalculoLote" :items="calculoLote" class="elevation-1"></v-data-table>
+      </template>
 
       <!-- BOTÕES -->
 
@@ -299,46 +224,26 @@
         <v-col>
           <label for="valor-devido" class="labels pensaoPOrMorte">
             {{ pensaoPorMorte }}
-          </label></v-col
-        >
+          </label>
+        </v-col>
       </v-row>
       <v-row class="my-3">
         <v-col cols="1" class="mr-6">
-          <v-btn
-            depressed
-            color="primary"
-            @click="
-              zeraDadosDocalculo(), (mode = 'table'), informacoesCalculo()
-            "
-            >Calcular</v-btn
-          >
+          <v-btn depressed color="primary" @click="
+            zeraDadosDocalculo(), (mode = 'table'), calculo()
+          ">Calcular</v-btn>
         </v-col>
         <v-col cols="1">
-          <v-btn
-            depressed
-            color="secondary"
-            @click="(mode = ''), redirectToCalculo()"
-            >cancelar</v-btn
-          >
+          <v-btn depressed color="secondary" @click="(mode = ''), redirectToCalculo()">cancelar</v-btn>
         </v-col>
         <v-col cols="1">
-          <v-btn
-            depressed
-            color="primary"
-            style="margin-left: 20px"
-            :href="info_calculo.urlProcesso"
-            target="_blank"
-            >Consultar Processo</v-btn
-          >
+
+          <v-btn depressed color="primary" style="margin-left:25px" :href="info_calculo.urlProcesso" target="_blank">
+            Consultar Processo</v-btn>
         </v-col>
-        <v-col cols="1" class="mr-6">
-          <v-btn
-            depressed
-            color="primary"
-            style="margin-left: 20px"
-            @click="zeraDadosDocalculo(), (mode = 'table'), calculo()"
-            >Calcular</v-btn
-          >
+        <v-col cols="1">
+          <v-btn depressed color="primary" style="margin-left:145px" @click=adicionarLote() target="_blank">Adicionar ao
+            Lote</v-btn>
         </v-col>
       </v-row>
     </v-card>
@@ -351,59 +256,42 @@
       <div v-if="add_taxa == false" class="column">
         <label class="camposInput">
           Processo:
-          <input
-            v-model="info_calculo.numeroDoProcesso"
-            placeholder="XXXX-XX.XXXX.XXX.XXXX"
-        /></label>
+          <input v-model="info_calculo.numeroDoProcesso" placeholder="XXXX-XX.XXXX.XXX.XXXX" /></label>
         <label class="inputToPrint" id="processoForm" />
         <br />
         <label class="camposInput">
           Autor:
-          <input v-model="info_calculo.nome" placeholder="Jennifer Walters"
-        /></label>
+          <input v-model="info_calculo.nome" placeholder="Jennifer Walters" /></label>
         <label class="inputToPrint" id="autorForm" />
         <br />
-        <label class="camposInput"
-          >Objeto:
-          <input
-            v-model="objetoDoCalculo"
-            placeholder="Ex.: CÁLCULO DE BENEFÍCIO PREVIDENCIÁRIO" /></label
-        ><label class="inputToPrint" id="objetoForm" />
+        <label class="camposInput">Objeto:
+          <input v-model="objetoDoCalculo" placeholder="Ex.: CÁLCULO DE BENEFÍCIO PREVIDENCIÁRIO" /></label><label
+          class="inputToPrint" id="objetoForm" />
         <br />
-        <label class="camposInput"
-          >Vara:
-          <input
-            v-model="varaPrevidenciaria"
-            placeholder="Ex.: Previdenciária" /></label
-        ><label class="inputToPrint" id="varaForm" />
+        <label class="camposInput">Vara:
+          <input v-model="varaPrevidenciaria" placeholder="Ex.: Previdenciária" /></label><label class="inputToPrint"
+          id="varaForm" />
         <br />
-        <label class="camposInput"
-          >Juros: <input placeholder="Ex.: 12% a.a. até 06/09 + ..." /></label
-        ><label class="inputToPrint" id="jurosForm" />
+        <label class="camposInput">Juros: <input placeholder="Ex.: 12% a.a. até 06/09 + ..." /></label><label
+          class="inputToPrint" id="jurosForm" />
         <br />
       </div>
       <div class="column">
-        <label class="camposInput"
-          >Ajuizamento:
-          <input
-            v-model="info_calculo.dataAjuizamento"
-            placeholder="XX/XX/XXXX" /></label
-        ><label class="inputToPrint" id="ajuizamentoForm" />
+        <label class="camposInput">Ajuizamento:
+          <input v-model="info_calculo.dataAjuizamento" placeholder="XX/XX/XXXX" /></label><label class="inputToPrint"
+          id="ajuizamentoForm" />
         <br />
-        <label class="camposInput"
-          >Início do Juros:
-          <input v-model="inicio_juros" placeholder="XX/XXXX" /></label
-        ><label class="inputToPrint" id="inicioJurosForm" />
+        <label class="camposInput">Início do Juros:
+          <input v-model="inicio_juros" placeholder="XX/XXXX" /></label><label class="inputToPrint"
+          id="inicioJurosForm" />
         <br />
         <!-- Criar Função -->
-        <label class="camposInput"
-          >Calculado em: <input placeholder="XX/XXXX" /></label
-        ><label class="inputToPrint" id="calculadoEmForm" />
+        <label class="camposInput">Calculado em: <input placeholder="XX/XXXX" /></label><label class="inputToPrint"
+          id="calculadoEmForm" />
         <br />
-        <label class="camposInput"
-          >Honorário:
-          <input placeholder="Ex.:" v-model="textoHonorarios" /></label
-        ><label class="inputToPrint" id="honorarioForm" />
+        <label class="camposInput">Honorário:
+          <input placeholder="Ex.:" v-model="textoHonorarios" /></label><label class="inputToPrint"
+          id="honorarioForm" />
         <br />
       </div>
     </div>
@@ -417,10 +305,7 @@
         </div>
         <div class="columnResumoProcessoParte">
           <h6>Parte</h6>
-          <input
-            v-model="info_calculo.nome"
-            placeholder="Ex.: Matthew M. Murdock"
-          />
+          <input v-model="info_calculo.nome" placeholder="Ex.: Matthew M. Murdock" />
           <label class="inputToPrintResumoParte" id="resumoParte" />
         </div>
         <div class="columnResumoProcesso">
@@ -483,11 +368,7 @@
         <br />
       </div>
     </div>
-    <v-row
-      class="mx-3"
-      v-for="beneficio of beneficioInacumulavel"
-      :key="beneficio.dib"
-    >
+    <v-row class="mx-3" v-for="beneficio of beneficioInacumulavel" :key="beneficio.dib">
       <v-col cols="12" sm="6" md="3">
         <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
       </v-col>
@@ -523,33 +404,26 @@
             <label class="inputToPrint" id="autorForm" />
             {{ info_calculo.nome }}
             <br />
-            <label class="camposInput">Objeto:</label
-            ><label class="inputToPrint" id="objetoForm" />
+            <label class="camposInput">Objeto:</label><label class="inputToPrint" id="objetoForm" />
             {{ objetoDoCalculo }}
             <br />
-            <label class="camposInput">Vara:</label
-            ><label class="inputToPrint" id="varaForm" />
+            <label class="camposInput">Vara:</label><label class="inputToPrint" id="varaForm" />
             {{ varaPrevidenciaria }}
             <br />
-            <label class="camposInput">Juros:</label
-            ><label class="inputToPrint" id="jurosForm" />
+            <label class="camposInput">Juros:</label><label class="inputToPrint" id="jurosForm" />
             <br />
           </div>
           <div class="column">
-            <label class="camposInput">Ajuizamento:</label
-            ><label class="inputToPrint" id="ajuizamentoForm" />
+            <label class="camposInput">Ajuizamento:</label><label class="inputToPrint" id="ajuizamentoForm" />
             {{ info_calculo.dataAjuizamento }}
             <br />
-            <label class="camposInput">Início do Juros:</label
-            ><label class="inputToPrint" id="inicioJurosForm" />
+            <label class="camposInput">Início do Juros:</label><label class="inputToPrint" id="inicioJurosForm" />
             {{ inicio_juros }}
             <br />
-            <label class="camposInput">Calculado em:</label
-            ><label class="inputToPrint" id="calculadoEmForm" />
+            <label class="camposInput">Calculado em:</label><label class="inputToPrint" id="calculadoEmForm" />
             <!--Função-->
             <br />
-            <label class="camposInput">Honorário:</label
-            ><label class="inputToPrint" id="honorarioForm" />
+            <label class="camposInput">Honorário:</label><label class="inputToPrint" id="honorarioForm" />
             {{ textoHonorarios }}
             <br />
           </div>
@@ -640,17 +514,8 @@
         </v-col>
       </v-row>
       <img src="" alt="" />
-      <v-data-table
-        id="areaToPrint"
-        dense
-        v-if="mode === 'table'"
-        :headers="headers"
-        :items="calc_total"
-        :items-per-page="calc_total.length"
-        item-key="name"
-        class="elevation-1"
-        hide-default-footer
-      >
+      <v-data-table id="areaToPrint" dense v-if="mode === 'table'" :headers="headers" :items="calc_total"
+        :items-per-page="calc_total.length" item-key="name" class="elevation-1" hide-default-footer>
       </v-data-table>
     </v-card>
 
@@ -669,9 +534,7 @@
       >
       </v-data-table>
     <div v-if="add_taxa == false" v-show="mode === 'table'">
-      <b-button variant="primary" @click="printDiv()"
-        ><i class="fa fa-file"></i
-      ></b-button>
+      <b-button variant="primary" @click="printDiv()"><i class="fa fa-file"></i></b-button>
     </div>
   </v-container>
 </template>
@@ -776,6 +639,12 @@ export default {
       limiteMinimoMaximo: true,
       salarioMinimo: false,
       atulizacao: "",
+      headersCalculoLote: [
+        { value: "numeroDoProcesso", text: "ID" },
+        { value: "nome", text: "Autor" },
+        { value: "actions", text: "" },
+      ],
+      calculoLote: [],
     };
   },
 
@@ -795,8 +664,9 @@ export default {
         salario13: this.salario13,
         dibAnterior: this.dibAnterior == "" ? null : this.dibAnterior,
       };
+      
       axios
-        .post("http://localhost:8888/calculo/calcular", body)
+        .post(`${baseApiUrl}/calculo/calcular`, body)
         .then(async (response) => {
           this.calc_total = await response.data;
           await this.iniciarCalculo();
@@ -823,6 +693,28 @@ export default {
           console.log(error);
           console.log("error");
         });
+      },
+
+    adicionarLote() {
+      this.calculoLote.push({
+        numeroDoProcesso: this.info_calculo.numeroDoProcesso,
+        nome: this.info_calculo.nome,
+        objetoDoCalculo: this.objetoDoCalculo,
+        varaPrevidenciaria: this.varaPrevidenciaria,
+        dataAjuizamento: this.info_calculo.dataAjuizamento,
+        inicio_juros: this.inicio_juros,
+        textoHonorarios: this.textoHonorarios,
+        add_taxa: this.add_taxa,
+        nb: this.info_calculo.nb,
+        valor_corrigido: this.valor_corrigido,
+        valor_juros: this.valor_juros,
+        valor_total: this.valor_total,
+        pacelasVencidas: this.pacelasVencidas,
+        valorHonorarios: this.valorHonorarios,
+        total_processos: this.total_processos,
+      })
+      console.log(this.calculoLote[this.calculoLote.length - 1]);
+
     },
     fatorador() {
       let reajuste_cumulado = this.salarioInicial;
@@ -888,8 +780,9 @@ export default {
             console.log("Salario minimo: " + this.salarioMinimoOssada);
           }
         });
+        
         axios
-          .post("http://localhost:8888/calculo/alcada", body)
+          .post(`${baseApiUrl}/calculo/alcada`, body)
           .then((response) => {
             console.log(response.data);
             let alcada = response.data;
@@ -919,9 +812,9 @@ export default {
               });
             });
             console.log("Parcelas vencidas: " + this.pacelasVencidas);
-            ossada = Math.floor(((this.pacelasVencidas * correcao * (juros + 1)) - this.salarioMinimoOssada) * 100) / 100;
+            ossada = Math.floor(((this.pacelasVencidas) - this.salarioMinimoOssada) * 100) / 100;
             console.log("Parcelas vencidas: " + ossada);
-            this.alcadaValue = Math.floor((this.pacelasVencidas * correcao * (juros + 1)) * 100) /100;
+            this.alcadaValue = Math.floor((this.pacelasVencidas) * 100) /100;
             if (ossada < 0) {
               ossada = 0
               this.pacelasVencidas = ossada;
@@ -937,7 +830,6 @@ export default {
             console.log("erro beneficioa Acumulado");
           });
       });
-
       //})
     },
     ajusteData(data) {
@@ -1076,6 +968,7 @@ export default {
               ? dado.recebido + value.salario
               : Math.floor(value.salario * 100) / 100,
           salario: Math.floor((dado.salario - value.salario) * 100) / 100,
+
           correcao: dado.correcao,
           salarioCorrigido:
             Math.floor((dado.salario - value.salario) * dado.correcao * 100) /
@@ -1125,8 +1018,9 @@ export default {
             salario13: this.salario13,
             limiteMinimoMaximo: this.limiteMinimoMaximo,
           };
+          
           axios
-            .post("http://localhost:8888/calculo/beneficioAcumulado", body)
+            .post(`${baseApiUrl}/calculo/beneficioAcumulado`, body)
             .then((response) => {
               let newArrayCalculo = [];
               let alteracaoConfimada = false;
@@ -1243,7 +1137,7 @@ export default {
             (this.valor_corrigido +
               this.valor_juros +
               (this.valorHonorarios * this.procntagem_acordo) / 100) *
-              100
+            100
           ) / 100;
       } else {
         this.valor_total = Math.floor(this.valor_total * 100) / 100;
@@ -1253,7 +1147,7 @@ export default {
         this.total_processos =
           Math.floor(
             (this.valor_corrigido + this.valor_juros + this.valorHonorarios) *
-              100
+            100
           ) / 100;
       }
       this.formatacao();
@@ -1390,7 +1284,7 @@ export default {
       };
       this.arrayBenficios.push(obj_beneficioAcumulado);
     },
-    atualizarCalculadora() {},
+    atualizarCalculadora() { },
     printDiv() {
       var divToPrint = document.getElementById("areaToPrint");
 
@@ -1551,9 +1445,8 @@ export default {
     },
     informacoesCalculo() {
       //let salaraioMinimo;
-      const ossadaUrl = `${baseApiUrl}/salarioMinimo/procuraPorAno/${
-        this.info_calculo.dataAjuizamento.split("/")[2]
-      }`;
+      const ossadaUrl = `${baseApiUrl}/salarioMinimo/procuraPorAno/${this.info_calculo.dataAjuizamento.split("/")[2]
+        }`;
       axios(ossadaUrl).then(async (res) => {
         const obj = await res.data;
         const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
@@ -1672,7 +1565,7 @@ export default {
       return taxas;
     },
     redirectToCalculo() {
-      this.$router.push("/processos").catch(() => {});
+      this.$router.push("/processos").catch(() => { });
     },
     test() {
       var arr_reajuste = [];
@@ -1816,6 +1709,7 @@ export default {
   /* background-size: cover; */
   position: absolute;
 }
+
 .pensaoPOrMorte {
   background: firebrick;
   color: white;
