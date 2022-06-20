@@ -169,7 +169,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="2">
-          <label for="beneficioAcumulado.dif" class="labels pb-3">DIF</label>
+          <label for="beneficioAcumulado.dif" class="labels pb-3">DCB</label>
           <v-text-field
             v-model="beneficioAcumulado.dif"
             id="beneficioAcumulado_dif"

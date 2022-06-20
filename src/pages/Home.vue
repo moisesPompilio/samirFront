@@ -21,20 +21,47 @@
       <v-row>
         <v-col cols="12" sm="6" md="3">
           <label for="data-inicial" class="labels pb-3">Data Inicial</label>
-          <v-text-field v-model="dtInicial" id="data-inicial" dense outlined></v-text-field>
+
+          <v-text-field
+            v-model="dtInicial"
+            id="data-inicial"
+            dense
+            outlined
+            required
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
           <label for="data_final" class="labels pb-3">Data Final</label>
-          <v-text-field v-model="dtFinal" id="data-final" dense outlined></v-text-field>
+          <v-text-field
+            v-model="dtFinal"
+            id="data-final"
+            dense
+            outlined
+            required
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
           <label for="valor-devido R$" class="labels pb-3">Valor Devido</label>
-          <v-text-field v-model="salarioInicial" id="valor-devido" dense placeholder="nada"
-            @input="salarioInicial = formataçao(salarioInicial)" outlined></v-text-field>
+          <v-text-field
+            v-model="salarioInicial"
+            id="valor-devido"
+            dense
+            placeholder="nada"
+            @input="salarioInicial = formataçao(salarioInicial)"
+            outlined
+            required
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
           <label for="inicio_Juros" class="labels pb-3">Inicio do juros</label>
-          <v-text-field v-model="inicio_juros" id="data-final" dense outlined></v-text-field>
+          <v-text-field
+            v-model="inicio_juros"
+            id="data-final"
+            dense
+            outlined
+            required
+          ></v-text-field>
+
         </v-col>
       </v-row>
       <v-row>
@@ -71,21 +98,82 @@
           </v-row>
           <v-row>
             <v-col cols="12" sm="6" md="1">
-              <input type="checkbox" class="form-check-input" style="margin-right: 5px" :value="alcada" v-model="alcada"
-                id="flexCheckDefault" />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                style="margin-right: 5px"
+                :value="alcadaBoolean"
+                v-model="alcadaBoolean"
+                id="flexCheckDefault"
+              />
             </v-col>
             <v-col cols="12" sm="6" md="2">
-              <label for="alcada" class="labels pb-2">Alcada</label>
+              <label for="alcadaBoolean" class="labels pb-2">Alcada</label>
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" sm="6" md="3">
+        <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3">Juros</label>
           <v-select outlined placeholder="Escolha uma opção" :items="optionsJuros" v-model="tipoJuros"></v-select>
         </v-col>
-        <v-col cols="12" sm="6" md="3">
+        <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3">Correção</label>
           <v-select outlined placeholder="Escolha uma opção" :items="optionsCorrecao" v-model="tipoCorrecao"></v-select>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <label for="atualizacao" class="labels pb-2">Atualizacao</label>
+          <v-text-field
+            v-model="atulizacao"
+            id="atualizacao"
+            placeholder="Ex: 06/2022"
+            dense
+            outlined
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <label for="dibAnterior" class="labels pb-2">dib-anterior</label>
+          <v-text-field
+            v-model="dibAnterior"
+            id="dibAnterior"
+            placeholder="Ex: 17/06/2022"
+            dense
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+          <v-row>
+            <v-col cols="12" sm="6" md="1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="margin-right: 5px"
+                v-model="salarioMinimo"
+                :value="salarioMinimo"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+              <label for="salarioMinimo" class="labels pb-2"
+                >salario Minimo</label
+              >
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="margin-right: 5px"
+                v-model="limiteMinimoMaximo"
+                :value="limiteMinimoMaximo"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+              <label for="limiteMinimoMaximo" class="labels pb-2"
+                >Limite minimo e maximo</label
+              >
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
@@ -149,12 +237,22 @@
           <v-btn depressed color="secondary" @click="(mode = ''), redirectToCalculo()">cancelar</v-btn>
         </v-col>
         <v-col cols="1">
+
           <v-btn depressed color="primary" style="margin-left:25px" :href="info_calculo.urlProcesso" target="_blank">
             Consultar Processo</v-btn>
         </v-col>
         <v-col cols="1">
           <v-btn depressed color="primary" style="margin-left:145px" @click=adicionarLote() target="_blank">Adicionar ao
             Lote</v-btn>
+        </v-col>
+        <v-col cols="1" class="mr-6">
+          <v-btn
+            depressed
+            color="primary"
+            style="margin-left: 20px"
+            @click="zeraDadosDocalculo(), (mode = 'table'), calculo()"
+            >Calcular</v-btn
+          >
         </v-col>
       </v-row>
     </v-card>
@@ -428,14 +526,22 @@
       <v-data-table id="areaToPrint" dense v-if="mode === 'table'" :headers="headers" :items="calc_total"
         :items-per-page="calc_total.length" item-key="name" class="elevation-1" hide-default-footer>
       </v-data-table>
-
-      <v-label v-if="arr_Salario13[0]">Tabela de 13 salario</v-label>
-
-      <v-data-table id="areaToPrint" dense v-if="arr_Salario13[0]" :headers="headers" :items="arr_Salario13"
-        :items-per-page="arr_Salario13.length" item-key="data" class="elevation-1" hide-default-footer>
-      </v-data-table>
     </v-card>
 
+  <v-label v-if="alcadaArray[0]">Tabela de Alcada</v-label>
+
+      <v-data-table
+        id="areaToPrint"
+        dense
+        v-if="alcadaArray[0]"
+        :headers="headersAlcada"
+        :items="alcadaArray"
+        :items-per-page="alcadaArray.length"
+        item-key="data"
+        class="elevation-1"
+        hide-default-footer
+      >
+      </v-data-table>
     <div v-if="add_taxa == false" v-show="mode === 'table'">
       <b-button variant="primary" @click="printDiv()"><i class="fa fa-file"></i></b-button>
     </div>
@@ -477,6 +583,13 @@ export default {
         { value: "salarioCorrigido", text: "Salário Corrigido R$" },
         { value: "juros", text: "Juros" },
         { value: "salarioJuros", text: "Salário Juros R$" },
+        { value: "salarioTotal", text: "Total" },
+      ],
+      headersAlcada: [
+        { value: "data", text: "Data" },
+        { value: "reajusteAcumulado", text: "Reajuste" },
+        { value: "salario", text: "Salário R$" },
+        { value: "correcao", text: "Correção Salarial" },
         { value: "salarioTotal", text: "Total" },
       ],
       logo: require("../assets/logo.png"),
@@ -528,17 +641,13 @@ export default {
       beneficioInacumulavel: [],
       pacelasVencidas: 0,
       salarioMinimoOssada: 0,
-      alcada: true,
-      alcadaVencidaText: [
-        { value: true, text: "Vencida" },
-        { value: false, text: "Vincenda" },
-      ],
-      alcada13Text: [
-        { value: true, text: "12 compentecias (13 incluso)" },
-        { value: false, text: "12 compentecias (13 autonomo)" },
-      ],
-      alcadaVencidaBoolean: true,
-      alcada13Boolean: false,
+      alcadaBoolean: true,
+      alcadaArray: [],
+      alcadaValue: 0,
+      dibAnterior: "",
+      limiteMinimoMaximo: true,
+      salarioMinimo: false,
+      atulizacao: "",
       headersCalculoLote: [
         { value: "numeroDoProcesso", text: "ID" },
         { value: "nome", text: "Autor" },
@@ -549,6 +658,51 @@ export default {
   },
 
   methods: {
+    calculo() {
+      const body = {
+        dib: this.dtInicial,
+        dip: this.dtFinal,
+        atulizacao: this.atulizacao,
+        incioJuros: this.inicio_juros,
+        rmi: this.salarioInicial,
+        juros: this.boolJuros,
+        tipoJuros: this.tipoJuros,
+        tipoCorrecao: this.tipoCorrecao,
+        salarioMinimo: this.salarioMinimo,
+        limiteMinimoMaximo: this.limiteMinimoMaximo,
+        salario13: this.salario13,
+        dibAnterior: this.dibAnterior == "" ? null : this.dibAnterior,
+      };
+      axios
+        .post("http://localhost:8888/calculo/calcular", body)
+        .then(async (response) => {
+          this.calc_total = await response.data;
+          await this.iniciarCalculo();
+          if (!this.porcentagemHonorarios && !this.DataHonorarios) {
+            this.textoHonorarios = null;
+          } else {
+            this.textoHonorarios =
+              this.porcentagemHonorarios +
+              "% com parcelas até " +
+              this.DataHonorarios;
+            this.honorarios(
+              this.DataHonorarios.split("/")[1],
+              this.DataHonorarios.split("/")[2]
+            );
+          }
+          console.log(this.alcadaBoolean);
+          if (this.alcadaBoolean) {
+            this.calculoDeOssada();
+          }
+
+          await this.totaisSalario();
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("error");
+        });
+      },
+
     adicionarLote() {
       this.calculoLote.push({
         numeroDoProcesso: this.info_calculo.numeroDoProcesso,
@@ -568,6 +722,7 @@ export default {
         total_processos: this.total_processos,
       })
       console.log(this.calculoLote[this.calculoLote.length - 1]);
+
     },
     fatorador() {
       let reajuste_cumulado = this.salarioInicial;
@@ -602,58 +757,86 @@ export default {
       let correcao = 1;
       let juros = 0;
       let valueMes = 12;
-      let mesOssada = date[1] + valueMes;
+      let mesOssada = parseInt(date[1]) + valueMes;
       let anoOssada;
       if (mesOssada > 12) {
         if (mesOssada > 24) {
           mesOssada -= 24;
-          anoOssada = date[2] + 2;
+          anoOssada = parseInt(date[2]) + 2;
         } else {
           mesOssada -= 12;
-          anoOssada = date[2] + 1;
+          anoOssada = parseInt(date[2]) + 1;
         }
       }
-      this.calc_total.forEach((value) => {
-        if (
-          value.data.split("/")[2] == date[2] &&
-          value.data.split("/")[1] == date[1]
-        ) {
-          correcao = value.correcao;
-          juros = value.juros;
-        }
-        if (value.data.split("/")[2] <= anoOssada) {
-          if (value.data.split("/")[2] == anoOssada) {
-            if (value.data.split("/")[1] <= mesOssada) {
-              ossada += value.salario;
+      const body = {
+        dib: this.dtInicial,
+        dip: `01/${mesOssada}/${anoOssada}`,
+        salario13: this.salario13,
+        tipoCorrecao: this.tipoCorrecao,
+        atulizacao: `${date[1]}/${date[2]}`,
+      };
+      const ossadaUrl = `${baseApiUrl}/salarioMinimo/procuraPorAno/${
+        this.info_calculo.dataAjuizamento.split("/")[2]
+      }`;
+      axios(ossadaUrl).then(async (res) => {
+        const obj = await res.data;
+        const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
+        await obj.forEach((value) => {
+          console.log("valor: " + value.data.split("T")[0].split("-")[1]);
+          if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
+            this.salarioMinimoOssada = 60 * value.valor;
+            console.log("Salario minimo: " + this.salarioMinimoOssada);
+          }
+        });
+        axios
+          .post("http://localhost:8888/calculo/alcada", body)
+          .then((response) => {
+            console.log(response.data);
+            let alcada = response.data;
+            console.log(alcada);
+            this.calc_total.forEach((value) => {
+              if (
+                value.data.split("/")[2] == date[2] &&
+                value.data.split("/")[1] == date[1]
+              ) {
+                correcao = value.correcao;
+                juros = value.juros;
+              }
+              alcada.forEach((dado) => {
+                if (
+                  value.data.split("/")[2] == dado.data.split("/")[2] &&
+                  value.data.split("/")[1] == dado.data.split("/")[1]
+                ) {
+                  this.alcadaArray.push({
+                    data: value.data,
+                    reajusteAcumulado: value.reajusteAcumulado,
+                    salario: value.salario,
+                    correcao: dado.correcao,
+                    salarioTotal: Math.floor(dado.correcao * value.salario * 100) /100,
+                  });
+                  this.pacelasVencidas += Math.floor(dado.correcao * value.salario * 100) /100;
+                }
+              });
+            });
+            console.log("Parcelas vencidas: " + this.pacelasVencidas);
+            ossada = Math.floor(((this.pacelasVencidas * correcao * (juros + 1)) - this.salarioMinimoOssada) * 100) / 100;
+            console.log("Parcelas vencidas: " + ossada);
+            this.alcadaValue = Math.floor((this.pacelasVencidas * correcao * (juros + 1)) * 100) /100;
+            if (ossada < 0) {
+              ossada = 0
+              this.pacelasVencidas = ossada;
+            } else {
+              this.pacelasVencidas =
+                Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
+              this.total_processos =
+                this.total_processos - this.pacelasVencidas;
             }
-          } else {
-            ossada += value.salario;
-          }
-        }
+          })
+          .catch((erro) => {
+            console.log(erro);
+            console.log("erro beneficioa Acumulado");
+          });
       });
-      this.arr_Salario13.forEach((value) => {
-        if (value.data.split("/")[2] <= anoOssada) {
-          if (value.data.split("/")[2] == anoOssada) {
-            if (value.data.split("/")[1] == mesOssada)
-              ossada += value.salario;
-          } else {
-            ossada += value.salario;
-          }
-        }
-      });
-      console.log("Salario minimo2: " + this.salarioMinimoOssada);
-      this.salarioMinimoOssada *= 60;
-      console.log("Salario minimo2: " + this.salarioMinimoOssada);
-      console.log("Parcelas vencidas: " + ossada);
-      ossada = ossada - this.salarioMinimoOssada;
-      console.log("Parcelas vencidas: " + ossada);
-      if (ossada < 0) {
-        ossada = 0;
-      } else {
-        this.pacelasVencidas =
-          Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
-        this.total_processos = this.total_processos - this.pacelasVencidas;
-      }
       //})
     },
     ajusteData(data) {
@@ -667,13 +850,14 @@ export default {
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
-      this.calc_total = [];
       this.valorSalario13 = 0;
       this.arr_Salario13 = 0;
       this.juros13Valor = 0;
       this.corrigido13Valor = 0;
       this.pacelasVencidas = 0;
       this.salarioMinimoOssada = 0;
+      this.alcadaValue = 0;
+      this.alcadaArray = [];
     },
     iniciarCalculo() {
       this.beneficioInacumulavel = [];
@@ -695,6 +879,11 @@ export default {
       }
 
       let x = this.calc_total.length - 1;
+
+      if (this.calc_total[x].data.split("/")[0] == "13Salario") {
+        x--;
+      }
+
       if (dfinal == 31) {
         dfinal = 30;
         this.calc_total[x].salario =
@@ -751,6 +940,7 @@ export default {
           { value: "data", text: "Data" },
           { value: "reajusteAcumulado", text: "Reajuste" },
           { value: "devido", text: "Devido R$" },
+          { value: "reajusteRecebido", text: "Reajute" },
           { value: "recebido", text: "Recebido R$" },
           { value: "salario", text: "Salário R$" },
           { value: "correcao", text: "Correção Salarial" },
@@ -774,43 +964,46 @@ export default {
       }
     },
     beneficioAcumuladoCalculo() {
-      let reajusteAcumulado = 1;
-      function decontar(value, dado, index) {
-        reajusteAcumulado *= dado.reajusteAcumulado;
-        // if (index > 0) {
-        let recebido = (dado.recebido * 100 + value.rmi * 100) / 100;
-        //index > 0 ? console.log("recebido: " + dado.recebido + " rmi: " + value.rmi + " valor final: " + ((value.rmi * 100) + (dado.recebido * 100))) : console.log("rmi: " + value.rmi)
+      function decontar(value, dado) {
         return {
           data: dado.data,
           reajusteAcumulado: dado.reajusteAcumulado,
-          devido: index > 0 ? dado.devido : dado.salario,
-          recebido: index > 0 ? recebido : Math.floor((value.rmi * reajusteAcumulado) * 100) / 100,
-          salario: dado.salario - (value.rmi * reajusteAcumulado),
+          devido: dado.devido > 0 ? dado.devido : dado.salario,
+          reajusteRecebido: dado.reajusteAcumulado,
+          recebido:
+            dado.recebido > 0
+              ? dado.recebido + value.salario
+              : Math.floor(value.salario * 100) / 100,
+          salario: Math.floor((dado.salario - value.salario) * 100) / 100,
+
           correcao: dado.correcao,
           salarioCorrigido:
-            Math.floor((dado.salario - (value.rmi * reajusteAcumulado)) * dado.correcao * 100) / 100,
+            Math.floor((dado.salario - value.salario) * dado.correcao * 100) /
+            100,
           juros: dado.juros,
           salarioJuros:
             Math.floor(
-              (dado.salario - (value.rmi * reajusteAcumulado)) * dado.juros * dado.correcao * 100
+              (dado.salario - value.salario) * dado.juros * dado.correcao * 100
             ) / 100,
           salarioTotal:
             Math.floor(
-              (dado.salario - value.rmi) *
-              (dado.juros + 1) *
-              dado.correcao *
-              100
+              (dado.salario - value.salario) *
+                (dado.juros + 1) *
+                dado.correcao *
+                100
             ) / 100,
         };
         // }
       }
-      function manter(value, dado, index) {
+      function manter(dado) {
         // console.log("slario juros: " + dado.salarioJuros);
         return {
           data: dado.data,
           reajusteAcumulado: dado.reajusteAcumulado,
-          devido: index > 0 ? dado.devido : dado.salario,
-          recebido: 0,
+          devido: dado.devido > 0 ? dado.devido : dado.salario,
+          reajusteRecebido:
+            dado.reajusteRecebido > 0 ? dado.reajusteRecebido : 0,
+          recebido: dado.recebido > 0 ? dado.recebido : 0,
           salario: dado.salario,
           correcao: dado.correcao,
           salarioCorrigido: dado.salarioCorrigido,
@@ -819,55 +1012,57 @@ export default {
           salarioTotal: dado.salarioTotal,
         };
       }
-      this.beneficioInacumulavel.forEach((value, index) => {
-        let new_array = [];
-        let dataDib = value.dib.split("/");
-        let dataDif = value.dif.split("/");
-        // value.rmi = value.rmi.replace(".", "");
-        // value.rmi = value.rmi.replace(",", ".");
-        this.calc_total.forEach((dado) => {
-          let dataTabe = dado.data.split("/");
-          if (dataDib[2] <= dataTabe[2] && dataDif[2] >= dataTabe[2]) {
-            if (dataDif[2] == dataTabe[2] && dataDib[2] == dataTabe[2]) {
-              if (dataDib[1] <= dataTabe[1] && dataDif[1] >= dataTabe[1]) {
-                new_array.push(decontar(value, dado));
-              }
-            } else if (dataDif[2] == dataTabe[2]) {
-              if (dataTabe[1] <= dataDif[1]) {
-                new_array.push(decontar(value, dado, index));
-              } else {
-                new_array.push(manter(value, dado, index));
-              }
-            } else if (dataDib[2] == dataTabe[2]) {
-              if (dataTabe[1] >= dataDib[1]) {
-                new_array.push(decontar(value, dado, index));
-              } else {
-                new_array.push(manter(value, dado, index));
-              }
-            } else {
-              new_array.push(decontar(value, dado, index));
-            }
-          } else {
-            new_array.push(manter(value, dado, index));
-          }
-        });
-        this.calc_total = new_array;
-        // let arrays13 = [];
-        // this.arr_Salario13.forEach((value,i) =>{
-        //   this.arr_Salario13[i] = {
-        //     data: value.data,
-        //   reajusteAcumulado: value.reajusteAcumulado,
-        //   devido: value.salario,
-        //   recebido: 0,
-        //   salario: value.salario,
-        //   correcao: value.correcao,
-        //   salarioCorrigido: value.salarioCorrigido,
-        //   juros: value.juros,
-        //   salarioJuros: value.salarioJuros,
-        //   salarioTotal: value.salarioTotal,
-        //   }
-        // })
-        // this.arr_Salario13 = arrays13;
+      this.beneficioInacumulavel.forEach((info) => {
+        let dataDib = info.dib.split("/");
+        let dataincial = this.dtInicial.split("/");
+        let dataFinal = this.dtFinal.split("/");
+        if (dataDib[2] >= dataincial[2] || dataDib[2] <= dataFinal[2]) {
+          //console.log("Benefico inacumulado");
+          const body = {
+            dib: info.dib,
+            dip: info.dif,
+            rmi: info.rmi,
+            salario13: this.salario13,
+            limiteMinimoMaximo: this.limiteMinimoMaximo,
+          };
+          axios
+            .post("http://localhost:8888/calculo/beneficioAcumulado", body)
+            .then((response) => {
+              let newArrayCalculo = [];
+              let alteracaoConfimada = false;
+              // console.log(response.data);
+              let beneficioAcumulado = response.data;
+              this.calc_total.forEach((dado) => {
+                let dataCalculo = dado.data.split("/");
+                alteracaoConfimada = false;
+                beneficioAcumulado.forEach((value) => {
+                  let dataBeneficioAcumulado = value.data.split("/");
+                  if (
+                    (dataBeneficioAcumulado[0] == dataCalculo[0] ||
+                      dataincial[0] == dataCalculo[0] ||
+                      dataFinal == dataCalculo[0]) &&
+                    dataBeneficioAcumulado[1] == dataCalculo[1] &&
+                    dataBeneficioAcumulado[2] == dataCalculo[2]
+                  ) {
+                    //console.log(decontar(value, dado));
+                    newArrayCalculo.push(decontar(value, dado));
+                    alteracaoConfimada = true;
+                  }
+                });
+                if (!alteracaoConfimada) {
+                  // console.log(manter(dado));
+                  newArrayCalculo.push(manter(dado));
+                }
+              });
+              this.calc_total = newArrayCalculo;
+              newArrayCalculo = [];
+              this.totaisSalario();
+            })
+            .catch((erro) => {
+              console.log(erro);
+              console.log("erro beneficioa Acumulado");
+            });
+        }
         if (!this.beneficioInacumulavel[0].rmi) {
           this.headers = [
             { value: "data", text: "Data" },
@@ -881,32 +1076,6 @@ export default {
           ];
         }
       });
-    },
-    ZerarOJuros() {
-      let index = 0;
-      for (const value of this.calc_total) {
-        this.calc_total[index].salarioTotal =
-          Math.floor((value.salarioTotal - value.salarioJuros) * 100) / 100;
-        this.calc_total[index].salarioJuros = 0;
-        this.calc_total[index].juros = 0;
-        index++;
-      }
-      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
-        this.textoHonorarios = null;
-      } else {
-        this.textoHonorarios =
-          this.porcentagemHonorarios +
-          "% com parcelas até " +
-          this.DataHonorarios;
-        this.honorarios(
-          this.DataHonorarios.split("/")[1],
-          this.DataHonorarios.split("/")[2]
-        );
-      }
-      if (this.salario13) {
-        this.colocarsalario13();
-      }
-      this.totaisSalario();
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
       this.calc_total[0].salario =
@@ -948,79 +1117,8 @@ export default {
         index++;
       }
     },
-    pararJuros() {
-      const url = `${baseApiUrl}/juros/procurarPorTipo/1`;
-      axios(url).then((res) => {
-        this.array_juros = res.data;
-        const dataAjuizamentoRequerida = this.inicio_juros.split("/");
-        const mesAjuizamento = dataAjuizamentoRequerida[1];
-        const anoAjuizamento = dataAjuizamentoRequerida[2];
-        for (let item of this.array_juros) {
-          const ArraydataJuros = item.data.split("T");
-          const dataJuros = ArraydataJuros[0].split("-");
-
-          if (
-            mesAjuizamento == dataJuros[1] &&
-            anoAjuizamento == dataJuros[0]
-          ) {
-            this.valorDoJuros = item.jurosAcumulados / 100;
-          }
-        }
-        this.colocarOjuros(mesAjuizamento, anoAjuizamento);
-      });
-    },
-    colocarOjuros(mesDoAjuizamento, anoAjuizamento) {
-      let i = 0;
-      for (const value of this.calc_total) {
-        var dateJuros = value.data.split("-").reverse().join("/");
-        var mesDoJuros = dateJuros.split("/")[1];
-        var anoDoJuros = dateJuros.split("/")[2];
-        if (anoDoJuros == anoAjuizamento) {
-          if (mesDoJuros <= mesDoAjuizamento) {
-            this.calc_total[i].salarioTotal =
-              this.calc_total[i].salarioTotal -
-              this.calc_total[i].salarioJuros +
-              (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-              this.valorDoJuros;
-            this.calc_total[i].salarioJuros =
-              (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-              this.valorDoJuros;
-            this.calc_total[i].juros = this.valorDoJuros;
-          }
-        } else if (anoDoJuros < anoAjuizamento) {
-          this.calc_total[i].salarioTotal =
-            this.calc_total[i].salarioTotal -
-            this.calc_total[i].salarioJuros +
-            (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-            this.valorDoJuros;
-          this.calc_total[i].salarioJuros =
-            (this.calc_total[i].salarioJuros / this.calc_total[i].juros) *
-            this.valorDoJuros;
-          this.calc_total[i].juros = this.valorDoJuros;
-        } else {
-          console.log("entrei no else");
-        }
-        i++;
-      }
-      this.formatacao();
-      if (!this.porcentagemHonorarios && !this.DataHonorarios) {
-        this.textoHonorarios = null;
-      } else {
-        this.textoHonorarios =
-          this.porcentagemHonorarios +
-          "% com parcelas até " +
-          this.DataHonorarios;
-        this.honorarios(
-          this.DataHonorarios.split("/")[1],
-          this.DataHonorarios.split("/")[2]
-        );
-      }
-      if (this.salario13) {
-        this.colocarsalario13();
-      }
-      this.totaisSalario();
-    },
     totaisSalario() {
+      this.zeraDadosDocalculo();
       this.formatacao();
       this.total_processos = 0;
       this.valor_total = 0;
@@ -1035,13 +1133,9 @@ export default {
       }
       if (this.procntagem_acordo) {
         this.valor_total =
-          Math.floor(
-            (this.valor_total + this.valorSalario13) * this.procntagem_acordo
-          ) / 100;
+          Math.floor(this.valor_total * this.procntagem_acordo) / 100;
         this.valor_juros =
-          Math.floor(
-            (this.valor_juros + this.juros13Valor) * this.procntagem_acordo
-          ) / 100;
+          Math.floor(this.valor_juros * this.procntagem_acordo) / 100;
         this.valor_corrigido =
           Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
         this.total_processos =
@@ -1052,10 +1146,8 @@ export default {
             100
           ) / 100;
       } else {
-        this.valor_total =
-          Math.floor((this.valor_total + this.valorSalario13) * 100) / 100;
-        this.valor_juros =
-          Math.floor((this.valor_juros + this.juros13Valor) * 100) / 100;
+        this.valor_total = Math.floor(this.valor_total * 100) / 100;
+        this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
         this.valor_corrigido =
           Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
         this.total_processos =
@@ -1063,9 +1155,6 @@ export default {
             (this.valor_corrigido + this.valor_juros + this.valorHonorarios) *
             100
           ) / 100;
-      }
-      if (this.alcada) {
-        this.calculoDeOssada();
       }
       this.formatacao();
     },
@@ -1086,111 +1175,9 @@ export default {
       }
       this.valorHonorarios =
         (this.valorHonorarios * this.porcentagemHonorarios) / 100;
-      this.formatacao();
-    },
-    colocarsalario13() {
-      let i = 0;
-      let quantidadeAno = 0;
-      let salario13Valor = 0;
-      let arr_13Salario = [];
-      let juros13 = 0;
-      let corrigido13 = 0;
-      let taxaReajusteAcumulada13 = 1;
-      var honorariosCom13 = 0;
-      for (const value of this.calc_total) {
-        var dateTable = value.data;
-        var mesDoTable = dateTable.split("/")[1];
-        var diaTable = dateTable.split("/")[0];
-        var anoDoTable = dateTable.split("/")[2];
-        if (i == 0) {
-          if (diaTable <= 15) {
-            quantidadeAno += 1;
-          }
-        } else {
-          if (mesDoTable == 12) {
-            quantidadeAno += 1;
-            juros13 +=
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.juros *
-                  value.correcao) /
-                  12) *
-                quantidadeAno *
-                100
-              ) / 100;
-            corrigido13 +=
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.correcao) /
-                  12) *
-                quantidadeAno *
-                100
-              ) / 100;
-            salario13Valor =
-              Math.floor(
-                ((this.salarioInicial *
-                  taxaReajusteAcumulada13 *
-                  value.correcao *
-                  (1 + value.juros)) /
-                  12) *
-                quantidadeAno *
-                100
-              ) / 100;
-            let salario =
-              Math.floor(
-                ((this.salarioInicial * taxaReajusteAcumulada13) / 12) *
-                quantidadeAno *
-                100
-              ) / 100;
-            quantidadeAno = 0;
-            arr_13Salario.push({
-              data: 31 + "/" + mesDoTable + "/" + anoDoTable,
-              reajusteAcumulado: value.reajusteAcumulado,
-              salario: Math.floor(salario * 100) / 100,
-              correcao: value.correcao,
-              salarioCorrigido: Math.floor(corrigido13 * 100) / 100,
-              juros: value.juros,
-              salarioJuros: Math.floor(juros13 * 100) / 100,
-              salarioTotal: Math.floor(salario13Valor * 100) / 100,
-            });
-            this.valorSalario13 += salario13Valor;
-            this.juros13Valor += juros13;
-            this.corrigido13Valor += corrigido13;
-            if (
-              this.porcentagemHonorarios != null &&
-              this.DataHonorarios != null
-            ) {
-              let mesHonorarios = this.DataHonorarios.split("/")[1];
-              let anoHonorarios = this.DataHonorarios.split("/")[2];
-              if (anoDoTable == anoHonorarios) {
-                if (mesDoTable <= mesHonorarios) {
-                  honorariosCom13 +=
-                    Math.floor(salario13Valor * this.porcentagemHonorarios) /
-                    100;
-                }
-              } else if (anoDoTable < anoHonorarios) {
-                honorariosCom13 +=
-                  Math.floor(salario13Valor * this.porcentagemHonorarios) / 100;
-              }
-            }
-          } else if (mesDoTable == 1) {
-            taxaReajusteAcumulada13 =
-              taxaReajusteAcumulada13 * value.reajusteAcumulado;
-            quantidadeAno += 1;
-          } else {
-            quantidadeAno += 1;
-          }
-        }
-        i++;
-      }
-
-      this.valorHonorarios += honorariosCom13;
-      this.arr_Salario13 = arr_13Salario;
-      //this.total_processos = this.valor_juros + this.valor_corrigido + this.valorHonorarios;
     },
     atualizarTodosDados() {
+      this.alcadaArray = [];
       this.headers = [
         { value: "data", text: "Data" },
         { value: "reajusteAcumulado", text: "Reajuste" },
@@ -1282,6 +1269,7 @@ export default {
       });
       this.arrayBenficios = this.beneficioInacumulavel;
       console.log("size: " + this.beneficioInacumulavel.length);
+      this.inicio_juros = null;
       this.inicio_juros = this.info_calculo.citacao;
       this.DataHonorarios = null;
       this.porcentagemHonorarios = 0;
@@ -1291,6 +1279,7 @@ export default {
       this.arr_Salario13 = 0;
       this.total_processos = 0;
       this.procntagem_acordo = null;
+      this.alcadaValue = 0;
     },
     pushBeneficiosAcumulados() {
       let obj_beneficioAcumulado = {
