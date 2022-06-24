@@ -149,7 +149,9 @@
       </v-col>
       <v-row class="mx-3" v-if="exibir.tudo">
         <v-col cols="12" sm="6" md="2">
-          <label for="beneficioAcumulado.beneficio" class="labels pb-3">Beneficio Acumulado?</label>
+          <label for="beneficioAcumulado.beneficio" class="labels pb-3"
+            >Beneficio Acumulado?</label
+          >
           <v-text-field
             v-model="beneficioAcumulado.beneficio"
             id="beneficioAcumulado_beneficio"
@@ -189,7 +191,9 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="2">
-          <v-btn color="primary" @click="pushBeneficio()" id="beneficioBtn" >Adicinar Beneficio</v-btn>
+          <v-btn color="primary" @click="pushBeneficio()" id="beneficioBtn"
+            >Adicinar Beneficio</v-btn
+          >
         </v-col>
       </v-row>
       <v-btn color="primary" @click="pushInfos(infos)" id="adicionarButton"
@@ -218,12 +222,12 @@
             {{ item.numeroDoProcesso }}
           </td>
           <td>{{ item.nome }}</td>
+          <td>{{ item.id }}</td>
           <td>
             <v-btn icon @click="tranferir(item.id)">
               <v-icon color="success">mdi-file-eye-outline</v-icon>
             </v-btn>
           </td>
-          <td>{{ item.id }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -251,14 +255,14 @@ export default {
       aps: "",
       urlProcesso: "",
       headers: [
-        { value: "id", text: "ID" },
         { value: "numeroDoProcesso", text: "NUP" },
         { value: "nome", text: "Nome " },
+        { value: "id", text: "ID" },
         { value: "actions", text: "" },
       ],
       infos: [],
       calculo: {},
-      beneficioAcumulado: {beneficio: null, dib: null, dif: null, rmi: null},
+      beneficioAcumulado: { beneficio: null, dib: null, dif: null, rmi: null },
       array_beneficioAcumulado: [],
       //exibir: {tudo: true, processos: false },
     };
@@ -342,12 +346,17 @@ export default {
       this.citacao = this.infos[y].citacao;
       this.urlProcesso = this.infos[y].urlProcesso;
     },
-    pushBeneficio(){
+    pushBeneficio() {
       this.array_beneficioAcumulado.push(this.beneficioAcumulado);
       this.cleanBeneficio();
     },
-    cleanBeneficio(){
-      this.beneficioAcumulado = {beneficio: null, dib: null, dif: null, rmi: null};
+    cleanBeneficio() {
+      this.beneficioAcumulado = {
+        beneficio: null,
+        dib: null,
+        dif: null,
+        rmi: null,
+      };
     },
     tranferir(y) {
       this.redirectToCalculo();
