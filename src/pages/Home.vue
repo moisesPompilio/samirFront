@@ -1320,7 +1320,6 @@ export default {
     },
     zeraDadosDocalculo() {
       this.total_processos = 0;
-      this.valorHonorarios = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
