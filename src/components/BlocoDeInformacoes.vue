@@ -255,7 +255,7 @@ export default {
       aps: "",
       urlProcesso: "",
       headers: [
-        { value: "numeroDoProcesso", text: "NUP" },
+        { value: "numeroDoProcesso", text: "Número do Processo" },
         { value: "nome", text: "Nome " },
         { value: "id", text: "ID" },
         { value: "actions", text: "" },
