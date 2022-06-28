@@ -296,6 +296,34 @@
           </b-form-input>
         </b-col>
       </b-row>
+      <template>
+        <v-data-table
+          :headers="headersCalculoLote"
+          :items="calculoLote"
+          class="elevation-1"
+        >
+          <template v-slot:item="{ item }">
+            <tr>
+              <td
+                class="py-3"
+                style="color: rgb(107, 107, 218); cursor: pointer"
+                @click="tranferir(item.id)"
+              >
+                {{ item.numeroDoProcesso }}
+              </td>
+              <td>{{ item.nome }}</td>
+              <td>
+                <v-btn icon @click="atulizarInfosLote(item)">
+                  <v-icon color="success">mdi-file-eye-outline</v-icon>
+                </v-btn>
+                <v-btn icon @click="removerItemLote(item)">
+                  <v-icon color="success">mdi-delete</v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </template>
 
       <!-- BOTÕES -->
 
@@ -334,7 +362,35 @@
             Consultar Processo</v-btn
           >
         </v-col>
-        
+        <v-col cols="3">
+          <v-btn
+            depressed
+            color="primary"
+            style="margin-left: 145px"
+            @click="adicionarLote()"
+            target="_blank"
+            >Adicionar ao Lote</v-btn
+          >
+        </v-col>
+        <v-col cols="3">
+          <v-btn
+            depressed
+            color="primary"
+            style="margin-left: 145px"
+            @click="deletarLote()"
+            target="_blank"
+            >Deletar lote</v-btn
+          >
+        </v-col>
+        <v-col cols="2">
+          <v-btn
+            depressed
+            color="primary"
+            @click="calcularEmLote(), (mode = 'table')"
+            target="_blank"
+            >Calcular Lote</v-btn
+          >
+        </v-col>
       </v-row>
     </v-card>
 
@@ -677,6 +733,7 @@
 import { calculaReajuste } from "../features/calculoReajuste";
 //import { pararJurosTeste } from "../features/pararJuros";
 import { baseApiUrl } from "../global";
+import jsPDF from "jspdf";
 import axios from "axios";
 import AdicionarTaxa from "./AdicionarTaxa.vue";
 import BlocoDeInformacoes from "../components/BlocoDeInformacoes.vue";
@@ -778,6 +835,7 @@ export default {
         { value: "actions", text: "" },
       ],
       calculoLote: [],
+      usuario_id: 1,
     };
   },
 
@@ -865,16 +923,22 @@ export default {
           if (!this.porcentagemHonorarios && !this.DataHonorarios) {
             this.textoHonorarios = null;
           } else {
-            this.textoHonorarios =
-              this.porcentagemHonorarios +
-              "% com parcelas até " +
-              this.DataHonorarios;
             this.honorarios(
               this.DataHonorarios.split("/")[1],
               this.DataHonorarios.split("/")[2]
             );
+            this.textoHonorarios =
+              this.porcentagemHonorarios +
+              "% com parcelas até " +
+              this.DataHonorarios;
           }
         })
+        // .then(() => {
+        //   this.honorarios(
+        //     this.DataHonorarios.split("/")[1],
+        //     this.DataHonorarios.split("/")[2]
+        //   );
+        // })
         .then(() => {
           if (this.alcadaBoolean) {
             this.calculoDeOssada();
@@ -915,6 +979,31 @@ export default {
         dataFinalBeneficioAcumulado.push(value.dif);
         rmilBeneficioAcumulado.push(value.rmi);
       });
+      const calculoData = [];
+      const calculo_reajusteAcumulado = [];
+      const calculo_devido = [];
+      const calculo_reajusteRecebido = [];
+      const calculo_recebido = [];
+      const calculo_salario = [];
+      const calculo_correcao = [];
+      const calculo_salarioCorrigido = [];
+      const calculo_juros = [];
+      const calculo_salarioJuros = [];
+      const calculo_salarioTotal = [];
+
+      this.calc_total.forEach((value) => {
+        calculoData.push(value.data);
+        calculo_reajusteAcumulado.push(value.reajusteAcumulado);
+        calculo_devido.push(value.devido);
+        calculo_reajusteRecebido.push(value.reajusteRecebido);
+        calculo_recebido.push(value.recebido);
+        calculo_salario.push(value.salario);
+        calculo_correcao.push(value.correcao);
+        calculo_salarioCorrigido.push(value.salarioCorrigido);
+        calculo_juros.push(value.juros);
+        calculo_salarioJuros.push(value.salarioJuros);
+        calculo_salarioTotal.push(value.salarioTotal);
+      });
       let body = {
         numeroDoProcesso: this.info_calculo.numeroDoProcesso,
         nome: this.info_calculo.nome,
@@ -949,14 +1038,31 @@ export default {
         limiteMinimoMaximo: this.limiteMinimoMaximo,
         salarioMinimo: this.salarioMinimo,
         aps: this.info_calculo.aps,
-        usuario: 1,
+        usuario: this.usuario_id,
+        total_processos: this.total_processos,
+        valor_total: this.valor_total,
+        valor_juros: this.valor_juros,
+        valor_corrigido: this.valor_corrigido,
+        valorHonorarios: this.valorHonorarios,
+        pacelasVencidas: this.pacelasVencidas,
+        data: calculoData,
+        reajusteAcumulado: calculo_reajusteAcumulado,
+        devido: calculo_devido,
+        reajusteRecebido: calculo_reajusteRecebido,
+        recebido: calculo_recebido,
+        salario: calculo_salario,
+        correcao: calculo_correcao,
+        salarioCorrigido: calculo_salarioCorrigido,
+        juros: calculo_juros,
+        salarioJuros: calculo_salarioJuros,
+        salarioTotal: calculo_salarioTotal,
       };
       axios
-        .post("http://localhost:8888/calculoEmLote/salvar", body)
+        .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
         .then((response) => {
           console.log(response.data);
           axios
-            .get("http://localhost:8888/calculoEmLote/procurarPorUsuario/1")
+            .get(`${baseApiUrl}/calculoEmLote/procurarPorUsuario/${this.usuario_id}`)
             .then((response) => {
               this.calculoLote = response.data;
               console.log(this.calculoLote);
@@ -1011,13 +1117,13 @@ export default {
     deletarLote() {
       axios
         .delete(
-          "http://localhost:8888/calculoEmLote/deletarAllUsuario/1",
+          `${baseApiUrl}/calculoEmLote/deletarAllUsuario/${this.usuario_id}`,
           this.calculoLote
         )
         .then((dados) => {
           console.log(dados);
           axios
-            .get("http://localhost:8888/calculoEmLote/procurarPorUsuario/1")
+            .get(`${baseApiUrl}/calculoEmLote/procurarPorUsuario/${this.usuario_id}`)
             .then((response) => {
               this.calculoLote = response.data;
               console.log(this.calculoLote);
@@ -1033,8 +1139,22 @@ export default {
         });
     },
     atulizarInfosLote(dado) {
+      this.zeraDadosDocalculo();
       let beneficioAcumuladoLote = [];
       if (dado.recebeuBeneficio) {
+        this.headers = [
+          { value: "data", text: "Data" },
+          { value: "reajusteAcumulado", text: "Reajuste" },
+          { value: "devido", text: "Devido R$" },
+          { value: "reajusteRecebido", text: "Reajute" },
+          { value: "recebido", text: "Recebido R$" },
+          { value: "salario", text: "Salário R$" },
+          { value: "correcao", text: "Correção Salarial" },
+          { value: "salarioCorrigido", text: "Salário Corrigido R$" },
+          { value: "juros", text: "Juros" },
+          { value: "salarioJuros", text: "Salário Juros R$" },
+          { value: "salarioTotal", text: "Total R$" },
+        ];
         dado.nomeBeneficioBeneficioAcumulado.forEach((value, index) => {
           beneficioAcumuladoLote.push({
             beneficio: value,
@@ -1043,9 +1163,44 @@ export default {
             rmi: dado.rmilBeneficioAcumulado[index],
           });
         });
+      } else {
+        this.headers = [
+          { value: "data", text: "Data" },
+          { value: "reajusteAcumulado", text: "Reajuste" },
+          { value: "salario", text: "Salário R$" },
+          { value: "correcao", text: "Correção Salarial" },
+          { value: "salarioCorrigido", text: "Salário Corrigido R$" },
+          { value: "juros", text: "Juros" },
+          { value: "salarioJuros", text: "Salário Juros R$" },
+          { value: "salarioTotal", text: "Total" },
+        ];
       }
-      this.zeraDadosDocalculo();
-      this.calc_total = [];
+      let calcul = [];
+      dado.data.forEach((value, index) => {
+        calcul.push({
+          data: value,
+          reajusteAcumulado: dado.reajusteAcumulado[index],
+          devido: dado.devido[index],
+          reajusteRecebido:
+            dado.reajusteRecebido[index] == null
+              ? 0
+              : dado.reajusteRecebido[index],
+          recebido: dado.recebido[index] == null ? 0 : dado.recebido[index],
+          salario: dado.salario[index],
+          correcao: dado.correcao[index],
+          salarioCorrigido: dado.salarioCorrigido[index],
+          juros: dado.juros[index],
+          salarioJuros: dado.salarioJuros[index],
+          salarioTotal: dado.salarioTotal[index],
+        });
+      });
+      this.calc_total = calcul;
+      this.total_processos = dado.total_processos;
+      this.valor_total = dado.valor_total;
+      this.valor_juros = dado.valor_juros;
+      this.valor_corrigido = dado.valor_corrigido;
+      this.valorHonorarios = dado.valorHonorarios;
+      this.pacelasVencidas = dado.pacelasVencidas;
       this.dtInicial = dado.termoInicial;
       this.dtFinal = dado.termoFinal;
       this.salarioInicial = dado.rmi;
@@ -1192,6 +1347,12 @@ export default {
     },
     async calcularEmLote() {
       //this.atulizarInfosLote(this.calculoLote[0])
+      // const executar = async () =>{
+      //     let fazer = await this.atulizarInfosLote(this.calculoLote[0]);
+      //     console.log(fazer);
+      //     this.imprimirPdf(this.calculoLote[0])
+      //   }
+      //   console.log(executar());
       this.calculoLote.forEach(async (dado /*index*/) => {
         // const print = () => {
         //     return new Promise((resolve) => {
@@ -1211,15 +1372,64 @@ export default {
 
         // var caular = await this.calculo()
         // caular
-        this.atulizarInfosLote(dado);
-        this.printDiv();
+        const print = () => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(
+                "The request is successful. " + this.atulizarInfosLote(dado)
+              );
+            });
+          });
+        };
+        const executar = async () => {
+          await print();
+          //await this.imprimirPdf(dado);
+          this.printDiv();
+        };
+        console.log(executar());
+        // const promiseAtulizar =  new Promise(() => this.atulizarInfosLote(dado));
+        // promiseAtulizar.then(() => this.imprimirPdf());
+        // this.atulizarInfosLote(dado);
+        // this.imprimirPdf();
         console.log("dado: " + dado);
         console.log(dado);
         //this.printDiv()
         //await this.calcularLote();
       });
     },
+    imprimirPdf(dado) {
+      // eslint-disable-next-line no-undef
+      var doc = new jsPDF("portrait", "pt", "a4"),
+        data = new Date();
+      let margins = {
+        top: 40,
+        bottom: 60,
+        left: 40,
+        width: 1000,
+      };
+      var divToPrint = document.getElementById("areaToPrint");
+      doc.fromHTML(
+        divToPrint,
+        margins.left, // x coord
+        margins.top,
+        { pagesplit: true },
+        function () {
+          doc.save(
+            "Relatorio - " +
+              dado.nome +
+              " " +
+              data.getDate() +
+              "/" +
+              data.getMonth() +
+              "/" +
+              data.getFullYear() +
+              ".pdf"
+          );
+        }
+      );
+    },
     calculoDeOssada() {
+      this.pacelasVencidas = 0;
       let ossada = 0;
       let date = this.info_calculo.dataAjuizamento.split("/");
       let correcao = 1;
@@ -1302,9 +1512,8 @@ export default {
             } else {
               this.pacelasVencidas =
                 Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
-              this.total_processos =
-                this.total_processos - this.pacelasVencidas;
             }
+            this.total_processos -= this.pacelasVencidas;
           })
           .catch((erro) => {
             console.log(erro);
@@ -1320,7 +1529,7 @@ export default {
     },
     zeraDadosDocalculo() {
       this.total_processos = 0;
-      this.valorHonorarios = 0;
+      //this.valorHonorarios = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
@@ -1328,7 +1537,7 @@ export default {
       this.arr_Salario13 = 0;
       this.juros13Valor = 0;
       this.corrigido13Valor = 0;
-      this.pacelasVencidas = 0;
+      //this.pacelasVencidas = 0;
       this.salarioMinimoOssada = 0;
       this.alcadaValue = 0;
       this.alcadaArray = [];
@@ -1585,7 +1794,7 @@ export default {
           Math.floor(
             (this.valor_corrigido +
               this.valor_juros +
-              (this.valorHonorarios * this.procntagem_acordo) / 100) *
+              (this.valorHonorarios * this.procntagem_acordo) / 100)  - this.pacelasVencidas *
               100
           ) / 100;
       } else {
@@ -1595,7 +1804,7 @@ export default {
           Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
         this.total_processos =
           Math.floor(
-            (this.valor_corrigido + this.valor_juros + this.valorHonorarios) *
+            (this.valor_corrigido + this.valor_juros + this.valorHonorarios - this.pacelasVencidas) *
               100
           ) / 100;
       }
@@ -1603,6 +1812,9 @@ export default {
     },
     honorarios(mesHonorarios, anoHonorarios) {
       let i = 0;
+      this.valorHonorarios = 0;
+      console.log(this.calc_total[0]);
+      console.log("this.calc_total[0]");
       for (const value of this.calc_total) {
         var dateTable = value.data;
         var mesDoTable = dateTable.split("/")[1];
@@ -1874,7 +2086,12 @@ export default {
         `;
       style = style + "</style>";
 
-      var newWin = window.open("_blank");
+      var id = new Date().getTime();
+      var newWin = window.open(
+        window.location.href + "?printerFriendly=true",
+        id,
+        "toolbar=1,scrollbars=1,location=0,statusbar=0,menubar=1,resizable=1,width=800,height=600,left = 240,top = 212"
+      );
 
       newWin.document.write("<html><head>");
       newWin.document.write(
@@ -1892,6 +2109,7 @@ export default {
       newWin.document.write("</body></html>");
 
       newWin.print();
+
       newWin.close();
     },
     informacoesCalculo() {
@@ -2105,8 +2323,9 @@ export default {
   },
 
   mounted() {
+
     axios
-      .get("http://localhost:8888/calculoEmLote/procurarPorUsuario/1")
+      .get(`${baseApiUrl}/calculoEmLote/procurarPorUsuario/${this.usuario_id}`)
       .then((response) => {
         this.calculoLote = response.data;
         console.log(this.calculoLote);
