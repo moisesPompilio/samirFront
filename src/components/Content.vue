@@ -11,7 +11,4 @@ export default {
 </script>
 
 <style>
-.content-master {
-  /* background-color: #efefef; */
-}
 </style>

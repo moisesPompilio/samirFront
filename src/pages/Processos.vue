@@ -9,33 +9,12 @@
     </v-card>
     <v-card class="mt-5">
       <v-card>
-        <bloco-informacoes></bloco-informacoes>
+        <bloco-informacoes
+        :exibir="{tudo: BlocoDeInformacoes_tudo, processos: BlocoDeInformacoes_processos }"
+        @dados="BlocoDeInformacoes_tudo = $event"
+        @processos="BlocoDeInformacoes_processos = $event"></bloco-informacoes>
     </v-card>
-      <v-card-title>Tabela de Processos</v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="infos"
-        item-key="name"
-        class="elevation-1"
-      >
-        <template v-slot:item="{ item }">
-          <tr>
-            <td
-              class="py-3"
-              style="color: rgb(107, 107, 218); cursor: pointer"
-              @click="redirectToCalculo"
-            >
-              {{ item.nup }}
-            </td>
-            <td>{{ item.interessados }}</td>
-            <td>
-              <v-btn icon @click="redirectToCalculo">
-                <v-icon color="success">mdi-file-eye-outline</v-icon>
-              </v-btn>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
+     
     </v-card>
   </v-container>
 </template>
@@ -46,6 +25,7 @@ export default {
   components: {
     "bloco-informacoes": BlocoDeInformacoes,
   },
+
 
   name: "Processos",
   data: function () {
@@ -66,38 +46,8 @@ export default {
         { value: "interessados", text: "Interessados " },
         { value: "actions" },
       ],
-      infos: [
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-        {
-          nup: "00457.02334/2021-18(ARQU/ER-SEAS-PRF1)1005832.2021.4.01.3900(TRF1_1)",
-          interessados:
-            "*AFONSO ROGRIGUES COSTA*INSTITUTO NACIONAL DO SEGURO SOCIAL[GERENCIA EXECUTIVA JUNDIAI]",
-        },
-      ],
+       BlocoDeInformacoes_tudo:true,
+      BlocoDeInformacoes_processos: false,
     };
   },
   methods: {

@@ -1,11 +1,11 @@
 function calculaValorReajuste(salarioBase, taxaReajuste) {
-  return salarioBase * (taxaReajuste - 1)
+  return Math.floor(salarioBase * (Math.floor((taxaReajuste - 1) * 100) / 100) * 100) / 100
 }
 function maiorTaxaAno(taxas = []) {
   let maiorTaxa = 1
 
-  taxas.forEach((taxaAtual) => {
-    if (taxaAtual > maiorTaxa) maiorTaxa = taxaAtual
+  taxas.forEach((taxaAtual,idex) => {
+    if (idex == 0) maiorTaxa = taxaAtual
   })
 
   return maiorTaxa

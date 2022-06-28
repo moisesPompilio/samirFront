@@ -15,7 +15,7 @@
     />
     <v-spacer />
     <div class="logged">
-      <span class="pr-3" style="color: black">Luan Paiva</span>
+      <span class="pr-3" style="color: black">Beremiz Samir</span>
       <v-avatar color="indigo" size="36">
         <span class="white--text text-h5">LP</span>
       </v-avatar>
