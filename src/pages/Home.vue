@@ -1113,6 +1113,7 @@ export default {
           juros: calculo_juros,
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
+          textoHonorarios: this.textoHonorarios,
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1287,6 +1288,10 @@ export default {
       this.info_calculo.dataAjuizamento = dado.dataDeAjuizamento;
       this.info_calculo.nb = dado.numeroDoBeneficio;
       this.info_calculo.beneficio = dado.beneficio;
+      this.beneficioInacumulavel = beneficioAcumuladoLote;
+      this.procntagem_acordo = dado.acordo;
+      this.dibAnterior = dado.dibAnterior;
+      this.textoHonorarios = dado.textoHonorarios;
     },
     calcularLote() {
       const body = {
@@ -1792,6 +1797,7 @@ export default {
             });
         }
         if (!this.beneficioInacumulavel[0].rmi) {
+          this.beneficio = false;
           this.headers = [
             { value: "data", text: "Data" },
             { value: "reajusteAcumulado", text: "Reajuste" },
