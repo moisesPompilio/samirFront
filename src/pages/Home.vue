@@ -2013,6 +2013,7 @@ export default {
       this.textoHonorarios = null;
       this.valorSalario13 = 0;
       this.arr_Salario13 = 0;
+      this.dibAnterior = this.info_calculo.dibAnterior;
       this.total_processos = 0;
       this.procntagem_acordo = null;
       this.alcadaValue = 0;

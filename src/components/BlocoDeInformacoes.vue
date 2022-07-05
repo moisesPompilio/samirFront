@@ -127,7 +127,7 @@
       </v-col>
     </v-row>
     <v-row class="mx-3" v-if="exibir.tudo">
-      <v-col cols="12" sm="6" md="6">
+      <v-col cols="12" sm="4" md="4">
         <label for="aps" class="labels pb-3">APS</label>
         <v-text-field
           v-model="aps"
@@ -137,13 +137,23 @@
           outlined
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="6">
+      <v-col cols="12" sm="4" md="4">
         <label for="urlProcesso" class="labels pb-3">URL do processo</label>
         <v-text-field
           v-model="urlProcesso"
           id="urlProcesso"
           dense
           placeholder="Exp: https://sapiens.agu.gov.br"
+          outlined
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="4" md="4">
+        <label for="urlProcesso" class="labels pb-3">DIB-ANTERIOR</label>
+        <v-text-field
+          v-model="dibAnterior"
+          id="dibAnterior"
+          dense
+          placeholder="Exp: 17/06/2000"
           outlined
         ></v-text-field>
       </v-col>
@@ -254,6 +264,7 @@ export default {
       citacao: "",
       aps: "",
       urlProcesso: "",
+      dibAnterior: "",
       headers: [
         { value: "numeroDoProcesso", text: "Número do Processo" },
         { value: "nome", text: "Nome " },
@@ -300,6 +311,7 @@ export default {
         citacao: this.citacao,
         beneficiosAcumulados: this.array_beneficioAcumulado,
         urlProcesso: this.urlProcesso,
+        dibAnterior: this.dibAnterior,
       });
       this.cleanFields();
       this.saveInfos();
@@ -327,6 +339,7 @@ export default {
       this.citacao = "";
       this.array_beneficioAcumulado = [];
       this.urlProcesso = "";
+      this.dibAnterior = "";
     },
     formataçao(valor) {
       return valor;
@@ -345,6 +358,7 @@ export default {
       this.aps = this.infos[y].aps;
       this.citacao = this.infos[y].citacao;
       this.urlProcesso = this.infos[y].urlProcesso;
+      this.dibAnterior = this.infos[y].dibAnterior;
     },
     pushBeneficio() {
       this.array_beneficioAcumulado.push(this.beneficioAcumulado);
