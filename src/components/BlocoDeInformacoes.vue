@@ -1,11 +1,16 @@
 <template>
   <div>
+    <v-progress-linear
+      v-if="!beneficiosInacumulveisBanco[0]"
+      indeterminate
+      color="teal"
+    ></v-progress-linear>
     <v-row>
       <button @click="dadosActive()">
         Prencher dados Manualmente <v-icon>mdi-menu-up</v-icon>
       </button>
     </v-row>
-    <v-row v-if="exibir.tudo" class="mx-3">
+    <v-row v-if="exibir.tudo && beneficiosInacumulveisBanco[0]" class="mx-3">
       <v-col cols="12" sm="6" md="3">
         <label for="numeroProcesso" class="labels pb-3"
           >Número do Processo</label
@@ -41,7 +46,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-row class="mx-3" v-if="exibir.tudo">
+    <v-row class="mx-3" v-if="exibir.tudo && beneficiosInacumulveisBanco[0]">
       <v-col cols="12" sm="6" md="3">
         <label for="cpf" class="labels pb-3">CPF</label>
         <v-text-field
@@ -84,7 +89,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-row class="mx-3" v-if="exibir.tudo">
+    <v-row class="mx-3" v-if="exibir.tudo && beneficiosInacumulveisBanco[0]">
       <v-col cols="12" sm="6" md="3">
         <label for="beneficio" class="labels pb-3">Benefício</label>
         <v-text-field
@@ -126,7 +131,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-row class="mx-3" v-if="exibir.tudo">
+    <v-row class="mx-3" v-if="exibir.tudo && beneficiosInacumulveisBanco[0]">
       <v-col cols="12" sm="4" md="4">
         <label for="aps" class="labels pb-3">APS</label>
         <v-text-field
@@ -157,7 +162,7 @@
           outlined
         ></v-text-field>
       </v-col>
-      <v-row class="mx-3" v-if="exibir.tudo">
+      <v-row class="mx-3" v-if="exibir.tudo && beneficiosInacumulveisBanco[0]">
         <v-col cols="12" sm="6" md="2">
           <label for="beneficioAcumulado.beneficio" class="labels pb-3"
             >Beneficio Acumulado?</label
@@ -223,7 +228,7 @@
       class="elevation-1"
     >
       <template v-slot:item="{ item }">
-        <tr>
+        <tr @click="tranferir(item.id)">
           <td
             class="py-3"
             style="color: rgb(107, 107, 218); cursor: pointer"
@@ -232,7 +237,12 @@
             {{ item.numeroDoProcesso }}
           </td>
           <td>{{ item.nome }}</td>
-          <td>{{ item.id }}</td>
+          <td>
+            <v-icon v-if="item.beneficiosAcumulados[0]" color="red">
+              mdi-check-outline
+            </v-icon>
+          </td>
+          <td>{{ item.id + 1 }}</td>
           <td>
             <v-btn icon @click="tranferir(item.id)">
               <v-icon color="success">mdi-file-eye-outline</v-icon>
@@ -245,6 +255,8 @@
 </template>
 
 <script>
+import { baseApiUrl } from "../global";
+import axios from "axios";
 export default {
   name: "Processos",
   props: ["exibir"],
@@ -265,9 +277,11 @@ export default {
       aps: "",
       urlProcesso: "",
       dibAnterior: "",
+      beneficiosInacumulveisBanco: [],
       headers: [
         { value: "numeroDoProcesso", text: "Número do Processo" },
         { value: "nome", text: "Nome " },
+        { value: "beneficioAcumuladoBoolean", text: "Recebeu Benefício" },
         { value: "id", text: "ID" },
         { value: "actions", text: "" },
       ],
@@ -275,6 +289,7 @@ export default {
       calculo: {},
       beneficioAcumulado: { beneficio: null, dib: null, dif: null, rmi: null },
       array_beneficioAcumulado: [],
+      beneficioAcumuladoBoolean: false,
       //exibir: {tudo: true, processos: false },
     };
   },
@@ -312,6 +327,7 @@ export default {
         beneficiosAcumulados: this.array_beneficioAcumulado,
         urlProcesso: this.urlProcesso,
         dibAnterior: this.dibAnterior,
+        beneficioAcumuladoBoolean: this.beneficioAcumuladoBoolean,
       });
       this.cleanFields();
       this.saveInfos();
@@ -340,6 +356,7 @@ export default {
       this.array_beneficioAcumulado = [];
       this.urlProcesso = "";
       this.dibAnterior = "";
+      this.beneficioAcumuladoBoolean = false;
     },
     formataçao(valor) {
       return valor;
@@ -359,10 +376,78 @@ export default {
       this.citacao = this.infos[y].citacao;
       this.urlProcesso = this.infos[y].urlProcesso;
       this.dibAnterior = this.infos[y].dibAnterior;
+      console.log(this.infos[y].beneficioAcumuladoBoolean);
+      console.log(this.infos[y].beneficiosAcumulados);
     },
     pushBeneficio() {
-      this.array_beneficioAcumulado.push(this.beneficioAcumulado);
-      this.cleanBeneficio();
+      let dataDib = this.beneficioAcumulado.dib.split("/");
+      let dataDif = this.beneficioAcumulado.dif.split("/");
+      let dataincial = this.dibInicial.split("/");
+      let dataFinal = this.dip.split("/");
+      if (
+        this.beneficiosInacumulveilVerificadorPeriodo(
+          dataDib,
+          dataDif,
+          dataincial,
+          dataFinal
+        ) &&
+        this.verificarBeneficio()
+      ) {
+        this.array_beneficioAcumulado.push(this.beneficioAcumulado);
+        this.beneficioAcumuladoBoolean = true;
+        this.cleanBeneficio();
+      } else {
+        this.cleanBeneficio();
+      }
+    },
+    verificarBeneficio() {
+      let beneficiovalido;
+      this.beneficiosInacumulveisBanco.forEach((value) => {
+        if (
+          parseInt(value.name.split("-")[0]) ==
+          parseInt(this.beneficio.split("-")[0])
+        ) {
+          value.inacumulavel.forEach((dado, index) => {
+            console.log(parseInt(dado.split("-")[0]));
+            if (
+              parseInt(dado.split("-")[0]) ==
+              parseInt(this.beneficioAcumulado.beneficio.split("-")[0])
+            ) {
+              beneficiovalido = true;
+            } else if (index - 1 == value.inacumulavel.length) {
+              beneficiovalido = false;
+            }
+          });
+        }
+      });
+      console.log("benefio e " + beneficiovalido);
+      return beneficiovalido;
+    },
+    beneficiosInacumulveilVerificadorPeriodo(
+      dataDib,
+      dataDif,
+      dataincial,
+      dataFinal
+    ) {
+      if (dataDib[2] <= dataFinal[2] && dataDif[2] >= dataincial[2]) {
+        if (dataDif[2] == dataincial[2]) {
+          if (dataDif[1] == dataincial[1]) {
+            if (dataDif[0] >= dataincial[0]) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (dataDif[1] > dataincial[1]) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
     },
     cleanBeneficio() {
       this.beneficioAcumulado = {
@@ -387,6 +472,9 @@ export default {
         localStorage.removeItem("infos");
       }
     }
+    axios.get(baseApiUrl + "/beneficio/listar").then((res) => {
+      this.beneficiosInacumulveisBanco = res.data;
+    });
   },
 };
 </script>

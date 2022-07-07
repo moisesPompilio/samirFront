@@ -320,34 +320,6 @@
           </b-form-input>
         </b-col>
       </b-row>
-      <template>
-        <v-data-table
-          :headers="headersCalculoLote"
-          :items="calculoLote"
-          class="elevation-1"
-        >
-          <template v-slot:item="{ item }">
-            <tr>
-              <td
-                class="py-3"
-                style="color: rgb(107, 107, 218); cursor: pointer"
-                @click="tranferir(item.id)"
-              >
-                {{ item.numeroDoProcesso }}
-              </td>
-              <td>{{ item.nome }}</td>
-              <td>
-                <v-btn icon @click="atulizarInfosLote(item)">
-                  <v-icon color="success">mdi-file-eye-outline</v-icon>
-                </v-btn>
-                <v-btn icon @click="removerItemLote(item)">
-                  <v-icon color="success">mdi-delete</v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </template>
 
       <!-- BOTÕES -->
 
@@ -418,6 +390,35 @@
         </v-col>
       </v-row>
     </v-card>
+    <h3 class="mt-5">Beneficios para calculo em lote</h3>
+    <template>
+      <v-data-table
+        :headers="headersCalculoLote"
+        :items="calculoLote"
+        class="elevation-1"
+      >
+        <template v-slot:item="{ item }">
+          <tr>
+            <td
+              class="py-3"
+              style="color: rgb(107, 107, 218); cursor: pointer"
+              @click="tranferir(item.id)"
+            >
+              {{ item.numeroDoProcesso }}
+            </td>
+            <td>{{ item.nome }}</td>
+            <td>
+              <v-btn icon @click="atulizarInfosLote(item)">
+                <v-icon color="success">mdi-file-eye-outline</v-icon>
+              </v-btn>
+              <v-btn icon @click="removerItemLote(item)">
+                <v-icon color="success">mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </template>
 
     <adicionar-taxa v-if="add_taxa == true" />
     <!-- TABELA PRNCIPAL -->
@@ -1014,13 +1015,12 @@ export default {
           });
       }
     },
-    verificarCalculo(){
-      if(this.calc_total[0]){
+    verificarCalculo() {
+      if (this.calc_total[0]) {
         return true;
-      }else{
+      } else {
         this.verificadoInformacao = true;
-        this.alertTexto =
-          "Obrigatório gerar e examinar a tabela de cálculo.";
+        this.alertTexto = "Obrigatório gerar e examinar a tabela de cálculo.";
         return false;
       }
     },
@@ -1120,7 +1120,7 @@ export default {
             console.log(response.data);
             axios
               .get(
-                `${baseApiUrl}/calculoEmLote/procurarPorUsuario/${this.usuario_id}`
+                `${baseApiUrl}calculoEmLote/procurarPorUsuario/${this.usuario_id}`
               )
               .then((response) => {
                 this.calculoLote = response.data;
@@ -1615,7 +1615,11 @@ export default {
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       var dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
-      var dfinal = parseInt(dtFinal.split("/")[0]);
+      var dfinal =
+        dtFinal.split("/")[1] == 2 &&
+        (dtFinal.split("/")[0] == 28 || dtFinal.split("/")[0] == 29)
+          ? 30
+          : parseInt(dtFinal.split("/")[0]);
       let inical_calculo;
       this.inical_calculo = 1;
       if (dinicial >= 30) {
@@ -1714,9 +1718,18 @@ export default {
       }
       this.beneficioInacumulavel.forEach((info, index) => {
         let dataDib = info.dib.split("/");
+        let dataDif = info.dif.split("/");
         let dataincial = this.dtInicial.split("/");
         let dataFinal = this.dtFinal.split("/");
-        if (dataDib[2] >= dataincial[2] || dataDib[2] <= dataFinal[2]) {
+        //fazerb um confirmado de periodo;
+        if (
+          this.beneficiosInacumulveilVerificadorPeriodo(
+            dataDib,
+            dataDif,
+            dataincial,
+            dataFinal
+          )
+        ) {
           //console.log("Benefico inacumulado");
           if (index == 0) {
             this.headers = [
@@ -1753,10 +1766,11 @@ export default {
                 alteracaoConfimada = false;
                 beneficioAcumulado.forEach((value) => {
                   let dataBeneficioAcumulado = value.data.split("/");
+                  console.log("sizeCalTotal : " + dataFinal[0] + " index: " + dataCalculo[0] + " comparacao: " + (dataFinal[0] == dataCalculo[0]))
                   if (
-                    (dataBeneficioAcumulado[0] == dataCalculo[0] ||
-                      dataincial[0] == dataCalculo[0] ||
-                      dataFinal == dataCalculo[0]) &&
+                    ((dataBeneficioAcumulado[0] == dataCalculo[0]) ||
+                      (dataincial[0] == dataCalculo[0]) ||
+                      (dataFinal[0] == dataCalculo[0])) &&
                     dataBeneficioAcumulado[1] == dataCalculo[1] &&
                     dataBeneficioAcumulado[2] == dataCalculo[2]
                   ) {
@@ -1792,6 +1806,7 @@ export default {
             });
         }
         if (!this.beneficioInacumulavel[0].rmi) {
+          this.beneficio = false;
           this.headers = [
             { value: "data", text: "Data" },
             { value: "reajusteAcumulado", text: "Reajuste" },
@@ -1804,6 +1819,32 @@ export default {
           ];
         }
       });
+    },
+    beneficiosInacumulveilVerificadorPeriodo(
+      dataDib,
+      dataDif,
+      dataincial,
+      dataFinal
+    ) {
+      if (dataDib[2] <= dataFinal[2] && dataDif[2] >= dataincial[2]) {
+        if (dataDif[2] == dataincial[2]) {
+          if (dataDif[1] == dataincial[1]) {
+            if (dataDif[0] >= dataincial[0]) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (dataDif[1] > dataincial[1]) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
       this.calc_total[0].salario =
@@ -1931,8 +1972,11 @@ export default {
         if (datafinal[1] == 1) {
           this.dtFinal = "31/12/" + (datafinal[2] - 1);
         } else {
-          if (datafinal[1] < 10) {
-            this.dtFinal = "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
+          if (datafinal[1] <= 10) {
+            this.dtFinal =
+              datafinal[1] == 3
+                ? "28/0" + (datafinal[1] - 1) + "/" + datafinal[2]
+                : "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
           } else {
             this.dtFinal = "30/" + (datafinal[1] - 1) + "/" + datafinal[2];
           }
