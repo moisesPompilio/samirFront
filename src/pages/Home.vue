@@ -272,54 +272,95 @@
           </b-button>
         </b-col>
       </b-row>
-      <b-row
-        class="row-one my-3 align-items-center"
+      <b-card
         v-for="obj_beneficioAcumulado of arrayBenficios"
         :key="obj_beneficioAcumulado"
       >
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio" class="labels">Qual Benefício?</label>
-          <b-form-input
-            id="beneficio"
-            v-model="obj_beneficioAcumulado.beneficio"
-            type="text"
-            size="sm"
-            placeholder="Ex: Auxílio Desemprego"
-          ></b-form-input>
-        </b-col>
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio_inicial" class="labels"
-            >Início do Benefício</label
-          >
-          <b-form-input
-            id="beneficio_inicial"
-            v-model="obj_beneficioAcumulado.dib"
-            type="text"
-            size="sm"
-          >
-          </b-form-input>
-        </b-col>
-        <b-col sm="2" v-if="beneficio === true">
-          <label for="beneficio_final" class="labels">Fim do Benefício</label>
-          <b-form-input
-            v-model="obj_beneficioAcumulado.dif"
-            id="beneficio_final"
-            type="text"
-            size="sm"
-          ></b-form-input>
-        </b-col>
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio" class="labels">RMI</label>
-          <b-form-input
-            v-model="obj_beneficioAcumulado.rmi"
-            id="beneficio"
-            type="text"
-            size="sm"
-            placeholder="Ex:1000"
-          >
-          </b-form-input>
-        </b-col>
-      </b-row>
+        <b-row class="row-one my-3 align-items-center">
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">Qual Benefício?</label>
+            <b-form-input
+              id="beneficio"
+              v-model="obj_beneficioAcumulado.beneficio"
+              type="text"
+              size="sm"
+              placeholder="Ex: Auxílio Desemprego"
+            ></b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio_inicial" class="labels"
+              >Início do Benefício</label
+            >
+            <b-form-input
+              id="beneficio_inicial"
+              v-model="obj_beneficioAcumulado.dib"
+              type="text"
+              size="sm"
+            >
+            </b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio_final" class="labels">Fim do Benefício</label>
+            <b-form-input
+              v-model="obj_beneficioAcumulado.dif"
+              id="beneficio_final"
+              type="text"
+              size="sm"
+            ></b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">RMI</label>
+            <b-form-input
+              v-model="obj_beneficioAcumulado.rmi"
+              id="beneficio"
+              type="text"
+              size="sm"
+              placeholder="Ex:1000"
+            >
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels"
+              >Limite de Minimo e Maximo</label
+            >
+            <input
+              v-model="obj_beneficioAcumulado.limiteMinimoMaximo"
+              :value="obj_beneficioAcumulado.limiteMinimoMaximo"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">13 Salario</label>
+            <input
+              v-model="obj_beneficioAcumulado.salario13"
+              :value="obj_beneficioAcumulado.salario13"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">Salario Minimo</label>
+            <input
+              v-model="obj_beneficioAcumulado.salarioMinimo"
+              :value="obj_beneficioAcumulado.salarioMinimo"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+        </b-row>
+      </b-card>
 
       <!-- BOTÕES -->
 
@@ -374,7 +415,6 @@
             depressed
             color="primary"
             style="margin-left: 145px"
-            @click="deletarLote()"
             target="_blank"
             >Deletar lote</v-btn
           >
@@ -383,7 +423,7 @@
           <v-btn
             depressed
             color="primary"
-            @click="calcularEmLote(), (mode = 'table')"
+            @click="mode = 'table'"
             target="_blank"
             >Calcular Lote</v-btn
           >
@@ -407,6 +447,14 @@
               {{ item.numeroDoProcesso }}
             </td>
             <td>{{ item.nome }}</td>
+            <td>
+              <v-icon
+                v-if="item.nomeBeneficioBeneficioAcumulado[0]"
+                color="red"
+              >
+                mdi-check-outline
+              </v-icon>
+            </td>
             <td>
               <v-btn icon @click="atulizarInfosLote(item)">
                 <v-icon color="success">mdi-file-eye-outline</v-icon>
@@ -841,6 +889,9 @@ export default {
       //   dataInicio: null,
       //   dataFinal: null,
       //   valor: null,
+      //   limiteMinimoMaximo: true,
+      //   salarioMinimo: false,
+      //   salario13: true,
       // },
       arrayBenficios: [],
       arrayTeste: [],
@@ -858,6 +909,7 @@ export default {
       headersCalculoLote: [
         { value: "numeroDoProcesso", text: "Numero Do Processo" },
         { value: "nome", text: "Autor" },
+        { value: "beneficio", text: "Recebeu Benefício" },
         { value: "actions", text: "" },
       ],
       calculoLote: [],
@@ -1113,6 +1165,7 @@ export default {
           juros: calculo_juros,
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
+          url: this.info_calculo.urlProcesso,
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1257,6 +1310,8 @@ export default {
           salarioTotal: dado.salarioTotal[index],
         });
       });
+      console.log(dado.url);
+      this.info_calculo.urlProcesso = dado.url;
       this.calc_total = calcul;
       this.total_processos = dado.total_processos;
       this.valor_total = dado.valor_total;
@@ -1668,7 +1723,40 @@ export default {
       }
     },
     beneficioAcumuladoCalculo() {
-      function decontar(value, dado) {
+      let beneficioAcumulado13 = 0;
+      function decontar(value, dado, dtInicial, dtFinal) {
+        let dinicial = dtInicial.split("/");
+        let recebido = value.salario;
+        if (value.data.split("/")[0] != "13Salario") {
+          if (
+            value.data.split("/")[1] == dinicial[1] &&
+            value.data.split("/")[2] == dinicial[2]
+          ) {
+            beneficioAcumulado13 =
+              dinicial[0] >= 15 ? beneficioAcumulado13++ : beneficioAcumulado13;
+          } else {
+            beneficioAcumulado13++;
+          }
+        } else {
+          recebido = (recebido / 12) * beneficioAcumulado13;
+          beneficioAcumulado13 = 1;
+        }
+        console.log(dtFinal);
+        if (
+          value.data.split("/")[1] == dinicial[1] &&
+          value.data.split("/")[2] == dinicial[2]
+        ) {
+          let dias = dinicial[0] >= 30 ? 1 : 30 - dinicial[0] + 1;
+          recebido = (recebido / 30) * dias;
+        } else if (
+          value.data.split("/")[1] == dtFinal.split("/")[1] &&
+          value.data.split("/")[2] == dtFinal.split("/")[2]
+        ) {
+          let dias = dtFinal.split("/")[0] >= 30 ? 30 : dtFinal.split("/")[0];
+          recebido = (recebido / 30) * dias;
+        }
+        console.log(recebido);
+        console.log(value.salario);
         return {
           data: dado.data,
           reajusteAcumulado: dado.reajusteAcumulado,
@@ -1676,25 +1764,21 @@ export default {
           reajusteRecebido: dado.reajusteAcumulado,
           recebido:
             dado.recebido > 0
-              ? dado.recebido + value.salario
-              : Math.floor(value.salario * 100) / 100,
-          salario: Math.floor((dado.salario - value.salario) * 100) / 100,
+              ? dado.recebido + recebido
+              : Math.floor(recebido * 100) / 100,
+          salario: Math.floor((dado.salario - recebido) * 100) / 100,
 
           correcao: dado.correcao,
           salarioCorrigido:
-            Math.floor((dado.salario - value.salario) * dado.correcao * 100) /
-            100,
+            Math.floor((dado.salario - recebido) * dado.correcao * 100) / 100,
           juros: dado.juros,
           salarioJuros:
             Math.floor(
-              (dado.salario - value.salario) * dado.juros * dado.correcao * 100
+              (dado.salario - recebido) * dado.juros * dado.correcao * 100
             ) / 100,
           salarioTotal:
             Math.floor(
-              (dado.salario - value.salario) *
-                (dado.juros + 1) *
-                dado.correcao *
-                100
+              (dado.salario - recebido) * (dado.juros + 1) * dado.correcao * 100
             ) / 100,
         };
         // }
@@ -1750,8 +1834,9 @@ export default {
             dib: info.dib,
             dip: info.dif,
             rmi: info.rmi,
-            salario13: this.salario13,
-            limiteMinimoMaximo: this.limiteMinimoMaximo,
+            salario13: info.salario13,
+            limiteMinimoMaximo: info.limiteMinimoMaximo,
+            salarioMinimo: info.salarioMinimo,
           };
 
           axios
@@ -1766,16 +1851,25 @@ export default {
                 alteracaoConfimada = false;
                 beneficioAcumulado.forEach((value) => {
                   let dataBeneficioAcumulado = value.data.split("/");
-                  console.log("sizeCalTotal : " + dataFinal[0] + " index: " + dataCalculo[0] + " comparacao: " + (dataFinal[0] == dataCalculo[0]))
+                  console.log(
+                    "sizeCalTotal : " +
+                      dataFinal[0] +
+                      " index: " +
+                      dataCalculo[0] +
+                      " comparacao: " +
+                      (dataFinal[0] == dataCalculo[0])
+                  );
                   if (
-                    ((dataBeneficioAcumulado[0] == dataCalculo[0]) ||
-                      (dataincial[0] == dataCalculo[0]) ||
-                      (dataFinal[0] == dataCalculo[0])) &&
+                    (dataBeneficioAcumulado[0] == dataCalculo[0] ||
+                      dataincial[0] == dataCalculo[0] ||
+                      dataFinal[0] == dataCalculo[0]) &&
                     dataBeneficioAcumulado[1] == dataCalculo[1] &&
                     dataBeneficioAcumulado[2] == dataCalculo[2]
                   ) {
                     //console.log(decontar(value, dado));
-                    newArrayCalculo.push(decontar(value, dado));
+                    newArrayCalculo.push(
+                      decontar(value, dado, this.dtInicial, this.dtFinal)
+                    );
                     alteracaoConfimada = true;
                   }
                 });
@@ -2042,7 +2136,16 @@ export default {
               parseInt(dado.split("-")[0]) ==
               parseInt(value.beneficio.split("-")[0])
             ) {
-              this.beneficioInacumulavel.push(value);
+              let push_beneficioAcumulado = {
+                beneficio: value.beneficio,
+                dib: value.dib,
+                dif: value.dif,
+                rmi: value.rmi,
+                limiteMinimoMaximo: true,
+                salarioMinimo: false,
+                salario13: true,
+              };
+              this.beneficioInacumulavel.push(push_beneficioAcumulado);
             }
           }
         });
@@ -2068,6 +2171,9 @@ export default {
         dib: null,
         dif: null,
         rmi: null,
+        salario13: true,
+        limiteMinimoMaximo: true,
+        salarioMinimo: false,
       };
       this.arrayBenficios.push(obj_beneficioAcumulado);
     },
