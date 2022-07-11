@@ -1166,6 +1166,8 @@ export default {
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
           url: this.info_calculo.urlProcesso,
+          textoHonorarios: this.textoHonorarios,
+
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1342,6 +1344,10 @@ export default {
       this.info_calculo.dataAjuizamento = dado.dataDeAjuizamento;
       this.info_calculo.nb = dado.numeroDoBeneficio;
       this.info_calculo.beneficio = dado.beneficio;
+      this.beneficioInacumulavel = beneficioAcumuladoLote;
+      this.procntagem_acordo = dado.acordo;
+      this.dibAnterior = dado.dibAnterior;
+      this.textoHonorarios = dado.textoHonorarios;
     },
     calcularLote() {
       const body = {
