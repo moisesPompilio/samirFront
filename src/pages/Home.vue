@@ -145,6 +145,7 @@
           </b-button>
         </b-col>
       </b-row>
+<<<<<<< master
       <b-row class="row-one my-3 align-items-center" v-for="obj_beneficioAcumulado of arrayBenficios"
         :key="obj_beneficioAcumulado">
         <b-col sm="3" v-if="beneficio === true">
@@ -187,6 +188,97 @@
           </template>
         </v-data-table>
       </template>
+=======
+      <b-card
+        v-for="obj_beneficioAcumulado of arrayBenficios"
+        :key="obj_beneficioAcumulado"
+      >
+        <b-row class="row-one my-3 align-items-center">
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">Qual Benefício?</label>
+            <b-form-input
+              id="beneficio"
+              v-model="obj_beneficioAcumulado.beneficio"
+              type="text"
+              size="sm"
+              placeholder="Ex: Auxílio Desemprego"
+            ></b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio_inicial" class="labels"
+              >Início do Benefício</label
+            >
+            <b-form-input
+              id="beneficio_inicial"
+              v-model="obj_beneficioAcumulado.dib"
+              type="text"
+              size="sm"
+            >
+            </b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio_final" class="labels">Fim do Benefício</label>
+            <b-form-input
+              v-model="obj_beneficioAcumulado.dif"
+              id="beneficio_final"
+              type="text"
+              size="sm"
+            ></b-form-input>
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">RMI</label>
+            <b-form-input
+              v-model="obj_beneficioAcumulado.rmi"
+              id="beneficio"
+              type="text"
+              size="sm"
+              placeholder="Ex:1000"
+            >
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels"
+              >Limite de Minimo e Maximo</label
+            >
+            <input
+              v-model="obj_beneficioAcumulado.limiteMinimoMaximo"
+              :value="obj_beneficioAcumulado.limiteMinimoMaximo"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">13 Salario</label>
+            <input
+              v-model="obj_beneficioAcumulado.salario13"
+              :value="obj_beneficioAcumulado.salario13"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">Salario Minimo</label>
+            <input
+              v-model="obj_beneficioAcumulado.salarioMinimo"
+              :value="obj_beneficioAcumulado.salarioMinimo"
+              class="form-check-input"
+              style="margin-left: 5px"
+              type="checkbox"
+              id="beneficio"
+              size="sm"
+            />
+          </b-col>
+        </b-row>
+      </b-card>
+>>>>>>> beta
 
       <!-- BOTÕES -->
 
@@ -214,15 +306,71 @@
             ao Lote</v-btn>
         </v-col>
         <v-col cols="3">
+<<<<<<< master
           <v-btn depressed color="primary" style="margin-left: 145px" @click="deletarLote()" target="_blank">Deletar
             lote</v-btn>
         </v-col>
         <v-col cols="2">
           <v-btn depressed color="primary" @click="calcularEmLote(), (mode = 'table')" target="_blank">Calcular Lote
           </v-btn>
+=======
+          <v-btn
+            depressed
+            color="primary"
+            style="margin-left: 145px"
+            target="_blank"
+            >Deletar lote</v-btn
+          >
+        </v-col>
+        <v-col cols="2">
+          <v-btn
+            depressed
+            color="primary"
+            @click="mode = 'table'"
+            target="_blank"
+            >Calcular Lote</v-btn
+          >
+>>>>>>> beta
         </v-col>
       </v-row>
     </v-card>
+    <h3 class="mt-5">Beneficios para calculo em lote</h3>
+    <template>
+      <v-data-table
+        :headers="headersCalculoLote"
+        :items="calculoLote"
+        class="elevation-1"
+      >
+        <template v-slot:item="{ item }">
+          <tr>
+            <td
+              class="py-3"
+              style="color: rgb(107, 107, 218); cursor: pointer"
+              @click="tranferir(item.id)"
+            >
+              {{ item.numeroDoProcesso }}
+            </td>
+            <td>{{ item.nome }}</td>
+            <td>
+              <v-icon
+                v-if="item.nomeBeneficioBeneficioAcumulado[0]"
+                color="red"
+              >
+                mdi-check-outline
+              </v-icon>
+            </td>
+            <td>
+              <v-btn icon @click="atulizarInfosLote(item)">
+                <v-icon color="success">mdi-file-eye-outline</v-icon>
+              </v-btn>
+              <v-btn icon @click="removerItemLote(item)">
+                <v-icon color="success">mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </template>
 
     <adicionar-taxa v-if="add_taxa == true" />
 
@@ -995,6 +1143,9 @@ export default {
       //   dataInicio: null,
       //   dataFinal: null,
       //   valor: null,
+      //   limiteMinimoMaximo: true,
+      //   salarioMinimo: false,
+      //   salario13: true,
       // },
       arrayBenficios: [],
       arrayTeste: [],
@@ -1012,6 +1163,7 @@ export default {
       headersCalculoLote: [
         { value: "numeroDoProcesso", text: "Numero Do Processo" },
         { value: "nome", text: "Autor" },
+        { value: "beneficio", text: "Recebeu Benefício" },
         { value: "actions", text: "" },
       ],
       calculoLote: [],
@@ -1182,8 +1334,7 @@ export default {
         return true;
       } else {
         this.verificadoInformacao = true;
-        this.alertTexto =
-          "Obrigatório gerar e examinar a tabela de cálculo.";
+        this.alertTexto = "Obrigatório gerar e examinar a tabela de cálculo.";
         return false;
       }
     },
@@ -1276,6 +1427,7 @@ export default {
           juros: calculo_juros,
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
+<<<<<<< master
           alcadaJurosPorcentagem: this.alcadaJurosPorcentagem,
           alcadaValor: this.alcadaValor,
           salariominimosAlcada: this.salariominimosAlcada,
@@ -1284,6 +1436,11 @@ export default {
           alcadaTotal: this.alcadaTotal,
           textoPeriodoAlcada: this.textoPeriodoAlcada,
           alcadaCorrecaoPorcetagem: this.alcadaCorrecaoPorcetagem,
+=======
+          url: this.info_calculo.urlProcesso,
+          textoHonorarios: this.textoHonorarios,
+
+>>>>>>> beta
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1291,7 +1448,7 @@ export default {
             console.log(response.data);
             axios
               .get(
-                `${baseApiUrl}/calculoEmLote/procurarPorUsuario/${this.usuario_id}`
+                `${baseApiUrl}calculoEmLote/procurarPorUsuario/${this.usuario_id}`
               )
               .then((response) => {
                 this.calculoLote = response.data;
@@ -1428,6 +1585,8 @@ export default {
           salarioTotal: dado.salarioTotal[index],
         });
       });
+      console.log(dado.url);
+      this.info_calculo.urlProcesso = dado.url;
       this.calc_total = calcul;
       this.total_processos = dado.total_processos;
       this.valor_total = dado.valor_total;
@@ -1458,6 +1617,10 @@ export default {
       this.info_calculo.dataAjuizamento = dado.dataDeAjuizamento;
       this.info_calculo.nb = dado.numeroDoBeneficio;
       this.info_calculo.beneficio = dado.beneficio;
+      this.beneficioInacumulavel = beneficioAcumuladoLote;
+      this.procntagem_acordo = dado.acordo;
+      this.dibAnterior = dado.dibAnterior;
+      this.textoHonorarios = dado.textoHonorarios;
     },
     calcularLote() {
       const body = {
@@ -1784,7 +1947,11 @@ export default {
       const dtInicial = this.dtInicial.split("-").reverse().join("/");
       var dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
-      var dfinal = parseInt(dtFinal.split("/")[0]);
+      var dfinal =
+        dtFinal.split("/")[1] == 2 &&
+        (dtFinal.split("/")[0] == 28 || dtFinal.split("/")[0] == 29)
+          ? 30
+          : parseInt(dtFinal.split("/")[0]);
       let inical_calculo;
       this.inical_calculo = 1;
       if (dinicial >= 30) {
@@ -1833,7 +2000,40 @@ export default {
       }
     },
     beneficioAcumuladoCalculo() {
-      function decontar(value, dado) {
+      let beneficioAcumulado13 = 0;
+      function decontar(value, dado, dtInicial, dtFinal) {
+        let dinicial = dtInicial.split("/");
+        let recebido = value.salario;
+        if (value.data.split("/")[0] != "13Salario") {
+          if (
+            value.data.split("/")[1] == dinicial[1] &&
+            value.data.split("/")[2] == dinicial[2]
+          ) {
+            beneficioAcumulado13 =
+              dinicial[0] >= 15 ? beneficioAcumulado13++ : beneficioAcumulado13;
+          } else {
+            beneficioAcumulado13++;
+          }
+        } else {
+          recebido = (recebido / 12) * beneficioAcumulado13;
+          beneficioAcumulado13 = 1;
+        }
+        console.log(dtFinal);
+        if (
+          value.data.split("/")[1] == dinicial[1] &&
+          value.data.split("/")[2] == dinicial[2]
+        ) {
+          let dias = dinicial[0] >= 30 ? 1 : 30 - dinicial[0] + 1;
+          recebido = (recebido / 30) * dias;
+        } else if (
+          value.data.split("/")[1] == dtFinal.split("/")[1] &&
+          value.data.split("/")[2] == dtFinal.split("/")[2]
+        ) {
+          let dias = dtFinal.split("/")[0] >= 30 ? 30 : dtFinal.split("/")[0];
+          recebido = (recebido / 30) * dias;
+        }
+        console.log(recebido);
+        console.log(value.salario);
         return {
           data: dado.data,
           reajusteAcumulado: dado.reajusteAcumulado,
@@ -1841,25 +2041,28 @@ export default {
           reajusteRecebido: dado.reajusteAcumulado,
           recebido:
             dado.recebido > 0
-              ? dado.recebido + value.salario
-              : Math.floor(value.salario * 100) / 100,
-          salario: Math.floor((dado.salario - value.salario) * 100) / 100,
+              ? dado.recebido + recebido
+              : Math.floor(recebido * 100) / 100,
+          salario: Math.floor((dado.salario - recebido) * 100) / 100,
 
           correcao: dado.correcao,
           salarioCorrigido:
-            Math.floor((dado.salario - value.salario) * dado.correcao * 100) /
-            100,
+            Math.floor((dado.salario - recebido) * dado.correcao * 100) / 100,
           juros: dado.juros,
           salarioJuros:
             Math.floor(
-              (dado.salario - value.salario) * dado.juros * dado.correcao * 100
+              (dado.salario - recebido) * dado.juros * dado.correcao * 100
             ) / 100,
           salarioTotal:
             Math.floor(
+<<<<<<< master
               (dado.salario - value.salario) *
               (dado.juros + 1) *
               dado.correcao *
               100
+=======
+              (dado.salario - recebido) * (dado.juros + 1) * dado.correcao * 100
+>>>>>>> beta
             ) / 100,
         };
         // }
@@ -1883,9 +2086,18 @@ export default {
       }
       this.beneficioInacumulavel.forEach((info, index) => {
         let dataDib = info.dib.split("/");
+        let dataDif = info.dif.split("/");
         let dataincial = this.dtInicial.split("/");
         let dataFinal = this.dtFinal.split("/");
-        if (dataDib[2] >= dataincial[2] || dataDib[2] <= dataFinal[2]) {
+        //fazerb um confirmado de periodo;
+        if (
+          this.beneficiosInacumulveilVerificadorPeriodo(
+            dataDib,
+            dataDif,
+            dataincial,
+            dataFinal
+          )
+        ) {
           //console.log("Benefico inacumulado");
           if (index == 0) {
             this.headers = [
@@ -1906,8 +2118,9 @@ export default {
             dib: info.dib,
             dip: info.dif,
             rmi: info.rmi,
-            salario13: this.salario13,
-            limiteMinimoMaximo: this.limiteMinimoMaximo,
+            salario13: info.salario13,
+            limiteMinimoMaximo: info.limiteMinimoMaximo,
+            salarioMinimo: info.salarioMinimo,
           };
 
           axios
@@ -1922,15 +2135,25 @@ export default {
                 alteracaoConfimada = false;
                 beneficioAcumulado.forEach((value) => {
                   let dataBeneficioAcumulado = value.data.split("/");
+                  console.log(
+                    "sizeCalTotal : " +
+                      dataFinal[0] +
+                      " index: " +
+                      dataCalculo[0] +
+                      " comparacao: " +
+                      (dataFinal[0] == dataCalculo[0])
+                  );
                   if (
                     (dataBeneficioAcumulado[0] == dataCalculo[0] ||
                       dataincial[0] == dataCalculo[0] ||
-                      dataFinal == dataCalculo[0]) &&
+                      dataFinal[0] == dataCalculo[0]) &&
                     dataBeneficioAcumulado[1] == dataCalculo[1] &&
                     dataBeneficioAcumulado[2] == dataCalculo[2]
                   ) {
                     //console.log(decontar(value, dado));
-                    newArrayCalculo.push(decontar(value, dado));
+                    newArrayCalculo.push(
+                      decontar(value, dado, this.dtInicial, this.dtFinal)
+                    );
                     alteracaoConfimada = true;
                   }
                 });
@@ -1961,6 +2184,7 @@ export default {
             });
         }
         if (!this.beneficioInacumulavel[0].rmi) {
+          this.beneficio = false;
           this.headers = [
             { value: "data", text: "Data" },
             { value: "reajusteAcumulado", text: "Reajuste" },
@@ -1973,6 +2197,32 @@ export default {
           ];
         }
       });
+    },
+    beneficiosInacumulveilVerificadorPeriodo(
+      dataDib,
+      dataDif,
+      dataincial,
+      dataFinal
+    ) {
+      if (dataDib[2] <= dataFinal[2] && dataDif[2] >= dataincial[2]) {
+        if (dataDif[2] == dataincial[2]) {
+          if (dataDif[1] == dataincial[1]) {
+            if (dataDif[0] >= dataincial[0]) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (dataDif[1] > dataincial[1]) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
     },
     formatçao_do_inicio(inical_calculo, dtInicial) {
       this.calc_total[0].salario =
@@ -2100,8 +2350,11 @@ export default {
         if (datafinal[1] == 1) {
           this.dtFinal = "31/12/" + (datafinal[2] - 1);
         } else {
-          if (datafinal[1] < 10) {
-            this.dtFinal = "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
+          if (datafinal[1] <= 10) {
+            this.dtFinal =
+              datafinal[1] == 3
+                ? "28/0" + (datafinal[1] - 1) + "/" + datafinal[2]
+                : "30/0" + (datafinal[1] - 1) + "/" + datafinal[2];
           } else {
             this.dtFinal = "30/" + (datafinal[1] - 1) + "/" + datafinal[2];
           }
@@ -2167,7 +2420,16 @@ export default {
               parseInt(dado.split("-")[0]) ==
               parseInt(value.beneficio.split("-")[0])
             ) {
-              this.beneficioInacumulavel.push(value);
+              let push_beneficioAcumulado = {
+                beneficio: value.beneficio,
+                dib: value.dib,
+                dif: value.dif,
+                rmi: value.rmi,
+                limiteMinimoMaximo: true,
+                salarioMinimo: false,
+                salario13: true,
+              };
+              this.beneficioInacumulavel.push(push_beneficioAcumulado);
             }
           }
         });
@@ -2182,6 +2444,7 @@ export default {
       this.textoHonorarios = null;
       this.valorSalario13 = 0;
       this.arr_Salario13 = 0;
+      this.dibAnterior = this.info_calculo.dibAnterior;
       this.total_processos = 0;
       this.procntagem_acordo = null;
       this.alcadaValue = 0;
@@ -2192,6 +2455,9 @@ export default {
         dib: null,
         dif: null,
         rmi: null,
+        salario13: true,
+        limiteMinimoMaximo: true,
+        salarioMinimo: false,
       };
       this.arrayBenficios.push(obj_beneficioAcumulado);
     },
