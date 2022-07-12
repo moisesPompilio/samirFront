@@ -145,50 +145,7 @@
           </b-button>
         </b-col>
       </b-row>
-<<<<<<< master
-      <b-row class="row-one my-3 align-items-center" v-for="obj_beneficioAcumulado of arrayBenficios"
-        :key="obj_beneficioAcumulado">
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio" class="labels">Qual Benefício?</label>
-          <b-form-input id="beneficio" v-model="obj_beneficioAcumulado.beneficio" type="text" size="sm"
-            placeholder="Ex: Auxílio Desemprego"></b-form-input>
-        </b-col>
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio_inicial" class="labels">Início do Benefício</label>
-          <b-form-input id="beneficio_inicial" v-model="obj_beneficioAcumulado.dib" type="text" size="sm">
-          </b-form-input>
-        </b-col>
-        <b-col sm="2" v-if="beneficio === true">
-          <label for="beneficio_final" class="labels">Fim do Benefício</label>
-          <b-form-input v-model="obj_beneficioAcumulado.dif" id="beneficio_final" type="text" size="sm"></b-form-input>
-        </b-col>
-        <b-col sm="3" v-if="beneficio === true">
-          <label for="beneficio" class="labels">RMI</label>
-          <b-form-input v-model="obj_beneficioAcumulado.rmi" id="beneficio" type="text" size="sm" placeholder="Ex:1000">
-          </b-form-input>
-        </b-col>
-      </b-row>
-      <template>
-        <v-data-table :headers="headersCalculoLote" :items="calculoLote" class="elevation-1">
-          <template v-slot:item="{ item }">
-            <tr>
-              <td class="py-3" style="color: rgb(107, 107, 218); cursor: pointer" @click="tranferir(item.id)">
-                {{ item.numeroDoProcesso }}
-              </td>
-              <td>{{ item.nome }}</td>
-              <td>
-                <v-btn icon @click="atulizarInfosLote(item)">
-                  <v-icon color="success">mdi-file-eye-outline</v-icon>
-                </v-btn>
-                <v-btn icon @click="removerItemLote(item)">
-                  <v-icon color="success">mdi-delete</v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </template>
-=======
+
       <b-card
         v-for="obj_beneficioAcumulado of arrayBenficios"
         :key="obj_beneficioAcumulado"
@@ -278,7 +235,6 @@
           </b-col>
         </b-row>
       </b-card>
->>>>>>> beta
 
       <!-- BOTÕES -->
 
@@ -306,14 +262,6 @@
             ao Lote</v-btn>
         </v-col>
         <v-col cols="3">
-<<<<<<< master
-          <v-btn depressed color="primary" style="margin-left: 145px" @click="deletarLote()" target="_blank">Deletar
-            lote</v-btn>
-        </v-col>
-        <v-col cols="2">
-          <v-btn depressed color="primary" @click="calcularEmLote(), (mode = 'table')" target="_blank">Calcular Lote
-          </v-btn>
-=======
           <v-btn
             depressed
             color="primary"
@@ -330,7 +278,6 @@
             target="_blank"
             >Calcular Lote</v-btn
           >
->>>>>>> beta
         </v-col>
       </v-row>
     </v-card>
@@ -381,12 +328,12 @@
       <div v-if="add_taxa == false" class="column">
         <label class="camposInput">
           Processo:
-          <input v-model="info_calculo.numeroDoProcesso" placeholder="XXXX-XX.XXXX.XXX.XXXX" /></label>
+          <input v-model="info_calculo.numeroDoProcesso" @input="atulizarvalor()" placeholder="XXXX-XX.XXXX.XXX.XXXX" /></label>
         <label class="inputToPrint" id="processoForm" />
         <br />
         <label class="camposInput">
           Autor:
-          <input v-model="info_calculo.nome" placeholder="Jennifer Walters" /></label>
+          <input v-model="info_calculo.nome" @input="atulizarvalor()" placeholder="Jennifer Walters" /></label>
         <label class="inputToPrint" id="autorForm" />
         <br />
         <label class="camposInput">Objeto:
@@ -403,7 +350,7 @@
       </div>
       <div class="column">
         <label class="camposInput">Ajuizamento:
-          <input v-model="info_calculo.dataAjuizamento" placeholder="XX/XX/XXXX" /></label><label class="inputToPrint"
+          <input v-model="info_calculo.dataAjuizamento" @input="atulizarvalor()" placeholder="XX/XX/XXXX" /></label><label class="inputToPrint"
           id="ajuizamentoForm" />
         <br />
         <label class="camposInput">Início do Juros:
@@ -426,12 +373,12 @@
       <div class="resumoProcesso">
         <div class="columnResumoProcesso">
           <h6>N.B.</h6>
-          <input v-model="info_calculo.nb" placeholder="XXX.XXX.XXX-X" />
+          <input v-model="info_calculo.nb" @input="atulizarvalor()" placeholder="XXX.XXX.XXX-X" />
           <label class="inputToPrintResumo" id="resumoNB" />
         </div>
         <div class="columnResumoProcessoParte">
           <h6>Parte</h6>
-          <input v-model="info_calculo.nome" placeholder="Ex.: Matthew M. Murdock" />
+          <input v-model="info_calculo.nome" @input="atulizarvalor()" placeholder="Ex.: Matthew M. Murdock" />
           <label class="inputToPrintResumoParte" id="resumoParte" />
         </div>
         <div class="columnResumoProcesso">
@@ -512,7 +459,7 @@
     <!-- TETO DE ALÇADA -->
     <div v-if="alcadaBoolean == true">
       <h3 class="center">TETO DE ALÇADA</h3>
-      <h5 class="center">SITUAÇÃO NO AJUIZAMENTO (DATA) Valor do salário mínimo (VALOR)</h5>
+      <h5 class="center">{{textoPeriodoAlcada}}</h5>
       <div class="columnRightAlcada">
         <label class="camposInputAlcada">a) Parcelas vencidas até o ajuizamento da ação:</label>
         <br />
@@ -531,11 +478,11 @@
         <br />
         <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="b" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="c" />
+        <input class="inputTetoAlcada" v-model="alcadaValor" placeholder="X,XX" /><label class="inputCalculo" id="c" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="d" />
+        <input class="inputTetoAlcada" v-model="salariominimosAlcada" placeholder="X,XX" /><label class="inputCalculo" id="d" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="e" />
+        <input class="inputTetoAlcada" v-model="alcadaTotal" placeholder="X,XX" /><label class="inputCalculo" id="e" />
         <br />
         <br />
       </div>
@@ -576,17 +523,17 @@
         <br />
       </div>
       <div class="column">
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="i" />
+        <input class="inputTetoAlcada" v-model="alcadaTotal" placeholder="X,XX" /><label class="inputCalculo" id="i" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="j" />
+        <input class="inputTetoAlcada" v-model="alcadaCorrecaoPorcetagem" placeholder="X,XX" /><label class="inputCalculo" id="j" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="k" />
+        <input class="inputTetoAlcada" v-model="alcadaCorrecao" placeholder="X,XX" /><label class="inputCalculo" id="k" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="l" />
+        <input class="inputTetoAlcada" v-model="alcadaJurosPorcentagem" placeholder="X,XX" /><label class="inputCalculo" id="l" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="m" />
+        <input class="inputTetoAlcada" v-model="alcadaJuros" placeholder="X,XX" /><label class="inputCalculo" id="m" />
         <br />
-        <input class="inputTetoAlcada" placeholder="X,XX" /><label class="inputCalculo" id="n" />
+        <input class="inputTetoAlcada" v-model="pacelasVencidas" placeholder="X,XX" /><label class="inputCalculo" id="n" />
         <br />
         <br />
       </div>
@@ -615,12 +562,12 @@
         <div class="column">
           <label class="camposInputAlcada">
             Parte:
-            <input v-model="info_calculo.nome" placeholder="Nome + (CPF 000.000.000-00)" /></label>
+            <input v-model="info_calculo.nome" @input="atulizarvalor()" placeholder="Nome + (CPF 000.000.000-00)" /></label>
           <label class="inputToPrint" id="partePlanilha" />
           <br />
           <label class="camposInputAlcada">
             Espécie:
-            <input v-model="info_calculo.beneficio" placeholder="XX(XXXXXXXXXX)" /></label>
+            <input v-model="info_calculo.beneficio" @input="atulizarvalor()" placeholder="XX(XXXXXXXXXX)" /></label>
           <label class="inputToPrintAlcada" id="autorPlanilha" />
           <br />
           <label class="camposInputAlcada">DIB Jud:
@@ -628,7 +575,7 @@
             id="dibJudPlanilha" />
           <br />
           <label class="camposInputAlcada">DIB Anterior:
-            <input v-model="info_calculo.dibAnterior" placeholder="00/00/0000" /></label><label class="inputToPrint"
+            <input v-model="info_calculo.dibAnterior" @input="atulizarvalor()" placeholder="00/00/0000" /></label><label class="inputToPrint"
             id="dibAnteriorPlanilha" />
           <br />
           <label class="camposInputAlcada">RMI Jud.:
@@ -660,7 +607,7 @@
         <div class="resumoProcesso">
           <div class="columnResumoPagamentosAdministrativos">
             <h6>Espécie</h6>
-            <input class="inputPagamentosAdministrativos" v-model="info_calculo.beneficio"
+            <input class="inputPagamentosAdministrativos" v-model="info_calculo.beneficio" @input="atulizarvalor()"
               placeholder="XX(XXXXXXXXXX)" />
             <label class="inputToPrintResumo" id="resumoNB" />
           </div>
@@ -671,17 +618,17 @@
           </div>
           <div class="columnResumoPagamentosAdministrativos">
             <h6>DIB Anterior</h6>
-            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dibAnterior" placeholder="XX/XX/XXXX" />
+            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dibAnterior" @input="atulizarvalor()" placeholder="XX/XX/XXXX" />
             <label class="inputToPrintResumo" id="resumoNB" />
           </div>
           <div class="columnResumoPagamentosAdministrativos">
             <h6>DIP</h6>
-            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dip" placeholder="XX/XX/XXXX" />
+            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dip" @input="atulizarvalor()" placeholder="XX/XX/XXXX" />
             <label class="inputToPrintResumo" id="resumoNB" />
           </div>
           <div class="columnResumoPagamentosAdministrativos">
             <h6>DCB</h6>
-            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dibFinal" placeholder="XX/XX/XXXX" />
+            <input class="inputPagamentosAdministrativos" v-model="info_calculo.dibFinal" @input="atulizarvalor()" placeholder="XX/XX/XXXX" />
             <label class="inputToPrintResumo" id="resumoNB" />
           </div>
           <div class="columnResumoPagamentosAdministrativos">
@@ -946,7 +893,7 @@
           <div class="column">
             <label class="camposInputAlcada">
               Parte:
-              <input v-model="info_calculo.nome" placeholder="Nome + (CPF 000.000.000-00)" /></label>
+              <input v-model="info_calculo.nome"  placeholder="Nome + (CPF 000.000.000-00)" /></label>
             <label class="inputToPrint" id="partePlanilha" />
             <br />
             <label class="camposInputAlcada">
@@ -1182,6 +1129,13 @@ export default {
   },
 
   methods: {
+    //FUNCAO SEM SENTIDO MAS EVITA BUG DE ATUALIZAO ENTAO NAO MEXA!!!!
+    atulizarvalor(){
+      this.valor_corrigido++;
+      this.valor_corrigido--;
+      console.log(this.info_calculo);
+      return this.info_calculo;
+   },
     verificadoInformacoes() {
       if (
         this.dtInicial == "" ||
@@ -1427,7 +1381,6 @@ export default {
           juros: calculo_juros,
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
-<<<<<<< master
           alcadaJurosPorcentagem: this.alcadaJurosPorcentagem,
           alcadaValor: this.alcadaValor,
           salariominimosAlcada: this.salariominimosAlcada,
@@ -1436,11 +1389,8 @@ export default {
           alcadaTotal: this.alcadaTotal,
           textoPeriodoAlcada: this.textoPeriodoAlcada,
           alcadaCorrecaoPorcetagem: this.alcadaCorrecaoPorcetagem,
-=======
           url: this.info_calculo.urlProcesso,
           textoHonorarios: this.textoHonorarios,
-
->>>>>>> beta
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1587,6 +1537,7 @@ export default {
       });
       console.log(dado.url);
       this.info_calculo.urlProcesso = dado.url;
+      this.info_calculo.dip = dado.dataDePagamento
       this.calc_total = calcul;
       this.total_processos = dado.total_processos;
       this.valor_total = dado.valor_total;
@@ -1858,6 +1809,7 @@ export default {
         await obj.forEach((value) => {
           console.log("valor: " + value.data.split("T")[0].split("-")[1]);
           if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
+            this.textoPeriodoAlcada = `SITUAÇÃO NO AJUIZAMENTO (${this.info_calculo.dataAjuizamento}) valor do salário mínimo ${value.valor}`
             this.salarioMinimoOssada = 60 * value.valor;
             console.log("Salario minimo: " + this.salarioMinimoOssada);
           }
@@ -1896,6 +1848,8 @@ export default {
               });
             });
             console.log("Parcelas vencidas: " + this.pacelasVencidas);
+            this.alcadaValor = this.pacelasVencidas;
+            this.salariominimosAlcada = this.salarioMinimoOssada
             ossada =
               Math.floor(
                 (this.pacelasVencidas - this.salarioMinimoOssada) * 100
@@ -1909,7 +1863,12 @@ export default {
               this.pacelasVencidas =
                 Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
             }
-            this.total_processos -= this.pacelasVencidas;
+            this.alcadaJurosPorcentagem = juros;
+            this.alcadaCorrecaoPorcetagem = correcao;
+            this.alcadaJuros = ossada * juros;
+            this.alcadaCorrecao = ossada * correcao;
+            this.alcadaTotal = ossada;
+            
           })
           .catch((erro) => {
             console.log(erro);
@@ -2055,14 +2014,7 @@ export default {
             ) / 100,
           salarioTotal:
             Math.floor(
-<<<<<<< master
-              (dado.salario - value.salario) *
-              (dado.juros + 1) *
-              dado.correcao *
-              100
-=======
               (dado.salario - recebido) * (dado.juros + 1) * dado.correcao * 100
->>>>>>> beta
             ) / 100,
         };
         // }
