@@ -122,50 +122,18 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="salario13"
-                :value="salario13"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="salario13" class="labels pb-2">13Salário</label>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="boolJuros"
-                :value="boolJuros"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="boolJuros" class="labels pb-2">Juros</label>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                style="margin-right: 5px"
-                :value="alcadaBoolean"
-                v-model="alcadaBoolean"
-                id="flexCheckDefault"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="alcadaBoolean" class="labels pb-2">Alçada</label>
-            </v-col>
-          </v-row>
+          <label for="porcentagemRMI" class="labels pb-3"
+            >Porcentagem RMI%</label
+          >
+          <v-text-field
+            v-model="porcentagemRMI"
+            id="porcentagemRMI"
+            dense
+            outlined
+          ></v-text-field>
         </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3"
             >Juros <b class="item-obrigatorio">*</b></label
@@ -199,7 +167,8 @@
             dense
             outlined
             required
-          ></v-text-field>
+          >
+          </v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="2">
           <label for="dibAnterior" class="labels pb-2">DIB-Anterior</label>
@@ -209,41 +178,63 @@
             placeholder="Ex: 17/06/2022"
             dense
             outlined
-          ></v-text-field>
+          >
+          </v-text-field>
         </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" sm="6" md="3">
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="salarioMinimo"
-                :value="salarioMinimo"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="salarioMinimo" class="labels pb-2"
-                >Salário Mínimo</label
-              >
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="limiteMinimoMaximo"
-                :value="limiteMinimoMaximo"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="limiteMinimoMaximo" class="labels pb-2"
-                >Limite Minimo e Máximo</label
-              >
-            </v-col>
-          </v-row>
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="limiteMinimoMaximo"
+            :value="limiteMinimoMaximo"
+          />
+          <label for="limiteMinimoMaximo" class="labels pb-2"
+            >Limite Minimo e Máximo</label
+          >
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="salarioMinimo"
+            :value="salarioMinimo"
+          />
+          <label for="salarioMinimo" class="labels pb-2">Salário Mínimo</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            style="margin-right: 5px"
+            :value="alcadaBoolean"
+            v-model="alcadaBoolean"
+            id="flexCheckDefault"
+          />
+          <label for="alcadaBoolean" class="labels pb-2">Alçada</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="boolJuros"
+            :value="boolJuros"
+          />
+          <label for="boolJuros" class="labels pb-2">Juros</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="salario13"
+            :value="salario13"
+          />
+          <label for="salario13" class="labels pb-2">13° Salário</label>
         </v-col>
       </v-row>
 
@@ -272,6 +263,7 @@
           </b-button>
         </b-col>
       </b-row>
+
       <b-card
         v-for="obj_beneficioAcumulado of arrayBenficios"
         :key="obj_beneficioAcumulado"
@@ -306,7 +298,8 @@
               id="beneficio_final"
               type="text"
               size="sm"
-            ></b-form-input>
+            >
+            </b-form-input>
           </b-col>
           <b-col sm="3" v-if="beneficio === true">
             <label for="beneficio" class="labels">RMI</label>
@@ -469,7 +462,9 @@
     </template>
 
     <adicionar-taxa v-if="add_taxa == true" />
+
     <!-- TABELA PRNCIPAL -->
+    <br />
     <h1 v-if="add_taxa == false" class="titulo">PREENCHA OS DADOS</h1>
     <h4 v-if="add_taxa == false" class="center">REVISÃO DE BENEFÍCIOS</h4>
     <div v-if="add_taxa == false" class="rowInputs">
@@ -478,13 +473,17 @@
           Processo:
           <input
             v-model="info_calculo.numeroDoProcesso"
+            @input="atulizarvalor()"
             placeholder="XXXX-XX.XXXX.XXX.XXXX"
         /></label>
         <label class="inputToPrint" id="processoForm" />
         <br />
         <label class="camposInput">
           Autor:
-          <input v-model="info_calculo.nome" placeholder="Jennifer Walters"
+          <input
+            v-model="info_calculo.nome"
+            @input="atulizarvalor()"
+            placeholder="Jennifer Walters"
         /></label>
         <label class="inputToPrint" id="autorForm" />
         <br />
@@ -512,6 +511,7 @@
           >Ajuizamento:
           <input
             v-model="info_calculo.dataAjuizamento"
+            @input="atulizarvalor()"
             placeholder="XX/XX/XXXX" /></label
         ><label class="inputToPrint" id="ajuizamentoForm" />
         <br />
@@ -538,13 +538,18 @@
       <div class="resumoProcesso">
         <div class="columnResumoProcesso">
           <h6>N.B.</h6>
-          <input v-model="info_calculo.nb" placeholder="XXX.XXX.XXX-X" />
+          <input
+            v-model="info_calculo.nb"
+            @input="atulizarvalor()"
+            placeholder="XXX.XXX.XXX-X"
+          />
           <label class="inputToPrintResumo" id="resumoNB" />
         </div>
         <div class="columnResumoProcessoParte">
           <h6>Parte</h6>
           <input
             v-model="info_calculo.nome"
+            @input="atulizarvalor()"
             placeholder="Ex.: Matthew M. Murdock"
           />
           <label class="inputToPrintResumoParte" id="resumoParte" />
@@ -573,19 +578,38 @@
         <br />
         <label class="camposInput">Soma do Juros: R$</label>
         <br />
+        <label class="camposInput">12 Parcelas Vincendas: R$</label>
+        <br />
+        <br />
         <label class="camposInput">Devido ao(s) Reclamante(s): R$</label>
         <br />
+        <label class="camposInput">Honorários Advocatícios: R$</label>
         <br />
-        <label class="camposInput">12 Parcelas Vincendas: </label>
-        <br />
-        <label class="camposInput">Honorários Advocatícios: </label>
-        <br />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <label
+          class="camposInput"
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          >Acordo: %</label
+        >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <label
+          class="camposInput"
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          >Devido ao(s) Reclamante(s) (Acordo): R$</label
+        >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <label
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          class="camposInput"
+          >Honorários Advocatícios (Acordo): R$</label
+        >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <br />
         <label class="camposInput">Total do Processo: R$</label>
         <br />
         <br />
-        <br />
       </div>
+
       <div class="column">
         <input v-model="valor_corrigido" placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="somaPrincipal" />
@@ -593,18 +617,87 @@
         <input v-model="valor_juros" placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="somaJuros" />
         <br />
-        <input v-model="valor_total" placeholder="XX.XXX,XX" />
-        <label class="inputCalculo" id="somaTotal" />
-        <br />
-        <br />
         <input placeholder="XX.XXX,XX" v-model="pacelasVencidas" />
         <label class="inputCalculo" id="parcelasVincendas" />
         <br />
-        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
+        <br />
+
+        {{
+          Math.floor(
+            (parseFloat(valor_corrigido) +
+              parseFloat(valor_juros) -
+              parseFloat(pacelasVencidas)) *
+              100
+          ) / 100
+        }}
+        <br />
+        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" id="honorariosAdvocativos" />
+        <label class="inputCalculo" />
+        <br />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <input
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          v-model="procntagem_acordo"
+          placeholder="XX.XXX,XX"
+        />
         <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+        <b v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          >{{
+            procntagem_acordo != 0 && procntagem_acordo != null
+              ? Math.floor(
+                  (((parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas)) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(
+                  (parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas)) *
+                    100
+                ) / 100
+          }}
+        </b>
+        <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+        <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">{{
+          procntagem_acordo != 0 && procntagem_acordo != null
+            ? Math.floor(
+                ((parseFloat(valorHonorarios) * parseFloat(procntagem_acordo)) /
+                  100) *
+                  100
+              ) / 100
+            : Math.floor(parseFloat(valorHonorarios) * 100) / 100
+        }}</b>
+        <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <br />
-        <br />
-        <input v-model="total_processos" placeholder="XX.XXX,XX" />
+
+        {{
+          procntagem_acordo != 0 && procntagem_acordo != null
+            ? Math.floor(
+                (((parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros) -
+                  parseFloat(pacelasVencidas) +
+                  parseFloat(valorHonorarios)) *
+                  parseFloat(procntagem_acordo)) /
+                  100) *
+                  100
+              ) / 100
+            : Math.floor(
+                (parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros) -
+                  parseFloat(pacelasVencidas) +
+                  parseFloat(valorHonorarios)) *
+                  100
+              ) / 100
+        }}
+
         <label class="inputCalculo" id="totalProcesso" />
         <br />
       </div>
@@ -627,6 +720,259 @@
         <p>RMI: {{ beneficio.rmi }}</p>
       </v-col>
     </v-row>
+
+    <!-- TETO DE ALÇADA -->
+    <div v-if="alcadaBoolean == true">
+      <h3 class="center">TETO DE ALÇADA</h3>
+      <h5 class="center">{{ textoPeriodoAlcada }}</h5>
+      <div class="columnRightAlcada">
+        <label class="camposInputAlcada"
+          >a) Total a ser considerado (Até 12 parcelas vincendas após
+          ajuizamento): R$</label
+        >
+        <br />
+        <label class="camposInputAlcada"
+          >b) 60 salários mínimos no ajuizamente: R$</label
+        >
+        <br />
+        <label class="camposInputAlcada"
+          >c) Eventual renúncia do total: R$</label
+        >
+        <br />
+        <br />
+      </div>
+      <div class="column">
+        <input
+          @input="parcelasDevida()"
+          class="inputTetoAlcada"
+          v-model="alcadaValor"
+          placeholder="X,XX"
+        /><label class="inputCalculo" id="c" />
+        <br />
+        <input
+          @input="parcelasDevida()"
+          class="inputTetoAlcada"
+          v-model="salariominimosAlcada"
+          placeholder="X,XX"
+        /><label class="inputCalculo" id="d" />
+        <br />
+        {{ alcadaTotal }}
+        <label class="inputCalculo" id="e" />
+        <br />
+        <br />
+      </div>
+      <h5 class="center">d) Valores renunciados no ajuizamento atualizados:</h5>
+      <div class="columnRightAlcada">
+        <label class="camposInputAlcada"
+          >d.1) Valor de eventual renúncia: R$</label
+        >
+        <br />
+        <label class="camposInputAlcada"
+          >d.2) Coeficiente de atualização:</label
+        >
+        <br />
+        <label class="camposInputAlcada"
+          >d.3) Valor atualizado da renúncia: R$</label
+        >
+        <br />
+        <label class="camposInputAlcada">d.4) Taxa de juros de mora:</label>
+        <br />
+        <label class="camposInputAlcada">d.5) Juros de mora: R$</label>
+        <br />
+        <label class="camposInputAlcada">d.6) Total: R$</label>
+        <br />
+        <br />
+      </div>
+      <div class="column">
+        {{ alcadaTotal }}
+        <label class="inputCalculo" id="i" />
+        <br />
+        <input
+          @input="parcelasDevida()"
+          class="inputTetoAlcada"
+          v-model="alcadaCorrecaoPorcetagem"
+          placeholder="X,XX"
+        /><label class="inputCalculo" id="j" />
+        <br />
+        {{ Math.floor(alcadaTotal * alcadaCorrecaoPorcetagem * 100) / 100 }}
+
+        <label class="inputCalculo" id="k" />
+        <br />
+        <input
+          @input="parcelasDevida()"
+          class="inputTetoAlcada"
+          v-model="alcadaJurosPorcentagem"
+          placeholder="X,XX"
+        /><label class="inputCalculo" id="l" />
+        <br />
+        {{
+          Math.floor(
+            alcadaTotal *
+              alcadaCorrecaoPorcetagem *
+              alcadaJurosPorcentagem *
+              100
+          ) / 100
+        }}
+
+        <label class="inputCalculo" id="m" />
+        <br />
+        {{
+          Math.floor(
+            (Math.floor(alcadaTotal * alcadaCorrecaoPorcetagem * 100) / 100 +
+              Math.floor(
+                alcadaTotal *
+                  alcadaCorrecaoPorcetagem *
+                  alcadaJurosPorcentagem *
+                  100
+              ) /
+                100) *
+              100
+          ) / 100
+        }}
+        <label class="inputCalculo" id="n" />
+        <br />
+        <br />
+      </div>
+    </div>
+
+    <h4 class="center">PLANILHA DE CÁLCULO</h4>
+    <div class="rowInputs">
+      <div class="column">
+        <label class="camposInputAlcada">
+          Parte:
+          <input
+            v-model="info_calculo.nome"
+            @input="atulizarvalor()"
+            placeholder="Nome + (CPF 000.000.000-00)"
+        /></label>
+        <label class="inputToPrint" id="partePlanilha" />
+        <br />
+        <label class="camposInputAlcada">
+          Espécie:
+          <input
+            v-model="info_calculo.beneficio"
+            @input="atulizarvalor()"
+            placeholder="XX(XXXXXXXXXX)"
+        /></label>
+        <label class="inputToPrintAlcada" id="autorPlanilha" />
+        <br />
+        <label class="camposInputAlcada"
+          >DIB Jud:
+          <input v-model="dtInicial" placeholder="00/00/0000" /></label
+        ><label class="inputToPrint" id="dibJudPlanilha" />
+        <br />
+        <label class="camposInputAlcada"
+          >DIB Anterior:
+          <input
+            v-model="info_calculo.dibAnterior"
+            @input="atulizarvalor()"
+            placeholder="00/00/0000" /></label
+        ><label class="inputToPrint" id="dibAnteriorPlanilha" />
+        <br />
+        <label class="camposInputAlcada"
+          >RMI Jud.:
+          <input v-model="salarioInicial" placeholder="00/00" /></label
+        ><label class="inputToPrint" id="rmiJudPlanilha" />
+        <br />
+      </div>
+      <div class="column">
+        <label class="camposInputAlcada"
+          >%RMI: <input placeholder="000,00" v-model="porcentagemRMI" /></label
+        ><label class="inputToPrint" id="porCententagemRmiPlanilha" />
+        <br />
+        <label class="camposInputAlcada"
+          >Período (Data de Início):
+          <input v-model="dtInicial" placeholder="XX/XX/XXXX" /></label
+        ><label class="inputToPrint" id="dataInicialPlanilha" />
+        <br />
+        <!-- Criar Função -->
+        <label class="camposInputAlcada"
+          >Período (Data de Fim):
+          <input placeholder="XX/XX/XXXX" v-model="dtFinal" /></label
+        ><label class="inputToPrint" id="dataFinalPlanilha" />
+        <br />
+        <label for="13salario" class="labels pb-2" style="margin-left: 18px"
+          >13º Salário
+        </label>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          style="margin-left: 5px"
+          v-model="salario13"
+          :value="salario13"
+        />
+        <br />
+      </div>
+    </div>
+    <br />
+
+    <div id="tabelaImpostoRenda">
+      <h4 class="center">
+        RENDIMENTOS RECEBIDOS ACUMULADAMENTE PARA IMPOSTO DE RENDA
+      </h4>
+      <table id="impostoRenda">
+        <tr>
+          <th id="impostoRendaDiscriminacao">DISCRIMINAÇÃO</th>
+          <th id="impostoRendaValores">VALORES</th>
+          <th id="impostoRendaAcordo">ACORDO</th>
+          <th id="impostoRendaCompetencias">COMPETÊNCIAS</th>
+        </tr>
+        <tr>
+          <td>ANO-CALENDÁRIO PAGAMENTO ({{ dataAtual.getFullYear() }})</td>
+          <td><input v-model="iPvalorAnoAtual" /></td>
+          <td>
+            {{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    parseFloat(iPvalorAnoAtual) * parseFloat(procntagem_acordo)
+                  ) / 100
+                : 0
+            }}
+          </td>
+          <td><input v-model="competenciaAnoAtual" /></td>
+        </tr>
+        <tr>
+          <td>ANOS-CALENDÁRIO ANTERIORES</td>
+          <td><input v-model="iPvalorAnoAnterior" /></td>
+          <td>
+            {{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    parseFloat(iPvalorAnoAnterior) *
+                      parseFloat(procntagem_acordo)
+                  ) / 100
+                : 0
+            }}
+          </td>
+          <td><input v-model="competenciaAnoAnterior" /></td>
+        </tr>
+        <tr>
+          <td>TOTAL EM R$</td>
+          <td>
+            {{ parseFloat(iPvalorAnoAnterior) + parseFloat(iPvalorAnoAtual) }}
+          </td>
+          <td>
+            {{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    parseFloat(
+                      parseFloat(iPvalorAnoAnterior) +
+                        parseFloat(iPvalorAnoAtual)
+                    ) * parseFloat(procntagem_acordo)
+                  ) / 100
+                : 0
+            }}
+          </td>
+          <td>
+            {{
+              parseInt(competenciaAnoAnterior) + parseInt(competenciaAnoAtual)
+            }}
+          </td>
+        </tr>
+      </table>
+      <br />
+    </div>
+
     <!-- Gerar pdf -->
 
     <h1 v-if="add_taxa == false" class="titulo">GERADOR DE PDF</h1>
@@ -718,37 +1064,126 @@
           <br />
           <label class="camposInput">Soma do Juros: R$</label>
           <br />
+          <label class="camposInput">12 Parcelas Vincendas: R$</label>
+          <br />
+          <br />
           <label class="camposInput">Devido ao(s) Reclamante(s): R$</label>
           <br />
+          <label class="camposInput">Honorários Advocatícios: R$</label>
           <br />
-          <label class="camposInput">12 Parcelas Vincendas: </label>
-          <br />
-          <label class="camposInput">Honorários Advocatícios: </label>
-          <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label
+            class="camposInput"
+            v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            >Acordo: %</label
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label
+            class="camposInput"
+            v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            >Devido ao(s) Reclamante(s)(Acordo):R$</label
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label
+            v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            class="camposInput"
+            >Honorários Advocatícios (Acordo): R$</label
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <br />
           <label class="camposInput">Total do Processo: R$</label>
           <br />
+          <br />
         </div>
         <div class="column">
-          <label class="inputCalculo" id="somaPrincipal" />
           {{ valor_corrigido }}
+          <label class="inputCalculo" id="somaPrincipal" />
           <br />
-          <label class="inputCalculo" id="somaJuros" />
           {{ valor_juros }}
+          <label class="inputCalculo" id="somaJuros" />
           <br />
-          <label class="inputCalculo" id="somaTotal" />
-          {{ valor_total }}
-          <br />
-          <br />
-          <label class="inputCalculo" id="parcelasVincendas" />
           {{ pacelasVencidas }}
+          <label class="inputCalculo" id="parcelasVincendas" />
           <br />
-          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <br />
+
+          {{
+            Math.floor(
+              (parseFloat(valor_corrigido) +
+                parseFloat(valor_juros) -
+                parseFloat(pacelasVencidas)) *
+                100
+            ) / 100
+          }}
+          <br />
           {{ valorHonorarios }}
+          <label class="inputCalculo" id="honorariosAdvocativos" />
           <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">
+            {{ procntagem_acordo }}</b
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <b v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            >{{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    (((parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas)) *
+                      parseFloat(procntagem_acordo)) /
+                      100) *
+                      100
+                  ) / 100
+                : Math.floor(
+                    (parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas)) *
+                      100
+                  ) / 100
+            }}
+          </b>
+          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+          <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">{{
+            procntagem_acordo != 0 && procntagem_acordo != null
+              ? Math.floor(
+                  ((parseFloat(valorHonorarios) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(parseFloat(valorHonorarios) * 100) / 100
+          }}</b>
+          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
           <br />
+
+          {{
+            procntagem_acordo != 0 && procntagem_acordo != null
+              ? Math.floor(
+                  (((parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas) +
+                    parseFloat(valorHonorarios)) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(
+                  (parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas) +
+                    parseFloat(valorHonorarios)) *
+                    100
+                ) / 100
+          }}
+
           <label class="inputCalculo" id="totalProcesso" />
-          {{ total_processos }}
+          <br />
         </div>
       </div>
       <v-row v-for="beneficio of beneficioInacumulavel" :key="beneficio">
@@ -766,6 +1201,133 @@
         </v-col>
       </v-row>
       <img src="" alt="" />
+
+      <!-- TETO DE ALÇADA -->
+      <div v-if="alcadaBoolean == true">
+        <h3 class="center">TETO DE ALÇADA</h3>
+        <h5 class="center">{{ textoPeriodoAlcada }}</h5>
+        <div class="columnAlcadaPrint">
+          <label class="camposInputAlcada"
+            >a) Total a ser considerado (Até 12 parcelas vincendas após
+            ajuizamento): R$ {{ alcadaValor }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >b) 60 salários mínimos no ajuizamente: R${{
+              salariominimosAlcada
+            }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >c) Eventual renúncia do total: R${{ alcadaTotal }}</label
+          >
+          <br />
+          <br />
+        </div>
+        <h5 class="center">
+          d) Valores renunciados no ajuizamento atualizados:
+        </h5>
+        <div class="columnAlcadaPrint">
+          <label class="camposInputAlcada"
+            >d.1) Valor de eventual renúncia: R${{ alcadaTotal }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >d.2) Coeficiente de atualização:
+            {{ alcadaCorrecaoPorcetagem }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >d.3) Valor atualizado da renúncia: R${{
+              Math.floor(alcadaTotal * alcadaCorrecaoPorcetagem * 100) / 100
+            }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >d.4) Taxa de juros de mora: {{ alcadaJurosPorcentagem }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >d.5) Juros de mora: R${{
+              Math.floor(
+                alcadaTotal *
+                  alcadaCorrecaoPorcetagem *
+                  alcadaJurosPorcentagem *
+                  100
+              ) / 100
+            }}</label
+          >
+          <br />
+          <label class="camposInputAlcada"
+            >d.6) Total: R${{
+              Math.floor(
+                (Math.floor(alcadaTotal * alcadaCorrecaoPorcetagem * 100) /
+                  100 +
+                  Math.floor(
+                    alcadaTotal *
+                      alcadaCorrecaoPorcetagem *
+                      alcadaJurosPorcentagem *
+                      100
+                  ) /
+                    100) *
+                  100
+              ) / 100
+            }}</label
+          >
+          <br />
+          <br />
+        </div>
+      </div>
+
+      <h4 class="center">PLANILHA DE CÁLCULO</h4>
+      <div class="rowInputs">
+        <div class="column">
+          <label class="camposInputAlcada">
+            Parte:
+            {{ info_calculo.nome }} (CPF {{ info_calculo.cpf }})</label
+          >
+          <label class="inputToPrintAlcada" id="partePlanilha" />
+          <br />
+          <label class="camposInputAlcada">
+            Espécie:
+            {{ info_calculo.beneficio }}
+          </label>
+          <label class="inputToPrintAlcada" id="autorPlanilha" />
+          <br />
+          <label class="camposInputAlcada">DIB Jud: {{ dtInicial }} </label
+          ><label class="inputToPrintAlcada" id="dibJudPlanilha" />
+          <br />
+          <label class="camposInputAlcada"
+            >DIB Anterior: {{ info_calculo.dibAnterior }} </label
+          ><label class="inputToPrintAlcada" id="dibAnteriorPlanilha" />
+          <br />
+          <label class="camposInputAlcada"
+            >RMI Jud.: R${{ salarioInicial }} </label
+          ><label class="inputToPrintAlcada" id="rmiJudPlanilha" />
+          <br />
+        </div>
+        <div class="column">
+          <label class="camposInputAlcada" id="porCententagemRmiPlanilha"
+            >%RMI: {{ porcentagemRMI }}
+          </label>
+          <br />
+          <label class="camposInputAlcada"
+            >Período (Data de Início): {{ dtInicial }} </label
+          ><label class="inputToPrintAlcada" id="dataInicialPlanilha" />
+          <br />
+          <!-- Criar Função -->
+          <label class="camposInputAlcada"
+            >Período (Data de Fim): {{ dtFinal }} </label
+          ><label class="inputToPrintAlcada" id="dataFinalPlanilha" />
+          <br />
+          <label for="13salario" class="labels pb-2" style="margin-left: 18px"
+            >13º Salário: {{ exibirBoolean(salario13) }}
+          </label>
+          <br />
+        </div>
+      </div>
+      <br />
+
       <v-data-table
         id="areaToPrint"
         dense
@@ -778,6 +1340,75 @@
         hide-default-footer
       >
       </v-data-table>
+      <br />
+      <br />
+      <div id="tabelaImpostoRenda">
+        <h4 class="center" id="impostoRendaTitulo">
+          RENDIMENTOS RECEBIDOS ACUMULADAMENTE PARA IMPOSTO DE RENDA
+        </h4>
+        <table id="impostoRenda">
+          <tr>
+            <th id="impostoRendaDiscriminacao">DISCRIMINAÇÃO</th>
+            <th id="impostoRendaValores">VALORES</th>
+            <th id="impostoRendaAcordo">ACORDO</th>
+            <th id="impostoRendaCompetencias">COMPETÊNCIAS</th>
+          </tr>
+          <tr>
+            <td>ANO-CALENDÁRIO PAGAMENTO ({{ dataAtual.getFullYear() }})</td>
+            <td>{{ iPvalorAnoAtual }}</td>
+            <td>
+              {{
+                procntagem_acordo != 0 && procntagem_acordo != null
+                  ? Math.floor(
+                      parseFloat(iPvalorAnoAtual) *
+                        parseFloat(procntagem_acordo)
+                    ) / 100
+                  : 0
+              }}
+            </td>
+            <td>{{ competenciaAnoAtual }}</td>
+          </tr>
+          <tr>
+            <td>ANOS-CALENDÁRIO ANTERIORES</td>
+            <td>{{ iPvalorAnoAnterior }}</td>
+            <td>
+              {{
+                procntagem_acordo != 0 && procntagem_acordo != null
+                  ? Math.floor(
+                      parseFloat(iPvalorAnoAnterior) *
+                        parseFloat(procntagem_acordo)
+                    ) / 100
+                  : 0
+              }}
+            </td>
+            <td>{{ competenciaAnoAnterior }}</td>
+          </tr>
+          <tr>
+            <td>TOTAL EM R$</td>
+            <td>
+              {{ parseFloat(iPvalorAnoAnterior) + parseFloat(iPvalorAnoAtual) }}
+            </td>
+            <td>
+              {{
+                procntagem_acordo != 0 && procntagem_acordo != null
+                  ? Math.floor(
+                      parseFloat(
+                        parseFloat(iPvalorAnoAnterior) +
+                          parseFloat(iPvalorAnoAtual)
+                      ) * parseFloat(procntagem_acordo)
+                    ) / 100
+                  : 0
+              }}
+            </td>
+            <td>
+              {{
+                parseInt(competenciaAnoAnterior) + parseInt(competenciaAnoAtual)
+              }}
+            </td>
+          </tr>
+        </table>
+        <br />
+      </div>
     </v-card>
 
     <v-label v-if="alcadaArray[0]">Tabela de Alcada</v-label>
@@ -804,7 +1435,6 @@
 
 <script>
 // import TabelaDib from "../features/TabelaDib.vue";
-import { calculaReajuste } from "../features/calculoReajuste";
 //import { pararJurosTeste } from "../features/pararJuros";
 import { baseApiUrl } from "../global";
 import jsPDF from "jspdf";
@@ -899,7 +1529,7 @@ export default {
       beneficioInacumulavel: [],
       pacelasVencidas: 0,
       salarioMinimoOssada: 0,
-      alcadaBoolean: false,
+      alcadaBoolean: true,
       alcadaArray: [],
       alcadaValue: 0,
       dibAnterior: "",
@@ -916,10 +1546,48 @@ export default {
       usuario_id: 1,
       verificadoInformacao: false,
       alertTexto: "",
+      alcadaJurosPorcentagem: 0,
+      alcadaValor: 0,
+      salariominimosAlcada: 0,
+      alcadaJuros: 0,
+      alcadaCorrecao: 0,
+      alcadaTotal: 0,
+      textoPeriodoAlcada: "",
+      alcadaCorrecaoPorcetagem: 0,
+      iPvalorAnoAnterior: 0,
+      iPvalorAnoAtual: 0,
+      competenciaAnoAnterior: "",
+      competenciaAnoAtual: "",
+      porcentagemRMI: null,
+      dataAtual: new Date(),
     };
   },
 
   methods: {
+    //FUNCAO SEM SENTIDO MAS EVITA BUG DE ATUALIZAO ENTAO NAO MEXA!!!!
+    exibirBoolean(boolean) {
+      if (boolean) {
+        return "sim";
+      } else {
+        return "não";
+      }
+    },
+    parcelasDevida() {
+      this.alcadaValor = Math.floor(this.alcadaValor * 100) / 100;
+      this.alcadaTotal =
+        this.alcadaValor - this.salariominimosAlcada < 0
+          ? 0
+          : Math.floor((this.alcadaValor - this.salariominimosAlcada) * 100) /
+            100;
+      this.pacelasVencidas =
+        Math.floor(
+          (Math.floor(this.alcadaTotal * this.alcadaCorrecaoPorcetagem * 100) /
+            100 +
+            Math.floor(this.alcadaTotal * this.alcadaJurosPorcentagem * 100) /
+              100) *
+            100
+        ) / 100;
+    },
     verificadoInformacoes() {
       if (
         this.dtInicial == "" ||
@@ -941,6 +1609,12 @@ export default {
     },
     calculo() {
       if (this.verificadoInformacoes()) {
+        this.porcentagemRMI =
+          this.porcentagemRMI != 0 &&
+          this.porcentagemRMI != null &&
+          this.porcentagemRMI != ""
+            ? this.porcentagemRMI
+            : 100;
         const body = {
           dib: this.dtInicial,
           dip: this.dtFinal,
@@ -954,6 +1628,7 @@ export default {
           limiteMinimoMaximo: this.limiteMinimoMaximo,
           salario13: this.salario13,
           dibAnterior: this.dibAnterior == "" ? null : this.dibAnterior,
+          porcentagemRMI: this.porcentagemRMI,
         };
         let timer = 0;
         axios
@@ -1165,9 +1840,21 @@ export default {
           juros: calculo_juros,
           salarioJuros: calculo_salarioJuros,
           salarioTotal: calculo_salarioTotal,
+          alcadaJurosPorcentagem: this.alcadaJurosPorcentagem,
+          alcadaValor: this.alcadaValor,
+          salariominimosAlcada: this.salariominimosAlcada,
+          alcadaJuros: this.alcadaJuros,
+          alcadaCorrecao: this.alcadaCorrecao,
+          alcadaTotal: this.alcadaTotal,
+          textoPeriodoAlcada: this.textoPeriodoAlcada,
+          alcadaCorrecaoPorcetagem: this.alcadaCorrecaoPorcetagem,
           url: this.info_calculo.urlProcesso,
           textoHonorarios: this.textoHonorarios,
-
+          iPvalorAnoAnterior: this.iPvalorAnoAnterior,
+          iPvalorAnoAtual: this.iPvalorAnoAtual,
+          competenciaAnoAnterior: this.competenciaAnoAnterior,
+          competenciaAnoAtual: this.competenciaAnoAtual,
+          porcentagemRMI: this.porcentagemRMI,
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1314,6 +2001,7 @@ export default {
       });
       console.log(dado.url);
       this.info_calculo.urlProcesso = dado.url;
+      this.info_calculo.dip = dado.dataDePagamento;
       this.calc_total = calcul;
       this.total_processos = dado.total_processos;
       this.valor_total = dado.valor_total;
@@ -1348,6 +2036,20 @@ export default {
       this.procntagem_acordo = dado.acordo;
       this.dibAnterior = dado.dibAnterior;
       this.textoHonorarios = dado.textoHonorarios;
+      this.info_calculo.cpf = dado.cpf;
+      this.alcadaJurosPorcentagem = dado.alcadaJurosPorcentagem;
+      this.alcadaValor = dado.alcadaValor;
+      this.salariominimosAlcada = dado.salariominimosAlcada;
+      this.alcadaJuros = dado.alcadaJuros;
+      this.alcadaCorrecao = dado.alcadaCorrecao;
+      this.alcadaTotal = dado.alcadaTotal;
+      this.textoPeriodoAlcada = dado.textoPeriodoAlcada;
+      this.alcadaCorrecaoPorcetagem = dado.alcadaCorrecaoPorcetagem;
+      this.iPvalorAnoAnterio = dado.iPvalorAnoAnterio;
+      this.iPvalorAnoAtual = dado.iPvalorAnoAtual;
+      this.competenciaAnoAnterior = dado.competenciaAnoAnterior;
+      this.competenciaAnoAtual = dado.competenciaAnoAtual;
+      this.porcentagemRMI = dado.porcentagemRMI;
     },
     calcularLote() {
       const body = {
@@ -1583,10 +2285,31 @@ export default {
       axios(ossadaUrl).then(async (res) => {
         const obj = await res.data;
         const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
+        let bodytaxaUnica = {
+          dib: this.info_calculo.dataAjuizamento,
+          tipoJuros: this.tipoJuros,
+          tipoCorrecao: this.tipoCorrecao,
+          atulizacao: this.atulizacao,
+        };
+        axios
+          .post(`${baseApiUrl}/calculo/taxaUnica`, bodytaxaUnica)
+          .then((taxaUnica) => {
+            console.log(taxaUnica.data);
+            let taxaUnicaData = taxaUnica.data;
+            console.log("taxa unica: " + taxaUnicaData);
+            correcao = taxaUnicaData.correcao;
+            juros = taxaUnicaData.juros;
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log("error taxaUnica");
+          });
         await obj.forEach((value) => {
           console.log("valor: " + value.data.split("T")[0].split("-")[1]);
           if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
+            this.textoPeriodoAlcada = `SITUAÇÃO NO AJUIZAMENTO (${this.info_calculo.dataAjuizamento}) - Valor do salário mínimo: R$ ${value.valor}`;
             this.salarioMinimoOssada = 60 * value.valor;
+            this.salariominimosAlcada = 60 * value.valor;
             console.log("Salario minimo: " + this.salarioMinimoOssada);
           }
         });
@@ -1598,13 +2321,6 @@ export default {
             let alcada = response.data;
             console.log(alcada);
             this.calc_total.forEach((value) => {
-              if (
-                value.data.split("/")[2] == date[2] &&
-                value.data.split("/")[1] == date[1]
-              ) {
-                correcao = value.correcao;
-                juros = value.juros;
-              }
               alcada.forEach((dado) => {
                 if (
                   value.data.split("/")[2] == dado.data.split("/")[2] &&
@@ -1624,6 +2340,8 @@ export default {
               });
             });
             console.log("Parcelas vencidas: " + this.pacelasVencidas);
+            this.alcadaValor = Math.floor(this.pacelasVencidas * 100) / 100;
+            this.salariominimosAlcada = this.salarioMinimoOssada;
             ossada =
               Math.floor(
                 (this.pacelasVencidas - this.salarioMinimoOssada) * 100
@@ -1637,7 +2355,13 @@ export default {
               this.pacelasVencidas =
                 Math.floor(ossada * correcao * (juros + 1) * 100) / 100;
             }
-            this.total_processos -= this.pacelasVencidas;
+            this.alcadaJurosPorcentagem = Math.floor(juros * 1000000) / 1000000;
+            this.alcadaCorrecaoPorcetagem =
+              Math.floor(correcao * 1000000) / 1000000;
+            this.alcadaJuros =
+              Math.floor(ossada * juros * correcao * 100) / 100;
+            this.alcadaCorrecao = Math.floor(ossada * correcao * 100) / 100;
+            this.alcadaTotal = Math.floor(ossada * 100) / 100;
           })
           .catch((erro) => {
             console.log(erro);
@@ -1652,9 +2376,11 @@ export default {
       return arry2;
     },
     zeraDadosDocalculo() {
+      this.competenciaAnoAnterior = 0;
+      this.competenciaAnoAtual = 0;
       this.total_processos = 0;
-      //this.valorHonorarios = 0;
-
+      this.iPvalorAnoAnterior = 0;
+      this.iPvalorAnoAtual = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
@@ -1992,42 +2718,38 @@ export default {
       this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
+      let dataAtual = new Date();
+      let anoAtual = dataAtual.getFullYear();
 
       for (const value of this.calc_total) {
         this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
         //console.log(this.valor_total);
         this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
         this.valor_corrigido += Math.floor(value.salarioCorrigido * 100) / 100;
+        if (value.data.split("/")[2] == anoAtual) {
+          this.competenciaAnoAtual++;
+          this.iPvalorAnoAtual =
+            Math.floor((this.iPvalorAnoAtual + value.salarioTotal) * 100) / 100;
+        } else {
+          this.competenciaAnoAnterior++;
+          this.iPvalorAnoAnterior =
+            Math.floor((this.iPvalorAnoAnterior + value.salarioTotal) * 100) /
+            100;
+        }
         //corta as cassais decimais
       }
-      if (this.procntagem_acordo) {
-        this.valor_total =
-          Math.floor(this.valor_total * this.procntagem_acordo) / 100;
-        this.valor_juros =
-          Math.floor(this.valor_juros * this.procntagem_acordo) / 100;
-        this.valor_corrigido =
-          Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
-        this.total_processos =
-          Math.floor(
-            this.valor_corrigido +
-              this.valor_juros +
-              (this.valorHonorarios * this.procntagem_acordo) / 100 -
-              this.pacelasVencidas * 100
-          ) / 100;
-      } else {
-        this.valor_total = Math.floor(this.valor_total * 100) / 100;
-        this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
-        this.valor_corrigido =
-          Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
-        this.total_processos =
-          Math.floor(
-            (this.valor_corrigido +
-              this.valor_juros +
-              this.valorHonorarios -
-              this.pacelasVencidas) *
-              100
-          ) / 100;
-      }
+      this.valor_total = Math.floor(this.valor_total * 100) / 100;
+      this.valor_juros = Math.floor(this.valor_juros * 100) / 100;
+      this.valor_corrigido =
+        Math.floor((this.valor_total - this.valor_juros) * 100) / 100;
+      this.total_processos =
+        Math.floor(
+          (this.valor_corrigido +
+            this.valor_juros +
+            this.valorHonorarios -
+            this.pacelasVencidas) *
+            100
+        ) / 100;
       this.formatacao();
     },
     honorarios(mesHonorarios, anoHonorarios) {
@@ -2105,7 +2827,7 @@ export default {
       if (
         this.info_calculo.beneficio == "21 - PENSAO POR MORTE PREVIDENCIARIA"
       ) {
-        this.pensaoPorMorte = "PENSÃO POR MORTE - RIVISAR TERMO INICIAL";
+        this.pensaoPorMorte = "PENSÃO POR MORTE - REVISAR TERMO INICIAL";
       }
       if (this.info_calculo.beneficiosAcumulados.length != 0) {
         this.beneficio = true;
@@ -2170,6 +2892,18 @@ export default {
       this.total_processos = 0;
       this.procntagem_acordo = null;
       this.alcadaValue = 0;
+      this.competenciaAnoAtual = null;
+      this.competenciaAnoAtual = null;
+      this.iPvalorAnoAtual = 0;
+      this.iPvalorAnoAnterior = 0;
+      this.alcadaCorrecaoPorcetagem = 0;
+      this.textoPeriodoAlcada = "";
+      this.alcadaTotal = 0;
+      this.alcadaCorrecao = 0;
+      this.alcadaJuros = 0;
+      this.salariominimosAlcada = 0;
+      this.alcadaValor = 0;
+      this.alcadaJurosPorcentagem = 0;
     },
     pushBeneficiosAcumulados() {
       let obj_beneficioAcumulado = {
@@ -2216,15 +2950,21 @@ export default {
         table th{
           border: 20px solid #FFFFFF;
           text-align: center;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
         table tr > td {
-          border: 20px solid #FFFFFF;
+          border: 4px solid #FFFFFF;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
 
         table tr < td {
           border-up: 5px solid #FFFFFF;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
-        
+       
         table td{
           text-align: center;
         }
@@ -2238,7 +2978,9 @@ export default {
 
         .camposInput {
           text-align: left;
-          margin-left: 3%;
+          margin-left: -1%;
+          font-size: 1.0em;
+          font-weight: normal;
         }
 
         .center {
@@ -2252,13 +2994,13 @@ export default {
 
         .column {
           float: left;
-          width: 50%;
+          width: 48%;
         }
 
         .columnRight {
           float: left;
           text-align: right;
-          width: 50%;
+          width: 52%;
         }
 
         .rowInputs:after {
@@ -2318,6 +3060,68 @@ export default {
         .page {
           padding-top: 3px;
         }
+
+        
+        .columnResumoPagamentosAdministrativos {
+          float: left;
+          width: 11%;
+          margin-left: 1%;
+        }
+
+        .columnRightAlcada {
+          float: left;
+          margin-left: 0%;
+          text-align: left;
+          width: 50%;
+        }
+
+        .columnAlcadaPrint {
+          float: center;
+          text-align: left;
+          width: 60%;
+          margin-left: 20%;
+          margin-right: 20%;
+        }
+
+        .inputPagamentosAdministrativos {
+          max-width: 100%;
+        }
+
+        .inputTetoAlcada {
+          max-width: 15%;
+          font-size: 12px;
+        }
+
+        .camposInputAlcada {
+          text-align: left;
+          margin-left: 3%;
+          font-size: 16px;
+          width: 30%;
+        }
+        
+
+        .inputToPrintAlcada {
+          text-align: left;
+          margin-left: 3%;
+          font-size: 16px;
+          width: 30%;
+        }
+
+        table,
+        th,
+        td {
+          border: 1px solid;
+          text-align: left;
+          margin-left: 0px;
+          padding-left: 5px;
+          width: 120%;
+        }
+
+        #impostoRendaTitulo {
+          font-size: 18px;
+          width: 120%;
+        }
+
         
         `;
       style = style + "</style>";
@@ -2348,112 +3152,7 @@ export default {
 
       newWin.close();
     },
-    informacoesCalculo() {
-      //let salaraioMinimo;
-      const ossadaUrl = `${baseApiUrl}/salarioMinimo/procuraPorAno/${
-        this.info_calculo.dataAjuizamento.split("/")[2]
-      }`;
-      axios(ossadaUrl).then(async (res) => {
-        const obj = await res.data;
-        const ajuizamento = this.info_calculo.dataAjuizamento.split("/");
-        await obj.forEach((value) => {
-          console.log("valor: " + value.data.split("T")[0].split("-")[1]);
-          if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
-            this.salarioMinimoOssada = value.valor;
-            console.log("Salario minimo: " + this.salarioMinimoOssada);
-          }
-        });
-      });
-      var arr_todasTaxas = [];
-      var taxas = [];
 
-      const dtInicial = this.dtInicial.split("-").reverse().join("/");
-      const dtFinal = this.dtFinal.split("-").reverse().join("/");
-      var salarioInicial = +this.salarioInicial;
-
-      const mesInicial = parseInt(dtInicial.split("/")[1]) - 1;
-      const mesFinal = parseInt(dtFinal.split("/")[1]) - 1;
-
-      let anoInicial = parseInt(dtInicial.split("/")[2]),
-        anoFinal = parseInt(dtFinal.split("/")[2]);
-
-      const url = `${baseApiUrl}/taxas/todasTaxas/${this.tipoJuros}/${this.tipoCorrecao}`;
-      axios(url)
-        .then((res) => {
-          this.todas_taxas = res.data.map((obj) => {
-            if (obj) {
-              const data = obj.data.split("T");
-              const dataReajuste = data.splice(0, 1);
-
-              obj.data = dataReajuste.toString().split("-").reverse().join("/");
-
-              arr_todasTaxas.push(obj);
-            }
-          });
-          // console.log(arr_todasTaxas);
-          taxas = this.taxasPorAno(arr_todasTaxas);
-          // console.log(taxas);
-
-          this.infos = [];
-
-          const compute = (anoInicial, salarioInicial, mesInicial, taxa) => {
-            const [reajustado, taxaReajuste] = calculaReajuste(
-              taxas[anoInicial.toString()],
-              salarioInicial,
-              mesInicial,
-              anoInicial,
-              taxa,
-              anoFinal,
-              mesFinal,
-              this.infos
-            );
-            // console.log("taxa de rejuste; " + taxaReajuste);
-            if (+anoInicial < +anoFinal)
-              return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
-          };
-          compute(anoInicial, salarioInicial, mesInicial, 0);
-
-          // console.log("REAJUSTE ", this.infos);
-          // console.log("CORREÇÃO", arr_todasTaxas);
-
-          this.all_info = this.infos.map((obj) => {
-            const temp = {};
-
-            arr_todasTaxas
-              .filter((item) => item.data === obj.data)
-              .forEach(
-                (i) => (
-                  (temp.correcao = i.correcaoAcumulado),
-                  (temp.juros = i.jurosAcumulado)
-                )
-              );
-            return { ...obj, ...temp };
-          });
-
-          this.calc_total = this.all_info.map((obj) => {
-            const temp = {
-              salarioCorrigido:
-                Math.floor(obj.salario * obj.correcao * 100) / 100,
-              salarioJuros:
-                Math.floor(obj.salario * obj.correcao * obj.juros * 100) / 100,
-              salarioTotal:
-                Math.floor(obj.salario * obj.correcao * (obj.juros + 1) * 100) /
-                100,
-            };
-
-            return { ...obj, ...temp };
-          });
-          this.fatorador();
-          /*if (this.boolJuros) {
-            this.pararJuros();
-          } else {
-            this.ZerarOJuros();
-          }*/
-        })
-        .catch((error) => {
-          alert(error.response.data.msg);
-        });
-    },
     taxasPorAno(response = []) {
       const taxas = {};
 
@@ -2472,89 +3171,6 @@ export default {
     },
     redirectToCalculo() {
       this.$router.push("/processos").catch(() => {});
-    },
-    test() {
-      var arr_reajuste = [];
-      var taxas = [];
-
-      const dtInicial = this.dtInicial.split("-").reverse().join("/");
-      const dtFinal = this.dtFinal.split("-").reverse().join("/");
-      var salarioInicial = +this.salarioInicial;
-
-      const mesInicial = parseInt(dtInicial.split("/")[1]) - 1;
-      const mesFinal = parseInt(dtFinal.split("/")[1]) - 1;
-
-      let anoInicial = parseInt(dtInicial.split("/")[2]),
-        anoFinal = parseInt(dtFinal.split("/")[2]);
-
-      const url = `${baseApiUrl}/taxas/todasTaxas/1/1`;
-      axios(url)
-        .then((res) => {
-          this.reajuste = res.data.map((obj) => {
-            if (obj) {
-              // const dataInicial = new Date(this.dtInicial);
-              // const dataFinal = new Date(this.dtFinal);
-              const data = obj.data.split("T");
-              const dataReajuste = data.splice(0, 1);
-              // const dataObjeto = new Date(dataReajuste);
-
-              obj.data = dataReajuste.toString().split("-").reverse().join("/");
-
-              // const maiorQueDataInicial =
-              //   dataObjeto.valueOf() >= dataInicial.valueOf();
-              // const menorQueDataFinal =
-              //   dataObjeto.valueOf() <= dataFinal.valueOf();
-
-              // if (maiorQueDataInicial && menorQueDataFinal) {
-              // }
-              arr_reajuste.push(obj);
-            }
-          });
-          //console.log(arr_reajuste);
-          taxas = this.taxasPorAno(arr_reajuste);
-          // console.log(taxas);
-
-          this.infos = [];
-
-          const compute = (anoInicial, salarioInicial, mesInicial, taxa) => {
-            const [reajustado, taxaReajuste] = calculaReajuste(
-              taxas[anoInicial.toString()],
-              salarioInicial,
-              mesInicial,
-              anoInicial,
-              taxa,
-              anoFinal,
-              mesFinal,
-              this.infos
-            );
-
-            if (+anoInicial < +anoFinal)
-              return compute(+anoInicial + 1, reajustado, 0, taxaReajuste);
-          };
-          compute(anoInicial, salarioInicial, mesInicial, 0);
-
-          // console.log("REAJUSTE ", this.infos);
-          // console.log("CORREÇÃO", arr_reajuste);
-
-          this.all_info = this.infos.map((obj) => {
-            const temp = {};
-
-            arr_reajuste
-              .filter((item) => item.data === obj.data)
-              .forEach(
-                (i) => (
-                  (temp.correcao = i.correcaoAcumulado),
-                  (temp.juros = i.jurosAcumulado)
-                )
-              );
-
-            return { ...obj, ...temp };
-          });
-          //console.log("FINAAALLL", this.all_info);
-        })
-        .catch((error) => {
-          alert(error.response.data.msg);
-        });
     },
   },
 
@@ -2612,9 +3228,11 @@ export default {
 #app {
   z-index: 1;
 }
+
 v-card {
   z-index: 1;
 }
+
 #alerta {
   position: fixed;
   right: 0;
@@ -2623,11 +3241,13 @@ v-card {
   margin-top: -2.5em;
   z-index: 2;
 }
+
 .item-obrigatorio {
   margin: 0;
 
   color: red;
 }
+
 .home {
   height: auto;
   min-height: 100vh;
@@ -2756,5 +3376,67 @@ v-card {
 
 .page {
   padding-top: 3px;
+}
+
+.columnResumoPagamentosAdministrativos {
+  float: left;
+  width: 11%;
+  margin-left: 1%;
+}
+
+.columnRightAlcada {
+  float: left;
+  margin-left: 8%;
+  text-align: left;
+  width: 42%;
+}
+
+.columnAlcadaPrint {
+  float: center;
+  text-align: left;
+  width: 60%;
+  margin-left: 25%;
+  margin-right: 15%;
+}
+
+.inputPagamentosAdministrativos {
+  max-width: 100%;
+}
+
+.inputTetoAlcada {
+  max-width: 10%;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+  text-align: left;
+  margin-left: 0px;
+}
+
+th,
+td {
+  padding: 5px;
+}
+
+#impostoRenda {
+  justify-items: center;
+}
+
+#impostoRendaDiscriminacao {
+  width: 40%;
+}
+
+#impostoRendaValores {
+  width: 30%;
+}
+
+#impostoRendaAcordo {
+  width: 30%;
+}
+
+#impostoRendaCompetencias {
+  width: 20%;
 }
 </style>
