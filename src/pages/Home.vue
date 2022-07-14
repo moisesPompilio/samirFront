@@ -631,8 +631,8 @@
           ) / 100
         }}
         <br />
-        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
-        <label class="inputCalculo" id="honorariosAdvocativos" />
+        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" id="honorariosAdvocativos" />
+        <label class="inputCalculo" />
         <br />
         <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <input
@@ -1081,7 +1081,7 @@
           <label
             class="camposInput"
             v-if="procntagem_acordo != 0 && procntagem_acordo != null"
-            >Devido ao(s) Reclamante(s) (Acordo): R$</label
+            >Devido ao(s) Reclamante(s)(Acordo):R$</label
           >
           <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <label
@@ -1343,7 +1343,7 @@
       <br />
       <br />
       <div id="tabelaImpostoRenda">
-        <h4 class="center">
+        <h4 class="center" id="impostoRendaTitulo">
           RENDIMENTOS RECEBIDOS ACUMULADAMENTE PARA IMPOSTO DE RENDA
         </h4>
         <table id="impostoRenda">
@@ -2950,15 +2950,21 @@ export default {
         table th{
           border: 20px solid #FFFFFF;
           text-align: center;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
         table tr > td {
           border: 4px solid #FFFFFF;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
 
         table tr < td {
           border-up: 5px solid #FFFFFF;
+          border: 1px solid #000000;
+          border-collapse: collapse;
         }
-        
+       
         table td{
           text-align: center;
         }
@@ -2972,7 +2978,9 @@ export default {
 
         .camposInput {
           text-align: left;
-          margin-left: 3%;
+          margin-left: -1%;
+          font-size: 1.0em;
+          font-weight: normal;
         }
 
         .center {
@@ -2986,13 +2994,13 @@ export default {
 
         .column {
           float: left;
-          width: 50%;
+          width: 48%;
         }
 
         .columnRight {
           float: left;
           text-align: right;
-          width: 50%;
+          width: 52%;
         }
 
         .rowInputs:after {
@@ -3098,6 +3106,22 @@ export default {
           font-size: 16px;
           width: 30%;
         }
+
+        table,
+        th,
+        td {
+          border: 1px solid;
+          text-align: left;
+          margin-left: 0px;
+          padding-left: 5px;
+          width: 120%;
+        }
+
+        #impostoRendaTitulo {
+          font-size: 18px;
+          width: 120%;
+        }
+
         
         `;
       style = style + "</style>";
@@ -3387,6 +3411,13 @@ table,
 th,
 td {
   border: 1px solid;
+  text-align: left;
+  margin-left: 0px;
+}
+
+th,
+td {
+  padding: 5px;
 }
 
 #impostoRenda {
