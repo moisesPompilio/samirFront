@@ -122,50 +122,18 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="3">
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="salario13"
-                :value="salario13"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="salario13" class="labels pb-2">13° Salário</label>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="boolJuros"
-                :value="boolJuros"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="boolJuros" class="labels pb-2">Juros</label>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                style="margin-right: 5px"
-                :value="alcadaBoolean"
-                v-model="alcadaBoolean"
-                id="flexCheckDefault"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="alcadaBoolean" class="labels pb-2">Alçada</label>
-            </v-col>
-          </v-row>
+          <label for="porcentagemRMI" class="labels pb-3"
+            >Porcentagem RMI%</label
+          >
+          <v-text-field
+            v-model="porcentagemRMI"
+            id="porcentagemRMI"
+            dense
+            outlined
+          ></v-text-field>
         </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" sm="6" md="2">
           <label class="labels pb-3"
             >Juros <b class="item-obrigatorio">*</b></label
@@ -213,39 +181,60 @@
           >
           </v-text-field>
         </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" sm="6" md="3">
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="salarioMinimo"
-                :value="salarioMinimo"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="salarioMinimo" class="labels pb-2"
-                >Salário Mínimo</label
-              >
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                style="margin-right: 5px"
-                v-model="limiteMinimoMaximo"
-                :value="limiteMinimoMaximo"
-              />
-            </v-col>
-            <v-col cols="12" sm="6" md="2">
-              <label for="limiteMinimoMaximo" class="labels pb-2"
-                >Limite Minimo e Máximo</label
-              >
-            </v-col>
-          </v-row>
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="limiteMinimoMaximo"
+            :value="limiteMinimoMaximo"
+          />
+          <label for="limiteMinimoMaximo" class="labels pb-2"
+            >Limite Minimo e Máximo</label
+          >
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="salarioMinimo"
+            :value="salarioMinimo"
+          />
+          <label for="salarioMinimo" class="labels pb-2">Salário Mínimo</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            style="margin-right: 5px"
+            :value="alcadaBoolean"
+            v-model="alcadaBoolean"
+            id="flexCheckDefault"
+          />
+          <label for="alcadaBoolean" class="labels pb-2">Alçada</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="boolJuros"
+            :value="boolJuros"
+          />
+          <label for="boolJuros" class="labels pb-2">Juros</label>
+        </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            style="margin-right: 5px"
+            v-model="salario13"
+            :value="salario13"
+          />
+          <label for="salario13" class="labels pb-2">13° Salário</label>
         </v-col>
       </v-row>
 
@@ -619,10 +608,10 @@
         <br />
         <br />
 
-        {{
-          parseFloat(valor_corrigido) +
+        {{Math.floor(
+          (parseFloat(valor_corrigido) +
           parseFloat(valor_juros) -
-          parseFloat(pacelasVencidas)
+          parseFloat(pacelasVencidas)) * 100) /100
         }}
         <br />
         <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
@@ -638,16 +627,16 @@
 
         {{
           procntagem_acordo != 0 && procntagem_acordo != null
-            ? ((parseFloat(valor_corrigido) +
+            ? Math.floor((((parseFloat(valor_corrigido) +
                 parseFloat(valor_juros) -
                 parseFloat(pacelasVencidas) +
                 parseFloat(valorHonorarios)) *
                 parseFloat(procntagem_acordo)) /
-              100
-            : parseFloat(valor_corrigido) +
+              100) * 100) / 100
+            : Math.floor((parseFloat(valor_corrigido) +
               parseFloat(valor_juros) -
               parseFloat(pacelasVencidas) +
-              parseFloat(valorHonorarios)
+              parseFloat(valorHonorarios)) * 100 ) / 100
         }}
 
         <label class="inputCalculo" id="totalProcesso" />
@@ -829,7 +818,7 @@
       </div>
       <div class="column">
         <label class="camposInputAlcada"
-          >%RMI: <input placeholder="000,00" /></label
+          >%RMI: <input placeholder="000,00" v-model="porcentagemRMI" /></label
         ><label class="inputToPrint" id="porCententagemRmiPlanilha" />
         <br />
         <label class="camposInputAlcada"
@@ -915,7 +904,11 @@
                 : 0
             }}
           </td>
-          <td><input v-model="competenciaAnoAnterior" /></td>
+          <td>
+            {{
+              parseInt(competenciaAnoAnterior) + parseInt(competenciaAnoAtual)
+            }}
+          </td>
         </tr>
       </table>
       <br />
@@ -1041,10 +1034,10 @@
           <br />
           <br />
 
-          {{
-            parseFloat(valor_corrigido) +
+          {{Math.floor(
+            (parseFloat(valor_corrigido) +
             parseFloat(valor_juros) -
-            parseFloat(pacelasVencidas)
+            parseFloat(pacelasVencidas)) * 100) / 100
           }}
           <br />
           {{ valorHonorarios }}
@@ -1058,16 +1051,16 @@
 
           {{
             procntagem_acordo != 0 && procntagem_acordo != null
-              ? ((parseFloat(valor_corrigido) +
+              ? Math.floor((((parseFloat(valor_corrigido) +
                   parseFloat(valor_juros) -
                   parseFloat(pacelasVencidas) +
                   parseFloat(valorHonorarios)) *
                   parseFloat(procntagem_acordo)) /
-                100
-              : parseFloat(valor_corrigido) +
+                100) * 100 ) /100
+              : Math.floor((parseFloat(valor_corrigido) +
                 parseFloat(valor_juros) -
                 parseFloat(pacelasVencidas) +
-                parseFloat(valorHonorarios)
+                parseFloat(valorHonorarios)) * 100) /100
           }}
 
           <label class="inputCalculo" id="totalProcesso" />
@@ -1196,7 +1189,7 @@
         </div>
         <div class="column">
           <label class="camposInputAlcada" id="porCententagemRmiPlanilha"
-            >%RMI:
+            >%RMI: {{ porcentagemRMI }}
           </label>
           <br />
           <label class="camposInputAlcada"
@@ -1209,15 +1202,8 @@
           ><label class="inputToPrintAlcada" id="dataFinalPlanilha" />
           <br />
           <label for="13salario" class="labels pb-2" style="margin-left: 18px"
-            >13º Salário
+            >13º Salário: {{ exibirBoolean(salario13) }}
           </label>
-          <input
-            class="form-check-input"
-            type="checkbox"
-            style="margin-left: 5px"
-            v-model="salario13"
-            :value="salario13"
-          />
           <br />
         </div>
       </div>
@@ -1295,7 +1281,11 @@
                   : 0
               }}
             </td>
-            <td>{{ competenciaAnoAnterior }}</td>
+            <td>
+              {{
+                parseInt(competenciaAnoAnterior) + parseInt(competenciaAnoAtual)
+              }}
+            </td>
           </tr>
         </table>
         <br />
@@ -1449,16 +1439,18 @@ export default {
       iPvalorAnoAtual: 0,
       competenciaAnoAnterior: "",
       competenciaAnoAtual: "",
+      porcentagemRMI: null,
     };
   },
 
   methods: {
     //FUNCAO SEM SENTIDO MAS EVITA BUG DE ATUALIZAO ENTAO NAO MEXA!!!!
-    atulizarvalor() {
-      this.valor_corrigido++;
-      this.valor_corrigido--;
-      console.log(this.info_calculo);
-      return this.info_calculo;
+    exibirBoolean(boolean) {
+      if (boolean) {
+        return "sim";
+      } else {
+        return "não";
+      }
     },
     parcelasDevida() {
       this.alcadaValor = Math.floor(this.alcadaValor * 100) / 100;
@@ -1497,6 +1489,12 @@ export default {
     },
     calculo() {
       if (this.verificadoInformacoes()) {
+        this.porcentagemRMI =
+          this.porcentagemRMI != 0 &&
+          this.porcentagemRMI != null &&
+          this.porcentagemRMI != ""
+            ? this.porcentagemRMI
+            : 100;
         const body = {
           dib: this.dtInicial,
           dip: this.dtFinal,
@@ -1510,6 +1508,7 @@ export default {
           limiteMinimoMaximo: this.limiteMinimoMaximo,
           salario13: this.salario13,
           dibAnterior: this.dibAnterior == "" ? null : this.dibAnterior,
+          porcentagemRMI: this.porcentagemRMI,
         };
         let timer = 0;
         axios
@@ -1731,6 +1730,11 @@ export default {
           alcadaCorrecaoPorcetagem: this.alcadaCorrecaoPorcetagem,
           url: this.info_calculo.urlProcesso,
           textoHonorarios: this.textoHonorarios,
+          iPvalorAnoAnterior: this.iPvalorAnoAnterior,
+          iPvalorAnoAtual: this.iPvalorAnoAtual,
+          competenciaAnoAnterior: this.competenciaAnoAnterior,
+          competenciaAnoAtual: this.competenciaAnoAtual,
+          porcentagemRMI: this.porcentagemRMI,
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1921,6 +1925,11 @@ export default {
       this.alcadaTotal = dado.alcadaTotal;
       this.textoPeriodoAlcada = dado.textoPeriodoAlcada;
       this.alcadaCorrecaoPorcetagem = dado.alcadaCorrecaoPorcetagem;
+      this.iPvalorAnoAnterio = dado.iPvalorAnoAnterio;
+      this.iPvalorAnoAtual = dado.iPvalorAnoAtual;
+      this.competenciaAnoAnterior = dado.competenciaAnoAnterior;
+      this.competenciaAnoAtual = dado.competenciaAnoAtual;
+      this.porcentagemRMI = dado.porcentagemRMI;
     },
     calcularLote() {
       const body = {
@@ -2180,6 +2189,7 @@ export default {
           if (value.data.split("T")[0].split("-")[1] <= ajuizamento[1]) {
             this.textoPeriodoAlcada = `SITUAÇÃO NO AJUIZAMENTO (${this.info_calculo.dataAjuizamento}) - Valor do salário mínimo: R$ ${value.valor}`;
             this.salarioMinimoOssada = 60 * value.valor;
+            this.salariominimosAlcada = 60 * value.valor;
             console.log("Salario minimo: " + this.salarioMinimoOssada);
           }
         });
@@ -2210,7 +2220,7 @@ export default {
               });
             });
             console.log("Parcelas vencidas: " + this.pacelasVencidas);
-            this.alcadaValor = this.pacelasVencidas;
+            this.alcadaValor = Math.floor(this.pacelasVencidas * 100) / 100;
             this.salariominimosAlcada = this.salarioMinimoOssada;
             ossada =
               Math.floor(
@@ -2246,8 +2256,11 @@ export default {
       return arry2;
     },
     zeraDadosDocalculo() {
+      this.competenciaAnoAnterior = 0;
+      this.competenciaAnoAtual = 0;
       this.total_processos = 0;
-
+      this.iPvalorAnoAnterior = 0;
+      this.iPvalorAnoAtual = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
       this.valor_corrigido = 0;
@@ -2585,12 +2598,24 @@ export default {
       this.total_processos = 0;
       this.valor_total = 0;
       this.valor_juros = 0;
+      let dataAtual = new Date();
+      let anoAtual = dataAtual.getFullYear();
 
       for (const value of this.calc_total) {
         this.valor_total += Math.floor(value.salarioTotal * 100) / 100;
         //console.log(this.valor_total);
         this.valor_juros += Math.floor(value.salarioJuros * 100) / 100;
         this.valor_corrigido += Math.floor(value.salarioCorrigido * 100) / 100;
+        if (value.data.split("/")[2] == anoAtual) {
+          this.competenciaAnoAtual++;
+          this.iPvalorAnoAtual =
+            Math.floor((this.iPvalorAnoAtual + value.salarioTotal) * 100) / 100;
+        } else {
+          this.competenciaAnoAnterior++;
+          this.iPvalorAnoAnterior =
+            Math.floor((this.iPvalorAnoAnterior + value.salarioTotal) * 100) /
+            100;
+        }
         //corta as cassais decimais
       }
       this.valor_total = Math.floor(this.valor_total * 100) / 100;
@@ -2953,7 +2978,7 @@ export default {
           font-size: 16px;
           width: 30%;
         }
-
+        
         `;
       style = style + "</style>";
 
