@@ -585,11 +585,25 @@
         <br />
         <label class="camposInput">Honorários Advocatícios: R$</label>
         <br />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <label
           class="camposInput"
           v-if="procntagem_acordo != 0 && procntagem_acordo != null"
           >Acordo: %</label
         >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <label
+          class="camposInput"
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          >Devido ao(s) Reclamante(s) (Acordo): R$</label
+        >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+        <label
+          v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          class="camposInput"
+          >Honorários Advocatícios (Acordo): R$</label
+        >
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <br />
         <label class="camposInput">Total do Processo: R$</label>
         <br />
@@ -608,35 +622,80 @@
         <br />
         <br />
 
-        {{Math.floor(
-          (parseFloat(valor_corrigido) +
-          parseFloat(valor_juros) -
-          parseFloat(pacelasVencidas)) * 100) /100
+        {{
+          Math.floor(
+            (parseFloat(valor_corrigido) +
+              parseFloat(valor_juros) -
+              parseFloat(pacelasVencidas)) *
+              100
+          ) / 100
         }}
         <br />
         <input v-model="valorHonorarios" placeholder="XX.XXX,XX" />
         <label class="inputCalculo" id="honorariosAdvocativos" />
         <br />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <input
           v-if="procntagem_acordo != 0 && procntagem_acordo != null"
           v-model="procntagem_acordo"
           placeholder="XX.XXX,XX"
         />
         <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+        <b v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+          >{{
+            procntagem_acordo != 0 && procntagem_acordo != null
+              ? Math.floor(
+                  (((parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas)) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(
+                  (parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas)) *
+                    100
+                ) / 100
+          }}
+        </b>
+        <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+        <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">{{
+          procntagem_acordo != 0 && procntagem_acordo != null
+            ? Math.floor(
+                ((parseFloat(valorHonorarios) * parseFloat(procntagem_acordo)) /
+                  100) *
+                  100
+              ) / 100
+            : Math.floor(parseFloat(valorHonorarios) * 100) / 100
+        }}</b>
+        <label class="inputCalculo" id="honorariosAdvocativos" />
+        <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <br />
 
         {{
           procntagem_acordo != 0 && procntagem_acordo != null
-            ? Math.floor((((parseFloat(valor_corrigido) +
-                parseFloat(valor_juros) -
-                parseFloat(pacelasVencidas) +
-                parseFloat(valorHonorarios)) *
-                parseFloat(procntagem_acordo)) /
-              100) * 100) / 100
-            : Math.floor((parseFloat(valor_corrigido) +
-              parseFloat(valor_juros) -
-              parseFloat(pacelasVencidas) +
-              parseFloat(valorHonorarios)) * 100 ) / 100
+            ? Math.floor(
+                (((parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros) -
+                  parseFloat(pacelasVencidas) +
+                  parseFloat(valorHonorarios)) *
+                  parseFloat(procntagem_acordo)) /
+                  100) *
+                  100
+              ) / 100
+            : Math.floor(
+                (parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros) -
+                  parseFloat(pacelasVencidas) +
+                  parseFloat(valorHonorarios)) *
+                  100
+              ) / 100
         }}
 
         <label class="inputCalculo" id="totalProcesso" />
@@ -859,7 +918,7 @@
           <th id="impostoRendaCompetencias">COMPETÊNCIAS</th>
         </tr>
         <tr>
-          <td>ANO-CALENDÁRIO PAGAMENTO (2022)</td>
+          <td>ANO-CALENDÁRIO PAGAMENTO ({{ dataAtual.getFullYear() }})</td>
           <td><input v-model="iPvalorAnoAtual" /></td>
           <td>
             {{
@@ -1012,11 +1071,25 @@
           <br />
           <label class="camposInput">Honorários Advocatícios: R$</label>
           <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <label
             class="camposInput"
             v-if="procntagem_acordo != 0 && procntagem_acordo != null"
             >Acordo: %</label
           >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label
+            class="camposInput"
+            v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            >Devido ao(s) Reclamante(s) (Acordo): R$</label
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+          <label
+            v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            class="camposInput"
+            >Honorários Advocatícios (Acordo): R$</label
+          >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <br />
           <label class="camposInput">Total do Processo: R$</label>
           <br />
@@ -1034,33 +1107,79 @@
           <br />
           <br />
 
-          {{Math.floor(
-            (parseFloat(valor_corrigido) +
-            parseFloat(valor_juros) -
-            parseFloat(pacelasVencidas)) * 100) / 100
+          {{
+            Math.floor(
+              (parseFloat(valor_corrigido) +
+                parseFloat(valor_juros) -
+                parseFloat(pacelasVencidas)) *
+                100
+            ) / 100
           }}
           <br />
           {{ valorHonorarios }}
           <label class="inputCalculo" id="honorariosAdvocativos" />
           <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">
             {{ procntagem_acordo }}</b
           >
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <label class="inputCalculo" id="honorariosAdvocativos" />
+          <b v-if="procntagem_acordo != 0 && procntagem_acordo != null"
+            >{{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    (((parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas)) *
+                      parseFloat(procntagem_acordo)) /
+                      100) *
+                      100
+                  ) / 100
+                : Math.floor(
+                    (parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas)) *
+                      100
+                  ) / 100
+            }}
+          </b>
+          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
+          <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">{{
+            procntagem_acordo != 0 && procntagem_acordo != null
+              ? Math.floor(
+                  ((parseFloat(valorHonorarios) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(parseFloat(valorHonorarios) * 100) / 100
+          }}</b>
+          <label class="inputCalculo" id="honorariosAdvocativos" />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
+
           <br />
 
           {{
             procntagem_acordo != 0 && procntagem_acordo != null
-              ? Math.floor((((parseFloat(valor_corrigido) +
-                  parseFloat(valor_juros) -
-                  parseFloat(pacelasVencidas) +
-                  parseFloat(valorHonorarios)) *
-                  parseFloat(procntagem_acordo)) /
-                100) * 100 ) /100
-              : Math.floor((parseFloat(valor_corrigido) +
-                parseFloat(valor_juros) -
-                parseFloat(pacelasVencidas) +
-                parseFloat(valorHonorarios)) * 100) /100
+              ? Math.floor(
+                  (((parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas) +
+                    parseFloat(valorHonorarios)) *
+                    parseFloat(procntagem_acordo)) /
+                    100) *
+                    100
+                ) / 100
+              : Math.floor(
+                  (parseFloat(valor_corrigido) +
+                    parseFloat(valor_juros) -
+                    parseFloat(pacelasVencidas) +
+                    parseFloat(valorHonorarios)) *
+                    100
+                ) / 100
           }}
 
           <label class="inputCalculo" id="totalProcesso" />
@@ -1235,7 +1354,7 @@
             <th id="impostoRendaCompetencias">COMPETÊNCIAS</th>
           </tr>
           <tr>
-            <td>ANO-CALENDÁRIO PAGAMENTO (2022)</td>
+            <td>ANO-CALENDÁRIO PAGAMENTO ({{ dataAtual.getFullYear() }})</td>
             <td>{{ iPvalorAnoAtual }}</td>
             <td>
               {{
@@ -1440,6 +1559,7 @@ export default {
       competenciaAnoAnterior: "",
       competenciaAnoAtual: "",
       porcentagemRMI: null,
+      dataAtual: new Date(),
     };
   },
 
