@@ -566,7 +566,15 @@
         </div>
         <div class="columnResumoProcesso">
           <h6>Total R$</h6>
-          <input v-model="valor_total" placeholder="XX.XXX,XX" />
+          <b>
+            {{
+              Math.floor(
+                (parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros)) *
+                  100
+              ) / 100
+            }}</b
+          >
           <label class="inputToPrintResumo" id="resumoTotal" />
         </div>
       </div>
@@ -631,7 +639,11 @@
           ) / 100
         }}
         <br />
-        <input v-model="valorHonorarios" placeholder="XX.XXX,XX" id="honorariosAdvocativos" />
+        <input
+          v-model="valorHonorarios"
+          placeholder="XX.XXX,XX"
+          id="honorariosAdvocativos"
+        />
         <label class="inputCalculo" />
         <br />
         <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
@@ -946,10 +958,31 @@
           </td>
           <td><input v-model="competenciaAnoAnterior" /></td>
         </tr>
+        <tr v-if="alcadaBoolean == true">
+          <td>RENÚNCIA R$</td>
+          <td>
+            {{ Math.floor(pacelasVencidas * 100) / 100 }}
+          </td>
+          <td>
+            {{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    parseFloat(parseFloat(pacelasVencidas)) *
+                      parseFloat(procntagem_acordo)
+                  ) / 100
+                : 0
+            }}
+          </td>
+          <td></td>
+        </tr>
         <tr>
           <td>TOTAL EM R$</td>
           <td>
-            {{ parseFloat(iPvalorAnoAnterior) + parseFloat(iPvalorAnoAtual) }}
+            {{
+              parseFloat(iPvalorAnoAnterior) +
+              parseFloat(iPvalorAnoAtual) -
+              parseFloat(pacelasVencidas)
+            }}
           </td>
           <td>
             {{
@@ -957,7 +990,8 @@
                 ? Math.floor(
                     parseFloat(
                       parseFloat(iPvalorAnoAnterior) +
-                        parseFloat(iPvalorAnoAtual)
+                        parseFloat(iPvalorAnoAtual) -
+                        parseFloat(pacelasVencidas)
                     ) * parseFloat(procntagem_acordo)
                   ) / 100
                 : 0
@@ -1053,7 +1087,13 @@
           <div class="columnResumoProcesso">
             <h6>Total R$</h6>
             <label class="inputToPrintResumo" id="resumoTotal" />
-            {{ valor_total }}
+            {{
+              Math.floor(
+                (parseFloat(valor_corrigido) +
+                  parseFloat(valor_juros)) *
+                  100
+              ) / 100
+            }}
           </div>
         </div>
       </div>
@@ -1096,13 +1136,13 @@
           <br />
         </div>
         <div class="column">
-          {{ valor_corrigido }}
+          {{ Math.floor(valor_corrigido * 100) / 100 }}
           <label class="inputCalculo" id="somaPrincipal" />
           <br />
-          {{ valor_juros }}
+          {{ Math.floor(valor_juros * 100) / 100 }}
           <label class="inputCalculo" id="somaJuros" />
           <br />
-          {{ pacelasVencidas }}
+          {{ Math.floor(pacelasVencidas * 100) / 100 }}
           <label class="inputCalculo" id="parcelasVincendas" />
           <br />
           <br />
@@ -1118,7 +1158,7 @@
           <br />
           {{ valorHonorarios }}
           <label class="inputCalculo" id="honorariosAdvocativos" />
-          <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">
             {{ procntagem_acordo }}</b
@@ -1158,31 +1198,31 @@
               : Math.floor(parseFloat(valorHonorarios) * 100) / 100
           }}</b>
           <label class="inputCalculo" id="honorariosAdvocativos" />
-          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
-
           <br />
-
-          {{
-            procntagem_acordo != 0 && procntagem_acordo != null
-              ? Math.floor(
-                  (((parseFloat(valor_corrigido) +
-                    parseFloat(valor_juros) -
-                    parseFloat(pacelasVencidas) +
-                    parseFloat(valorHonorarios)) *
-                    parseFloat(procntagem_acordo)) /
-                    100) *
-                    100
-                ) / 100
-              : Math.floor(
-                  (parseFloat(valor_corrigido) +
-                    parseFloat(valor_juros) -
-                    parseFloat(pacelasVencidas) +
-                    parseFloat(valorHonorarios)) *
-                    100
-                ) / 100
-          }}
-
+          <br />
+          <p class="inputCalculo" id="totalProcesso">
+            {{
+              procntagem_acordo != 0 && procntagem_acordo != null
+                ? Math.floor(
+                    (((parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas) +
+                      parseFloat(valorHonorarios)) *
+                      parseFloat(procntagem_acordo)) /
+                      100) *
+                      100
+                  ) / 100
+                : Math.floor(
+                    (parseFloat(valor_corrigido) +
+                      parseFloat(valor_juros) -
+                      parseFloat(pacelasVencidas) +
+                      parseFloat(valorHonorarios)) *
+                      100
+                  ) / 100
+            }}
+          </p>
           <label class="inputCalculo" id="totalProcesso" />
+          <br />
           <br />
         </div>
       </div>
@@ -1209,7 +1249,7 @@
         <div class="columnAlcadaPrint">
           <label class="camposInputAlcada"
             >a) Total a ser considerado (Até 12 parcelas vincendas após
-            ajuizamento): R$ {{ alcadaValor }}</label
+            ajuizamento): R$ {{ Math.floor(alcadaValor * 100) / 100 }}</label
           >
           <br />
           <label class="camposInputAlcada"
@@ -1219,7 +1259,9 @@
           >
           <br />
           <label class="camposInputAlcada"
-            >c) Eventual renúncia do total: R${{ alcadaTotal }}</label
+            >c) Eventual renúncia do total: R${{
+              Math.floor(alcadaTotal * 100) / 100
+            }}</label
           >
           <br />
           <br />
@@ -1229,7 +1271,9 @@
         </h5>
         <div class="columnAlcadaPrint">
           <label class="camposInputAlcada"
-            >d.1) Valor de eventual renúncia: R${{ alcadaTotal }}</label
+            >d.1) Valor de eventual renúncia: R${{
+              Math.floor(alcadaTotal * 100) / 100
+            }}</label
           >
           <br />
           <label class="camposInputAlcada"
@@ -1308,7 +1352,7 @@
         </div>
         <div class="column">
           <label class="camposInputAlcada" id="porCententagemRmiPlanilha"
-            >%RMI: {{ porcentagemRMI }}
+            >%RMI: {{ porcentagemRMI == 0 ? 100: porcentagemRMI}}
           </label>
           <br />
           <label class="camposInputAlcada"
@@ -1355,7 +1399,7 @@
           </tr>
           <tr>
             <td>ANO-CALENDÁRIO PAGAMENTO ({{ dataAtual.getFullYear() }})</td>
-            <td>{{ iPvalorAnoAtual }}</td>
+            <td>{{ Math.floor(iPvalorAnoAtual * 100) / 100 }}</td>
             <td>
               {{
                 procntagem_acordo != 0 && procntagem_acordo != null
@@ -1370,7 +1414,7 @@
           </tr>
           <tr>
             <td>ANOS-CALENDÁRIO ANTERIORES</td>
-            <td>{{ iPvalorAnoAnterior }}</td>
+            <td>{{ Math.floor(iPvalorAnoAnterior * 100) / 100 }}</td>
             <td>
               {{
                 procntagem_acordo != 0 && procntagem_acordo != null
@@ -1383,10 +1427,34 @@
             </td>
             <td>{{ competenciaAnoAnterior }}</td>
           </tr>
+          <tr v-if="alcadaBoolean == true">
+            <td>RENÚNCIA R$</td>
+            <td>
+              {{ Math.floor(pacelasVencidas * 100) / 100 }}
+            </td>
+            <td>
+              {{
+                procntagem_acordo != 0 && procntagem_acordo != null
+                  ? Math.floor(
+                      parseFloat(parseFloat(pacelasVencidas)) *
+                        parseFloat(procntagem_acordo)
+                    ) / 100
+                  : 0
+              }}
+            </td>
+            <td></td>
+          </tr>
           <tr>
             <td>TOTAL EM R$</td>
             <td>
-              {{ parseFloat(iPvalorAnoAnterior) + parseFloat(iPvalorAnoAtual) }}
+              {{
+                Math.floor(
+                  (parseFloat(iPvalorAnoAnterior) +
+                    parseFloat(iPvalorAnoAtual) -
+                    parseFloat(pacelasVencidas)) *
+                    100
+                ) / 100
+              }}
             </td>
             <td>
               {{
@@ -1394,7 +1462,8 @@
                   ? Math.floor(
                       parseFloat(
                         parseFloat(iPvalorAnoAnterior) +
-                          parseFloat(iPvalorAnoAtual)
+                          parseFloat(iPvalorAnoAtual) -
+                          parseFloat(pacelasVencidas)
                       ) * parseFloat(procntagem_acordo)
                     ) / 100
                   : 0
@@ -2403,13 +2472,13 @@ export default {
       var dtFinal = this.dtFinal.split("-").reverse().join("/");
       let dinicial = parseInt(dtInicial.split("/")[0]);
       var dfinal =
-        dtFinal.split("/")[1] == 2 &&
-        (dtFinal.split("/")[0] == 28 || dtFinal.split("/")[0] == 29)
+        dtFinal.split("/")[0] >= 30 ||
+        (dtFinal.split("/")[1] == 2 && dtFinal.split("/")[0] >= 28)
           ? 30
           : parseInt(dtFinal.split("/")[0]);
       let inical_calculo;
       this.inical_calculo = 1;
-      if (dinicial >= 30) {
+      if (dinicial >= 30 || (dtInicial.split("/")[1] == 2 && dinicial >= 28)) {
         inical_calculo = 1;
         this.formatçao_do_inicio(inical_calculo, dtInicial);
       } else {
@@ -2456,9 +2525,21 @@ export default {
     },
     beneficioAcumuladoCalculo() {
       let beneficioAcumulado13 = 0;
-      function decontar(value, dado, dtInicial, dtFinal) {
+      function decontar(
+        value,
+        dado,
+        dtInicial,
+        dtFinal,
+        index,
+        size,
+        dib,
+        dif,
+        salrio13
+      ) {
+        console.log("Index: " + index);
         let dinicial = dtInicial.split("/");
         let recebido = value.salario;
+
         if (value.data.split("/")[0] != "13Salario") {
           if (
             value.data.split("/")[1] == dinicial[1] &&
@@ -2470,22 +2551,79 @@ export default {
             beneficioAcumulado13++;
           }
         } else {
-          recebido = (recebido / 12) * beneficioAcumulado13;
-          beneficioAcumulado13 = 1;
+          if (salrio13) {
+            recebido = (recebido / 12) * beneficioAcumulado13;
+            beneficioAcumulado13 = 0;
+          } else {
+            recebido = 0;
+          }
         }
         console.log(dtFinal);
         if (
           value.data.split("/")[1] == dinicial[1] &&
           value.data.split("/")[2] == dinicial[2]
         ) {
-          let dias = dinicial[0] >= 30 ? 1 : 30 - dinicial[0] + 1;
-          recebido = (recebido / 30) * dias;
+          console.log("AQUI");
+          if (index == 0) {
+            let dias =
+              dib.split("/")[0] >= dinicial[0]
+                ? dib.split("/")[0] >= 30 ||
+                  (dib.split("/")[0] >= 28 && dib.split("/")[1] == 2)
+                  ? 1
+                  : 30 - dib.split("/")[0] + 1
+                : dinicial[0] >= 30 || (dinicial[0] >= 28 && dinicial[0] == 2)
+                ? 1
+                : 30 - dinicial[0] + 1;
+            recebido = (recebido / 30) * dias;
+          } else {
+            let dias =
+              dinicial[0] >= 30 || (dinicial[0] >= 28 && dinicial[1] == 2)
+                ? 1
+                : 30 - dinicial[0] + 1;
+            recebido = (recebido / 30) * dias;
+          }
         } else if (
           value.data.split("/")[1] == dtFinal.split("/")[1] &&
           value.data.split("/")[2] == dtFinal.split("/")[2]
         ) {
-          let dias = dtFinal.split("/")[0] >= 30 ? 30 : dtFinal.split("/")[0];
+          if (index == size) {
+            let dias =
+              dif.split("/")[0] >= dtFinal.split("/")[0]
+                ? dtFinal.split("/")[0] >= 30 ||
+                  (dtFinal.split("/")[0] >= 28 && dtFinal.split("/")[2] == 2)
+                  ? 30
+                  : dtFinal.split("/")[0]
+                  ? 30
+                  : dtFinal.split("/")[0]
+                : dif.split("/")[0] >= 30 ||
+                  (dif.split("/")[0] >= 28 && dif.split("/")[2] == 2)
+                ? 30
+                : dif.split("/")[0];
+            recebido = (recebido / 30) * dias;
+          } else {
+            let dias =
+              dtFinal.split("/")[0] >= 30 ||
+              (dtFinal.split("/")[0] >= 28 && dtFinal.split("/")[2] == 2)
+                ? 30
+                : dtFinal.split("/")[0];
+            recebido = (recebido / 30) * dias;
+          }
+        } else if (index == size) {
+          let dias =
+            dif.split("/")[0] >= 30 ||
+            (dif.split("/")[0] >= 28 && dif.split("/")[2] == 2)
+              ? 30
+              : dif.split("/")[0];
           recebido = (recebido / 30) * dias;
+        } else if (index == 0) {
+          let dias =
+            parseInt(dib.split("/")[0]) >= 30 ||
+            (parseInt(dib.split("/")[0]) >= 28 &&
+              parseInt(dib.split("/")[1]) == 2)
+              ? 1
+              : 30 - dib.split("/")[0] + 1;
+          recebido = (recebido / 30) * dias;
+          console.log("recebido: " + recebido + " dias: " + dias);
         }
         console.log(recebido);
         console.log(value.salario);
@@ -2496,7 +2634,7 @@ export default {
           reajusteRecebido: dado.reajusteAcumulado,
           recebido:
             dado.recebido > 0
-              ? dado.recebido + recebido
+              ? Math.floor((dado.recebido + recebido) * 100) / 100
               : Math.floor(recebido * 100) / 100,
           salario: Math.floor((dado.salario - recebido) * 100) / 100,
 
@@ -2581,7 +2719,8 @@ export default {
               this.calc_total.forEach((dado) => {
                 let dataCalculo = dado.data.split("/");
                 alteracaoConfimada = false;
-                beneficioAcumulado.forEach((value) => {
+                let size = beneficioAcumulado.length - 1;
+                beneficioAcumulado.forEach((value, index) => {
                   let dataBeneficioAcumulado = value.data.split("/");
                   console.log(
                     "sizeCalTotal : " +
@@ -2600,7 +2739,17 @@ export default {
                   ) {
                     //console.log(decontar(value, dado));
                     newArrayCalculo.push(
-                      decontar(value, dado, this.dtInicial, this.dtFinal)
+                      decontar(
+                        value,
+                        dado,
+                        this.dtInicial,
+                        this.dtFinal,
+                        index,
+                        size,
+                        info.dib,
+                        info.dif,
+                        info.salario13
+                      )
                     );
                     alteracaoConfimada = true;
                   }
@@ -2904,6 +3053,7 @@ export default {
       this.salariominimosAlcada = 0;
       this.alcadaValor = 0;
       this.alcadaJurosPorcentagem = 0;
+      this.pacelasVencidas = 0;
     },
     pushBeneficiosAcumulados() {
       let obj_beneficioAcumulado = {
