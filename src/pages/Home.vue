@@ -1158,7 +1158,7 @@
           <br />
           {{ valorHonorarios }}
           <label class="inputCalculo" id="honorariosAdvocativos" />
-          <br />
+          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
           <b v-if="procntagem_acordo != 0 && procntagem_acordo != null">
             {{ procntagem_acordo }}</b
@@ -1198,10 +1198,9 @@
               : Math.floor(parseFloat(valorHonorarios) * 100) / 100
           }}</b>
           <label class="inputCalculo" id="honorariosAdvocativos" />
-          <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
-
           <br />
-          <b class="inputCalculo" id="totalProcesso">
+          <br />
+          <p class="inputCalculo" id="totalProcesso">
             {{
               procntagem_acordo != 0 && procntagem_acordo != null
                 ? Math.floor(
@@ -1221,8 +1220,7 @@
                       100
                   ) / 100
             }}
-          </b>
-
+          </p>
           <label class="inputCalculo" id="totalProcesso" />
           <br />
           <br />
@@ -1354,7 +1352,7 @@
         </div>
         <div class="column">
           <label class="camposInputAlcada" id="porCententagemRmiPlanilha"
-            >%RMI: {{ porcentagemRMI }}
+            >%RMI: {{ porcentagemRMI == 0 ? 100: porcentagemRMI}}
           </label>
           <br />
           <label class="camposInputAlcada"
