@@ -621,7 +621,6 @@
         <label class="inputCalculo" id="parcelasVincendas" />
         <br />
         <br />
-
         {{
           Math.floor(
             (parseFloat(valor_corrigido) +
@@ -677,7 +676,6 @@
         <label class="inputCalculo" id="honorariosAdvocativos" />
         <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
         <br />
-
         {{
           procntagem_acordo != 0 && procntagem_acordo != null
             ? Math.floor(
@@ -697,8 +695,6 @@
                   100
               ) / 100
         }}
-
-        <label class="inputCalculo" id="totalProcesso" />
         <br />
       </div>
     </div>
@@ -1159,9 +1155,8 @@
           }}</b>
           <label class="inputCalculo" id="honorariosAdvocativos" />
           <br v-if="procntagem_acordo != 0 && procntagem_acordo != null" />
-
+          <input v-else class="campoInvisivel">
           <br />
-
           {{
             procntagem_acordo != 0 && procntagem_acordo != null
               ? Math.floor(
@@ -1181,7 +1176,6 @@
                     100
                 ) / 100
           }}
-
           <label class="inputCalculo" id="totalProcesso" />
           <br />
         </div>
@@ -3122,6 +3116,10 @@ export default {
           width: 120%;
         }
 
+        .campoInvisivel {
+          width: 100px;
+          border: 5px solid #FFFFFF;
+        }
         
         `;
       style = style + "</style>";
@@ -3439,4 +3437,9 @@ td {
 #impostoRendaCompetencias {
   width: 20%;
 }
+
+.campoInvisivel {
+  width: 0px;
+}
+
 </style>
