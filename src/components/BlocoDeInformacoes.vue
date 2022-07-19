@@ -132,7 +132,7 @@
       </v-col>
     </v-row>
     <v-row class="mx-3" v-if="exibir.tudo && beneficiosInacumulveisBanco[0]">
-      <v-col cols="12" sm="4" md="4">
+      <v-col cols="12" sm="3" md="3">
         <label for="aps" class="labels pb-3">APS</label>
         <v-text-field
           v-model="aps"
@@ -142,7 +142,7 @@
           outlined
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="4" md="4">
+      <v-col cols="12" sm="3" md="3">
         <label for="urlProcesso" class="labels pb-3">URL do processo</label>
         <v-text-field
           v-model="urlProcesso"
@@ -152,13 +152,23 @@
           outlined
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="4" md="4">
+      <v-col cols="12" sm="3" md="3">
         <label for="urlProcesso" class="labels pb-3">DIB-ANTERIOR</label>
         <v-text-field
           v-model="dibAnterior"
           id="dibAnterior"
           dense
           placeholder="Exp: 17/06/2000"
+          outlined
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="3" md="3">
+        <label for="tipo" class="labels pb-3">TIPO</label>
+        <v-text-field
+          v-model="tipo"
+          id="tipo"
+          dense
+          placeholder="Ativo"
           outlined
         ></v-text-field>
       </v-col>
@@ -237,6 +247,7 @@
             {{ item.numeroDoProcesso }}
           </td>
           <td>{{ item.nome }}</td>
+          <td>{{ item.tipo }}</td>
           <td>
             <v-icon v-if="item.beneficiosAcumulados[0]" color="red">
               mdi-check-outline
@@ -276,11 +287,13 @@ export default {
       citacao: "",
       aps: "",
       urlProcesso: "",
+      tipo: "",
       dibAnterior: "",
       beneficiosInacumulveisBanco: [],
       headers: [
         { value: "numeroDoProcesso", text: "Número do Processo" },
-        { value: "nome", text: "Nome " },
+        { value: "nome", text: "Nome" },
+        { value: "tipo", text: "Tipo" },
         { value: "beneficioAcumuladoBoolean", text: "Recebeu Benefício" },
         { value: "id", text: "ID" },
         { value: "actions", text: "" },
@@ -328,6 +341,7 @@ export default {
         urlProcesso: this.urlProcesso,
         dibAnterior: this.dibAnterior,
         beneficioAcumuladoBoolean: this.beneficioAcumuladoBoolean,
+        tipo: this.tipo
       });
       this.cleanFields();
       this.saveInfos();
@@ -357,6 +371,7 @@ export default {
       this.urlProcesso = "";
       this.dibAnterior = "";
       this.beneficioAcumuladoBoolean = false;
+      this.tipo = "";
     },
     formataçao(valor) {
       return valor;
@@ -376,6 +391,7 @@ export default {
       this.citacao = this.infos[y].citacao;
       this.urlProcesso = this.infos[y].urlProcesso;
       this.dibAnterior = this.infos[y].dibAnterior;
+      this.tipo = this.infos[y].tipo;
       console.log(this.infos[y].beneficioAcumuladoBoolean);
       console.log(this.infos[y].beneficiosAcumulados);
     },

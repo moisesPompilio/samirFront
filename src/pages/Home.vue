@@ -352,6 +352,17 @@
               size="sm"
             />
           </b-col>
+          <b-col sm="3" v-if="beneficio === true">
+            <label for="beneficio" class="labels">RMI%</label>
+            <b-form-input
+              v-model="obj_beneficioAcumulado.porcentagemRmi"
+              id="beneficio"
+              type="text"
+              size="sm"
+              placeholder="Ex:1000"
+            >
+            </b-form-input>
+          </b-col>
         </b-row>
       </b-card>
 
@@ -406,9 +417,10 @@
         <v-col cols="3">
           <v-btn
             depressed
-            color="primary"
+            color= red
             style="margin-left: 145px"
             target="_blank"
+            @click="deletarLote()"
             >Deletar lote</v-btn
           >
         </v-col>
@@ -440,6 +452,7 @@
               {{ item.numeroDoProcesso }}
             </td>
             <td>{{ item.nome }}</td>
+            <td>{{ item.tipo }}</td>
             <td>
               <v-icon
                 v-if="item.nomeBeneficioBeneficioAcumulado[0]"
@@ -453,7 +466,7 @@
                 <v-icon color="success">mdi-file-eye-outline</v-icon>
               </v-btn>
               <v-btn icon @click="removerItemLote(item)">
-                <v-icon color="success">mdi-delete</v-icon>
+                <v-icon color="red">mdi-delete</v-icon>
               </v-btn>
             </td>
           </tr>
@@ -569,9 +582,7 @@
           <b>
             {{
               Math.floor(
-                (parseFloat(valor_corrigido) +
-                  parseFloat(valor_juros)) *
-                  100
+                (parseFloat(valor_corrigido) + parseFloat(valor_juros)) * 100
               ) / 100
             }}</b
           >
@@ -722,14 +733,17 @@
       <v-col cols="12" sm="6" md="3">
         <p>Beneficio recebido: {{ beneficio.beneficio }}</p>
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col cols="12" sm="6" md="2">
         <p>DIB: {{ beneficio.dib }}</p>
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col cols="12" sm="6" md="2">
         <p>DIF: {{ beneficio.dif }}</p>
       </v-col>
-      <v-col cols="12" sm="6" md="3">
-        <p>RMI: {{ beneficio.rmi }}</p>
+      <v-col cols="12" sm="6" md="2">
+        <p>RMI: R${{ beneficio.rmi }}</p>
+      </v-col>
+      <v-col cols="12" sm="6" md="2">
+        <p>RMI%: {{ beneficio.porcentagemRmi }}</p>
       </v-col>
     </v-row>
 
@@ -1089,9 +1103,7 @@
             <label class="inputToPrintResumo" id="resumoTotal" />
             {{
               Math.floor(
-                (parseFloat(valor_corrigido) +
-                  parseFloat(valor_juros)) *
-                  100
+                (parseFloat(valor_corrigido) + parseFloat(valor_juros)) * 100
               ) / 100
             }}
           </div>
@@ -1239,6 +1251,9 @@
         <v-col cols="12" sm="6" md="3">
           <p>RMI: {{ beneficio.rmi }}</p>
         </v-col>
+        <v-col cols="12" sm="6" md="2">
+          <p>RMI%: {{ beneficio.porcentagemRmi }}</p>
+        </v-col>
       </v-row>
       <img src="" alt="" />
 
@@ -1352,7 +1367,7 @@
         </div>
         <div class="column">
           <label class="camposInputAlcada" id="porCententagemRmiPlanilha"
-            >%RMI: {{ porcentagemRMI == 0 ? 100: porcentagemRMI}}
+            >%RMI: {{ porcentagemRMI == 0 ? 100 : porcentagemRMI }}
           </label>
           <br />
           <label class="camposInputAlcada"
@@ -1608,6 +1623,7 @@ export default {
       headersCalculoLote: [
         { value: "numeroDoProcesso", text: "Numero Do Processo" },
         { value: "nome", text: "Autor" },
+        { value: "tipo", text: "Tipo" },
         { value: "beneficio", text: "Recebeu Benefício" },
         { value: "actions", text: "" },
       ],
@@ -1826,11 +1842,19 @@ export default {
         let dataDeInicioBeneficioAcumulado = [];
         let dataFinalBeneficioAcumulado = [];
         let rmilBeneficioAcumulado = [];
+        let porcentagemRmiBeneficioAcumulado = [];
+        let salario13BeneficioAcumulado = [];
+        let salarioMinimoBeneficioAcumulado = [];
+        let limiteMinimoMaximoBeneficioAcumulado = [];
         this.beneficioInacumulavel.forEach((value) => {
           nomeBeneficioBeneficioAcumulado.push(value.beneficio);
           dataDeInicioBeneficioAcumulado.push(value.dib);
           dataFinalBeneficioAcumulado.push(value.dif);
           rmilBeneficioAcumulado.push(value.rmi);
+          porcentagemRmiBeneficioAcumulado.push(value.porcentagemRMI);
+          salario13BeneficioAcumulado.push(value.salario13);
+          salarioMinimoBeneficioAcumulado.push(value.salarioMinimo);
+          limiteMinimoMaximoBeneficioAcumulado.push(value.limiteMinimoMaximo);
         });
         const calculoData = [];
         const calculo_reajusteAcumulado = [];
@@ -1880,6 +1904,10 @@ export default {
           dataDeInicioBeneficioAcumulado,
           dataFinalBeneficioAcumulado,
           rmilBeneficioAcumulado,
+          limiteMinimoMaximoBeneficioAcumulado,
+          salario13BeneficioAcumulado,
+          salarioMinimoBeneficioAcumulado,
+          porcentagemRmiBeneficioAcumulado,
           acordo: this.procntagem_acordo,
           tipoJuros: this.tipoJuros,
           tipoCorrecao: this.tipoCorrecao,
@@ -1924,6 +1952,7 @@ export default {
           competenciaAnoAnterior: this.competenciaAnoAnterior,
           competenciaAnoAtual: this.competenciaAnoAtual,
           porcentagemRMI: this.porcentagemRMI,
+          tipo: this.info_calculo.tipo
         };
         axios
           .post(`${baseApiUrl}/calculoEmLote/salvar`, body)
@@ -1984,10 +2013,42 @@ export default {
       console.log(this.calculoLote[this.calculoLote.length - 1]);
     },
     removerItemLote(dado) {
-      this.calculoLote = this.calculoLote.filter((item) => item !== dado);
+      console.log(dado);
+      this.$prompt("digitr o nome de usuario").then((text) => {
+        if (text == "samir") {
+          let body = dado;
+          //this.calculoLote = this.calculoLote.filter((item) => item !== dado);
+          axios
+            .delete(`${baseApiUrl}calculoEmLote/deletar/${body.id}`)
+            .then(async (res) => {
+              console.log(res.data);
+              axios
+                .get(
+                  `${baseApiUrl}calculoEmLote/procurarPorUsuario/${this.usuario_id}`
+                )
+                .then((response) => {
+                  this.calculoLote = response.data;
+                  console.log(this.calculoLote);
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                  console.log("error 2");
+                });
+            })
+            .catch((error) => {
+              console.log(error.message);
+              console.log("error 1");
+            });
+        } else {
+          this.$alert("Nome errado");
+        }
+      });
     },
     deletarLote() {
-      axios
+      console.log();
+      this.$prompt("digitr o nome de usuario").then((text) => {
+        if (text == "armageddon1234") {
+          axios
         .delete(
           `${baseApiUrl}/calculoEmLote/deletarAllUsuario/${this.usuario_id}`,
           this.calculoLote
@@ -2011,6 +2072,11 @@ export default {
           console.log(error);
           console.log("error deletar");
         });
+        } else {
+          this.$alert("Nome errado");
+        }
+      });
+      
     },
     atulizarInfosLote(dado) {
       this.zeraDadosDocalculo();
@@ -2035,6 +2101,11 @@ export default {
             dib: dado.dataDeInicioBeneficioAcumulado[index],
             dif: dado.dataFinalBeneficioAcumulado[index],
             rmi: dado.rmilBeneficioAcumulado[index],
+            limiteMinimoMaximo:
+              dado.limiteMinimoMaximoBeneficioAcumulado[index],
+            salario13: dado.salario13BeneficioAcumulado[index],
+            salarioMinimo: dado.salarioMinimoBeneficioAcumulado[index],
+            porcentagemRmi: dado.porcentagemRmiBeneficioAcumulado[index],
           });
         });
       } else {
@@ -2707,6 +2778,7 @@ export default {
             salario13: info.salario13,
             limiteMinimoMaximo: info.limiteMinimoMaximo,
             salarioMinimo: info.salarioMinimo,
+            porcentagemRmi: info.porcentagemRmi,
           };
 
           axios
@@ -3021,6 +3093,7 @@ export default {
                 limiteMinimoMaximo: true,
                 salarioMinimo: false,
                 salario13: true,
+                porcentagemRmi: 100,
               };
               this.beneficioInacumulavel.push(push_beneficioAcumulado);
             }
@@ -3064,6 +3137,7 @@ export default {
         salario13: true,
         limiteMinimoMaximo: true,
         salarioMinimo: false,
+        porcentagemRmi: 100,
       };
       this.arrayBenficios.push(obj_beneficioAcumulado);
     },
